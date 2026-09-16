@@ -69,8 +69,9 @@ async def main():
     bot = None
     if BOT_TOKEN:
         bot = Bot(BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+        log.info('BOT_TOKEN is set; Telegram polling will be started.')
     else:
-        log.error('BOT_TOKEN is not set. Set it in Railway › Variables.')
+        log.error('BOT_TOKEN is not set. Set it in Railway › Variables. The bot cannot answer /start.')
 
     if not ADMIN_IDS and not SUPPORT_CHAT_ID:
         log.warning('ADMIN_IDS / SUPPORT_CHAT_ID are empty — customer messages have nowhere to go. '
@@ -112,10 +113,13 @@ async def main():
     dp.include_router(shop_router)
     dp.include_router(support_router)
 
-    log.info('Oncedshop bot starting...')
+    log.info('Oncedshop bot starting polling...')
     try:
+        me = await bot.get_me()
+        log.info('Telegram authorization OK: @%s (id=%s)', me.username, me.id)
         await bot.delete_webhook(drop_pending_updates=True)
         await setup_commands(bot)
+        log.info('Polling is active. Send /start to @%s.', me.username)
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
     finally:
         if runner:

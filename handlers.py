@@ -48,12 +48,17 @@ async def notify_paid(bot, order_id, buyer=None, method=''):
 # ─ Start & language ─────────────────────────────────────────────────────────────
 @router.message(CommandStart())
 async def cmd_start(message: Message):
+    '''Always acknowledge /start even if the persistent DB is temporarily unavailable.'''
     u = message.from_user
-    await db.upsert_user(u.id, u.username or '', u.full_name or '')
+    # Answer first: a locked/read-only Railway volume must never make the bot look dead.
     await message.answer(
         '◼️ <b>Oncedshop</b>' + NL + 'Выберите язык / Choose language:',
         reply_markup=lang_kb(),
     )
+    try:
+        await db.upsert_user(u.id, u.username or '', u.full_name or '')
+    except Exception as e:
+        log.exception('start: failed to save user %s: %s', u.id, e)
 
 
 @router.message(Command('id'))
