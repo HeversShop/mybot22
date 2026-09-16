@@ -1,9 +1,19 @@
 # Railway/Nixpacks build config for the Telegram bot
+# Install into a virtual environment because NixOS protects its system Python.
 [phases.setup]
 nixPkgs = ["python312", "python312Packages.pip"]
 
 [phases.install]
-cmds = ["pip install -r requirements.txt"]
+cmds = [
+  "python3 -m venv /opt/venv",
+  "/opt/venv/bin/python -m pip install --upgrade pip",
+  "/opt/venv/bin/python -m pip install -r requirements.txt"
+]
+
+[phases.build]
+cmds = [
+  "/opt/venv/bin/python -m compileall -q ."
+]
 
 [start]
-cmd = "python main.py"
+cmd = "/opt/venv/bin/python main.py"
