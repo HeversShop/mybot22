@@ -1,0 +1,77 @@
+"""Configuration for Oncedshop bot."""
+import os
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except Exception:
+    pass
+
+BOT_TOKEN        = os.getenv('BOT_TOKEN', '')
+WEBAPP_URL       = os.getenv('WEBAPP_URL', '').strip()
+SUPPORT_USERNAME = os.getenv('SUPPORT_USERNAME', 'oncedshopsupport').lstrip('@')
+SUPPORT_URL      = 'https://t.me/' + SUPPORT_USERNAME
+DB_PATH          = os.getenv('DB_PATH', 'oncedshop.db')
+
+# ---- Financials ----
+PRICE_MARKUP   = 0.12
+USD_TO_RUB     = 95.0
+STARS_PER_RUB  = 0.9
+MIN_ORDER_USD  = 7.0
+
+# ---- Throttling ----
+THROTTLE_RATE_SECONDS = 0.7
+
+# ---- CryptoBot ----
+CRYPTOBOT_URL = 'https://t.me/CryptoBot'
+
+# ---- Crypto wallets ----
+CRYPTO_WALLETS = {
+    'TON': {
+        'address': 'UQDEvKC6YHjTxgq8nsJyK33LRPcqHUEtgebTIM1oPGyPzKs2',
+        'usd': 5.50, 'dp': 4, 'emoji': '💎', 'label': 'TON',
+    },
+    'USDT_TRC20': {
+        'address': 'TTaXvZ3g9qnLnEGKd9NBP6CNrH5tk35eB6',
+        'usd': 1.00, 'dp': 2, 'emoji': '🟢', 'label': 'USDT (TRC20)',
+    },
+    'USDT_ERC20': {
+        'address': '0x532689544E299bF588fd17C5805f1eA8bF5A4AF1',
+        'usd': 1.00, 'dp': 2, 'emoji': '🔷', 'label': 'USDT (ERC20)',
+    },
+    'SOL': {
+        'address': 'EEBe7mg1e69BDxvuazFjHASK12Pjsu1EZNZFAMjbnTYT',
+        'usd': 145.0, 'dp': 4, 'emoji': '🟣', 'label': 'Solana',
+    },
+    'BTC': {
+        'address': 'bc1qc7j2jnt3sdrnwhkf9l3uudjan3y3qjjuv0park',
+        'usd': 65000.0, 'dp': 8, 'emoji': '🟠', 'label': 'Bitcoin',
+    },
+    'BNB_BEP20': {
+        'address': '0xE1a98Db3060D6803c7CA220BB00fF74e420515b9',
+        'usd': 600.0, 'dp': 5, 'emoji': '🟡', 'label': 'BNB (BEP20)',
+    },
+}
+
+# ---- Admin ----
+ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'oncedshopsupport').lstrip('@').lower()
+_admin_ids = os.getenv('ADMIN_IDS', '')
+ADMIN_IDS = set(int(x) for x in _admin_ids.replace(' ', '').split(',') if x.strip().lstrip('-').isdigit())
+
+# Optional: a staff group/supergroup where customer messages are delivered
+# (negative id, e.g. -1001234567890). Leave empty to deliver to ADMIN_IDS in private.
+_support_chat = os.getenv('SUPPORT_CHAT_ID', '').strip()
+SUPPORT_CHAT_ID = int(_support_chat) if _support_chat.lstrip('-').isdigit() else 0
+
+# ---- Web server ----
+PORT         = int(os.getenv('PORT', '8080'))
+RUN_WEBSERVER = os.getenv('RUN_WEBSERVER', '1') not in ('0', 'false', 'False', 'no', '')
+WEBAPP_ORIGIN = os.getenv('WEBAPP_ORIGIN', '*')
+
+# ---- Telethon monitor ----
+TG_API_ID      = int(os.getenv('TG_API_ID', '0') or '0')
+TG_API_HASH    = os.getenv('TG_API_HASH', '')
+TG_SESSION     = os.getenv('TG_SESSION', '')
+MONITOR_CHATS  = [c.strip() for c in os.getenv('MONITOR_CHATS', 'FunPayPlace').split(',') if c.strip()]
+MONITOR_TRIGGERS = [t.strip().lower() for t in os.getenv(
+    'MONITOR_TRIGGERS', 'поставщик,постав,#ищу,#куплю').split(',') if t.strip()]
+MONITOR_NOTIFY_ADMIN = os.getenv('MONITOR_NOTIFY_ADMIN', '1') not in ('0', 'false', 'False', 'no', '')

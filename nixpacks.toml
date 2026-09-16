@@ -1,0 +1,9 @@
+# Railway/Nixpacks build config for the Telegram bot
+[phases.setup]
+nixPkgs = ["python312"]
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[start]
+cmd = "python main.py"
