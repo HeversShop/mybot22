@@ -965,7 +965,8 @@ function playSound() {
   try {
     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2432/2432-preview.mp3');
     audio.volume = 0.3;
-    audio.play().catch(e => {}); // Игнорируем ошибку автоплея
+    const p = audio.play();
+    if (p !== undefined) p.catch(() => {}); 
   } catch (e) {}
 }
 
@@ -976,7 +977,10 @@ function init(){
    tg.ready();tg.expand();
    if(tg.setHeaderColor)tg.setHeaderColor('#000000');
    if(tg.setBackgroundColor)tg.setBackgroundColor('#000000');
-   if(tg.MainButton)tg.MainButton.onClick(checkout);
+   if(tg.MainButton) {
+     tg.MainButton.onClick(checkout);
+     tg.MainButton.setParams({color:'#ffffff', text_color:'#000000'});
+   }
   }catch(e){}
  }
  renderLogin();
@@ -984,18 +988,20 @@ function init(){
  render();
  initCyclingText();
  
- // ГАРАНТИРОВАННЫЙ ЗАПУСК
- setTimeout(() => {
+ // МАКСИМАЛЬНО БЕЗОПАСНЫЙ ЗАПУСК
+ const finishSplash = () => {
    const splash = document.getElementById('splash');
    const app = document.getElementById('app');
    if(splash) splash.classList.add('hide');
    if(app) app.classList.add('show');
-   
    updateMovers();
    const chips = document.querySelector('.chips');
    if(chips) initDragScroll(chips);
- }, 1500); 
+ };
 
+ setTimeout(finishSplash, 1200); // Сократил время до 1.2с для скорости
+ window.onload = finishSplash; // Дублирующий запуск по загрузке окна
+ 
  loadRate();
  loadMe();
 }
