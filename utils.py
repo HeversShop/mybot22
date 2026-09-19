@@ -116,11 +116,13 @@ async def get_usd_rub(force=False):
 
 # ---- Assortment / lead matching (for chat monitor) ----
 ASSORTMENT_KEYWORDS = [
-    'telegram stars', 'stars', 'звёзды', 'звезды', 'звезд',
-    'brawl', 'brawl pass', 'бравл',
-    'gemini', 'гемини', 'google ai', 'chatgpt', 'chat gpt', 'gpt', 'чат гпт', 'гпт',
-    'claude', 'клод', 'grok', 'грок', 'x premium', 'икс премиум', 'premium',
-    'robux', 'робукс', 'роблокс', 'roblox', 'gamepass', 'game pass', 'гейм пасс',
+    'telegram stars', 'stars', '\u0437\u0432\u0451\u0437\u0434\u044b', '\u0437\u0432\u0435\u0437\u0434\u044b', '\u0437\u0432\u0435\u0437\u0434',
+    'brawl', 'brawl pass', '\u0431\u0440\u0430\u0432\u043b',
+    'gemini', '\u0433\u0435\u043c\u0438\u043d\u0438', 'google ai', 'chatgpt', 'chat gpt', 'gpt', '\u0447\u0430\u0442 \u0433\u043f\u0442', '\u0433\u043f\u0442',
+    'claude', '\u043a\u043b\u043e\u0434', 'grok', '\u0433\u0440\u043e\u043a', 'x premium', '\u0438\u043a\u0441 \u043f\u0440\u0435\u043c\u0438\u0443\u043c', 'premium',
+    'robux', '\u0440\u043e\u0431\u0443\u043a\u0441', '\u0440\u043e\u0431\u043b\u043e\u043a\u0441', 'roblox', 'gamepass', 'game pass', '\u0433\u0435\u0439\u043c \u043f\u0430\u0441\u0441',
+    'tiktok', 'tik tok', '\u0442\u0438\u043a\u0442\u043e\u043a', '\u0442\u0438\u043a \u0442\u043e\u043a', '\u043c\u043e\u043d\u0435\u0442\u044b',
+    '\u0432\u0438\u0440\u0442\u044b', '\u0440\u0430\u0434\u043c\u0438\u0440', 'radmir', '\u0430\u043c\u0430\u0437\u0438\u043d\u0433', 'amazing', 'black russia', '\u0431\u043b\u044d\u043a \u0440\u0430\u0448\u0430', 'majestic', '\u043c\u0430\u0436\u0435\u0441\u0442\u0438\u043a', 'arizona', '\u0430\u0440\u0438\u0437\u043e\u043d\u0430',
 ]
 
 
