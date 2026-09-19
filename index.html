@@ -99,10 +99,11 @@ body{
 
 /* ===== CHIPS ===== */
 .chips{
- display:flex;gap:8px;overflow-x:auto;padding:4px 20px 20px;
+ display:flex;gap:8px;overflow-x:auto;padding:4px 16px 16px;
  scrollbar-width:none;-webkit-overflow-scrolling:touch;
- margin:0 -20px;
+ width: 100%;
 }
+.chips::-webkit-scrollbar { display: none; }
 .chip{
  flex:0 0 auto;padding:10px 18px;border-radius:12px;
  font-size:13px;font-weight:600;cursor:pointer;
@@ -359,11 +360,12 @@ body{
     <div class='brand-sub' id='tagline'>Digital Store</div>
    </div>
   </div>
-  <div class='topbar-right'>
-   <div class='pill-group'>
-    <button id='cusd' data-cur='USD'>\$</button>
-    <button id='crub' data-cur='RUB'>&#8381;</button>
-   </div>
+   <div class='topbar-right'>
+    <div class='pill-group'>
+     <button id='cusd' data-cur='USD'>$</button>
+     <button id='crub' data-cur='RUB'>&#8381;</button>
+    </div>
+
    <div class='pill-group'>
     <button id='lru' data-lang='ru'>RU</button>
     <button id='len' data-lang='en'>EN</button>
@@ -420,7 +422,7 @@ const CATALOG=[
   {id:'p_radmir',emoji:'\uD83D\uDE97',title:{ru:'Radmir \u0412\u0438\u0440\u0442\u044b',en:'Radmir Virts'},kind:'per1000',base:0.55,unit:'1kk',step:1,def:25,min:25,note:{ru:'52\u0440 \u0437\u0430 1\u043a\u043a',en:'52 RUB per 1m'}},
   {id:'p_amazing',emoji:'\uD83D\uDE97',title:{ru:'Amazing \u0412\u0438\u0440\u0442\u044b',en:'Amazing Virts'},kind:'per1000',base:0.47,unit:'1kk',step:1,def:25,min:25,note:{ru:'45\u0440 \u0437\u0430 1\u043a\u043a',en:'45 RUB per 1m'}},
   {id:'p_black_russia',emoji:'\uD83D\uDE97',title:{ru:'Black Russia \u0412\u0438\u0440\u0442\u044b',en:'Black Russia Virts'},kind:'per1000',base:0.37,unit:'1kk',step:1,def:30,min:30,note:{ru:'35\u0440 \u0437\u0430 1\u043a\u043a',en:'35 RUB per 1m'}},
-  {id:'p_majestic',emoji:'\uD83D\uDE97',title:{ru:'Majestic \u0412\u0438\u0440\u0442\u044b',en:'Majestic Virts'},kind:'per1000',base:2.11,unit:'1kk',step:1,def:25,min:25,note:{ru:'0.20\u0440 \u0437\u0430 1\u043a (200\u0440 \u0437\u0430 1\u043a\u043a)',en:'0.20 RUB per 1k'}},
+  {id:'p_majestic',emoji:'\uD83D\uDE97',title:{ru:'Majestic \u0412\u0438\u0440\u0442\u044b',en:'Majestic Virts'},kind:'per1000',price:2.11,unit:'1kk',step:1,def:25,min:25,note:{ru:'0.20\u0440 \u0437\u0430 1\u043a (200\u0440 \u0437\u0430 1\u043a\u043a)',en:'0.20 RUB per 1k'}},
   {id:'p_arizona',emoji:'\uD83D\uDE97',title:{ru:'Arizona RP \u0412\u0438\u0440\u0442\u044b',en:'Arizona RP Virts'},kind:'per1000',base:2.63,unit:'1kkk',step:1,def:1,min:1,note:{ru:'0.25\u0440 \u0437\u0430 1\u043a\u043a (250\u0440 \u0437\u0430 1\u043a\u043a\u043a)',en:'0.25 RUB per 1m'}}]}
 ];
 
