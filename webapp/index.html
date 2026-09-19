@@ -30,7 +30,11 @@ body{
  overflow-x:hidden;
  -webkit-font-smoothing: antialiased;
 }
-#app{width:100%;max-width:500px;min-height:100vh;padding-bottom:120px;position:relative;}
+#app{
+  width:100%;max-width:500px;min-height:100vh;padding-bottom:120px;position:relative;
+  opacity: 0; transition: opacity 0.8s ease; /* Контент скрыт до конца заставки */
+}
+#app.show { opacity: 1; }
 
 /* ===== PREMIUM TOGGLES ===== */
 .pill-group {
@@ -946,6 +950,14 @@ function initCyclingText() {
   }, 3000);
 }
 
+function playStartSound() {
+  try {
+    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2432/2432-preview.mp3');
+    audio.volume = 0.5;
+    audio.play();
+  } catch (e) {}
+}
+
 function init(){
  document.documentElement.lang=state.lang;
  if(tg){
@@ -962,11 +974,14 @@ function init(){
  initCyclingText();
  setTimeout(() => {
    const splash = document.getElementById('splash');
+   const app = document.getElementById('app');
    if(splash) splash.classList.add('hide');
+   if(app) app.classList.add('show');
+   playStartSound();
    updateMovers();
    const chips = document.querySelector('.chips');
    if(chips) initDragScroll(chips);
- }, 1800); // Показываем заставку 1.8 секунды
+ }, 1800); 
  loadRate();
  loadMe();
 }
