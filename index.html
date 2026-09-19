@@ -616,7 +616,12 @@ function render(){
 }
 function go(tab){state.tab=tab;haptic('light');render();window.scrollTo(0,0);if(tab==='cabinet')loadMe();}
 function setLang(l){state.lang=l;document.documentElement.lang=l;persist();render();}
-function setCat(c){state.cat=c;render();}
+function setCat(c){
+  state.cat=c;
+  render();
+  const chips = document.querySelector('.chips');
+  if(chips) initDragScroll(chips);
+}
 function priceLabel(p){return p.kind==='per1000'?(money(withMk(p.base))+' <small>/ '+T('perK')+' '+p.unit+'</small>'):money(unitPrice(p));}
 
 function productHTML(p){
@@ -790,6 +795,26 @@ function showSent(oid,ok){
  if(ok)setTimeout(()=>{try{if(tg&&tg.close)tg.close();}catch(e){}},2600);
 }
 
+function initDragScroll(el) {
+  let isDown = false, startX, scrollLeft;
+  el.addEventListener('mousedown', e => {
+    isDown = true;
+    el.style.cursor = 'grabbing';
+    startX = e.pageX - el.offsetLeft;
+    scrollLeft = el.scrollLeft;
+  });
+  el.addEventListener('mouseleave', () => { isDown = false; el.style.cursor = 'grab'; });
+  el.addEventListener('mouseup', () => { isDown = false; el.style.cursor = 'grab'; });
+  el.addEventListener('mousemove', e => {
+    if(!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - startX) * 2;
+    el.scrollLeft = scrollLeft - walk;
+  });
+  el.style.cursor = 'grab';
+}
+
 function init(){
  document.documentElement.lang=state.lang;
  if(tg){
@@ -803,7 +828,11 @@ function init(){
  renderLogin();
  if(document.getElementById('login')&&state.authed)document.getElementById('login').classList.add('hidden');
  render();
- setTimeout(updateMovers, 100);
+ setTimeout(() => {
+   updateMovers();
+   const chips = document.querySelector('.chips');
+   if(chips) initDragScroll(chips);
+ }, 100);
  loadRate();
  loadMe();
 }
