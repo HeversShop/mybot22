@@ -347,13 +347,26 @@ body{
  opacity:0;pointer-events:none;transition:.2s;
 }
 .backdrop.show{opacity:1;pointer-events:auto;}
+/* ===== SHEET ===== */
+.backdrop{
+ position:fixed;inset:0;z-index:200; /* Поднял над навигацией */
+ background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);
+ -webkit-backdrop-filter:blur(8px);
+ display:flex;align-items:flex-end;justify-content:center;
+ opacity:0;pointer-events:none;transition:.3s;
+}
+.backdrop.show{opacity:1;pointer-events:auto;}
 .sheet{
  width:100%;max-width:500px;
  background:#111;border-top:1px solid var(--border-bright);
  border-top-left-radius:28px;border-top-right-radius:28px;
- padding:20px 20px calc(100px + env(safe-area-inset-bottom)); /* Увеличен отступ снизу */
- transform:translateY(100%);transition:.3s cubic-bezier(0.4, 0, 0.2, 1);
+ padding:24px 20px calc(40px + env(safe-area-inset-bottom));
+ transform:translateY(100%);transition:.4s cubic-bezier(0.4, 0, 0.2, 1);
+ max-height: 90vh;
+ overflow-y: auto;
 }
+.backdrop.show ~ .nav { transform: translate(-50%, 100px); opacity: 0; } /* Скрываем навигацию при открытии */
+.nav { transition: all 0.3s ease; }
 
 .backdrop.show .sheet{transform:none;}
 .grab{width:40px;height:4px;border-radius:99px;background:var(--border2);margin:0 auto 18px;}
@@ -504,24 +517,24 @@ const tg=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 // ---- CATALOG ----
 const CATALOG=[
  {id:'stars',emoji:'⭐',title:{ru:'Telegram Stars',en:'Telegram Stars'},items:[
-  {id:'p_stars_1k',img:'https://img.icons8.com/color/96/telegram-app.png',title:{ru:'Telegram Stars',en:'Telegram Stars'},kind:'per1000',base:12.0,unit:'Stars',step:500,def:1000,min:1}]},
+  {id:'p_stars_1k',img:'https://img.icons8.com/color/96/telegram-app.png',emoji:'⭐',title:{ru:'Telegram Stars',en:'Telegram Stars'},kind:'per1000',base:12.0,unit:'Stars',step:500,def:1000,min:1}]},
  {id:'tiktok',emoji:'📱',title:{ru:'TikTok Монеты',en:'TikTok Coins'},items:[
-  {id:'p_tt_coins',img:'https://img.icons8.com/color/96/tiktok.png',title:{ru:'TikTok Монеты',en:'TikTok Coins'},kind:'perUnit',base:0.0105,unit:'Монет',step:100,def:100,min:100,note:{ru:'Вход на аккаунт (1.05р/шт)',en:'Account login (1.05 RUB/pc)'}}]},
+  {id:'p_tt_coins',img:'https://img.icons8.com/color/96/tiktok.png',emoji:'🪙',title:{ru:'TikTok Монеты',en:'TikTok Coins'},kind:'perUnit',base:0.0105,unit:'Монет',step:100,def:100,min:100,note:{ru:'Вход на аккаунт (1.05р/шт)',en:'Account login (1.05 RUB/pc)'}}]},
  {id:'rbx',emoji:'🟩',title:{ru:'Roblox Robux',en:'Roblox Robux'},items:[
-  {id:'p_rbxgp_new',img:'https://img.icons8.com/color/96/roblox.png',title:{ru:'Robux GamePass',en:'Robux GamePass'},kind:'perUnit',base:0.0036,unit:'R$',step:1000,def:1000,min:1000,note:{ru:'Выдача 5 дней',en:'5 days delivery'}},
-  {id:'p_rbxpv_new',img:'https://img.icons8.com/color/96/roblox.png',title:{ru:'Robux Private Server',en:'Robux Private Server'},kind:'perUnit',base:0.003,unit:'R$',step:1000,def:1000,min:1000,note:{ru:'Выдача 5 дней',en:'5 days delivery'}}]},
+  {id:'p_rbxgp_new',img:'https://img.icons8.com/color/96/roblox.png',emoji:'🟦',title:{ru:'Robux GamePass',en:'Robux GamePass'},kind:'perUnit',base:0.0036,unit:'R$',step:1000,def:1000,min:1000,note:{ru:'Выдача 5 дней',en:'5 days delivery'}},
+  {id:'p_rbxpv_new',img:'https://img.icons8.com/color/96/roblox.png',emoji:'🟪',title:{ru:'Robux Private Server',en:'Robux Private Server'},kind:'perUnit',base:0.003,unit:'R$',step:1000,def:1000,min:1000,note:{ru:'Выдача 5 дней',en:'5 days delivery'}}]},
  {id:'brawl',emoji:'🎮',title:{ru:'Brawl Stars',en:'Brawl Stars'},items:[
-  {id:'p_brawl_pass',img:'https://img.icons8.com/color/96/supercell.png',title:{ru:'Brawl Pass',en:'Brawl Pass'},kind:'fixed',price:3.15,note:{ru:'300 рублей',en:'300 RUB'}},
-  {id:'p_brawl_plus_new',img:'https://img.icons8.com/color/96/supercell.png',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},kind:'fixed',price:3.68,note:{ru:'350 рублей',en:'350 RUB'}}]},
+  {id:'p_brawl_pass',img:'https://img.icons8.com/color/96/supercell.png',emoji:'🎮',title:{ru:'Brawl Pass',en:'Brawl Pass'},kind:'fixed',price:3.15,note:{ru:'300 рублей',en:'300 RUB'}},
+  {id:'p_brawl_plus_new',img:'https://img.icons8.com/color/96/supercell.png',emoji:'🎮',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},kind:'fixed',price:3.68,note:{ru:'350 рублей',en:'350 RUB'}}]},
  {id:'ai',emoji:'🤖',title:{ru:'AI Подписки',en:'AI Subscriptions'},items:[
-  {id:'p_gpt_plus_180',img:'https://img.icons8.com/color/96/chatgpt.png',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus (Personal)'},kind:'fixed',price:1.89,note:{ru:'180 рублей / Гарантия',en:'180 RUB / Warranty'}},
-  {id:'p_gemini_18m',img:'https://img.icons8.com/color/96/google-logo.png',title:{ru:'Gemini 18 мес',en:'Gemini 18m'},kind:'fixed',price:1.05,note:{ru:'100 рублей / Гарантия',en:'100 RUB / Warranty'}}]},
+  {id:'p_gpt_plus_180',img:'https://img.icons8.com/color/96/chatgpt.png',emoji:'💬',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus (Personal)'},kind:'fixed',price:1.89,note:{ru:'180 рублей / Гарантия',en:'180 RUB / Warranty'}},
+  {id:'p_gemini_18m',img:'https://img.icons8.com/color/96/google-logo.png',emoji:'✨',title:{ru:'Gemini 18 мес',en:'Gemini 18m'},kind:'fixed',price:1.05,note:{ru:'100 рублей / Гарантия',en:'100 RUB / Warranty'}}]},
  {id:'virta',emoji:'💰',title:{ru:'Игровая Валюта',en:'Game Currency'},items:[
-  {id:'p_radmir',img:'https://img.icons8.com/color/96/get-revenue.png',title:{ru:'Radmir Вирты',en:'Radmir Virts'},kind:'perUnit',base:0.55,unit:'1kk',step:1,def:25,min:25,note:{ru:'52р за 1кк',en:'52 RUB per 1m'}},
-  {id:'p_amazing',img:'https://img.icons8.com/color/96/get-revenue.png',title:{ru:'Amazing Вирты',en:'Amazing Virts'},kind:'perUnit',base:0.47,unit:'1kk',step:1,def:25,min:25,note:{ru:'45р за 1кк',en:'45 RUB per 1m'}},
-  {id:'p_black_russia',img:'https://img.icons8.com/color/96/get-revenue.png',title:{ru:'Black Russia Вирты',en:'Black Russia Virts'},kind:'perUnit',base:0.37,unit:'1kk',step:1,def:30,min:30,note:{ru:'35р за 1кк',en:'35 RUB per 1m'}},
-  {id:'p_majestic',img:'https://img.icons8.com/color/96/get-revenue.png',title:{ru:'Majestic Вирты',en:'Majestic Virts'},kind:'perUnit',base:2.11,unit:'1kk',step:1,def:25,min:25,note:{ru:'0.20р за 1к (200р за 1кк)',en:'0.20 RUB per 1k'}},
-  {id:'p_arizona',img:'https://img.icons8.com/color/96/get-revenue.png',title:{ru:'Arizona RP Вирты',en:'Arizona RP Virts'},kind:'perUnit',base:2.63,unit:'1kkk',step:1,def:1,min:1,note:{ru:'0.25р за 1кк (250р за 1ккк)',en:'0.25 RUB per 1m'}}]}
+  {id:'p_radmir',img:'https://img.icons8.com/color/96/get-revenue.png',emoji:'🚗',title:{ru:'Radmir Вирты',en:'Radmir Virts'},kind:'perUnit',base:0.55,unit:'1kk',step:1,def:25,min:25,note:{ru:'52р за 1кк',en:'52 RUB per 1m'}},
+  {id:'p_amazing',img:'https://img.icons8.com/color/96/get-revenue.png',emoji:'🚗',title:{ru:'Amazing Вирты',en:'Amazing Virts'},kind:'perUnit',base:0.47,unit:'1kk',step:1,def:25,min:25,note:{ru:'45р за 1кк',en:'45 RUB per 1m'}},
+  {id:'p_black_russia',img:'https://img.icons8.com/color/96/get-revenue.png',emoji:'🚗',title:{ru:'Black Russia Вирты',en:'Black Russia Virts'},kind:'perUnit',base:0.37,unit:'1kk',step:1,def:30,min:30,note:{ru:'35р за 1кк',en:'35 RUB per 1m'}},
+  {id:'p_majestic',img:'https://img.icons8.com/color/96/get-revenue.png',emoji:'🚗',title:{ru:'Majestic Вирты',en:'Majestic Virts'},kind:'perUnit',base:2.11,unit:'1kk',step:25,def:25,min:25,note:{ru:'0.20р за 1к (200р за 1кк)',en:'0.20 RUB per 1k'}},
+  {id:'p_arizona',img:'https://img.icons8.com/color/96/get-revenue.png',emoji:'🚗',title:{ru:'Arizona RP Вирты',en:'Arizona RP Virts'},kind:'perUnit',base:2.63,unit:'1kkk',step:1,def:1,min:1,note:{ru:'0.25р за 1кк (250р за 1ккк)',en:'0.25 RUB per 1m'}}]}
 ];
 
 // ---- I18N ----
@@ -740,8 +753,14 @@ function productHTML(p, delay = 0){
   const off=discPct(p);
   const badge=off>0?'<div class="badge-tag">\u2212'+off+'%</div>':'';
   const old=(p.face&&off>0)?'<span class="old">'+money(Number(p.face))+'</span>':'';
-  const img = p.img ? `<img src="${p.img}" onerror="this.style.display='none'; this.nextSibling.style.display='grid'" style="width:100%;height:100%;object-fit:contain;border-radius:8px;"><div style="display:none;width:100%;height:100%;place-items:center;">${p.emoji}</div>` : p.emoji;
-  return `<div class="card" style="animation-delay: ${delay}s">${badge}<div class="pic">${img}</div><div class="pinfo"><div class="t">${esc(tt(p.title))}</div>${note}<div class="pr">${old+priceLabel(p)}</div></div><button class="add-btn" ${act}>+</button></div>`;
+  
+  // Надежный рендеринг иконки без undefined
+  let imgHtml = `<div style="width:100%;height:100%;display:grid;place-items:center;">${p.emoji || '📦'}</div>`;
+  if (p.img) {
+    imgHtml = `<img src="${p.img}" onerror="this.style.display='none'" style="width:100%;height:100%;object-fit:contain;border-radius:8px;position:absolute;inset:0;">` + imgHtml;
+  }
+
+  return `<div class="card" style="animation-delay: ${delay}s; position:relative;">${badge}<div class="pic" style="position:relative; overflow:hidden;">${imgHtml}</div><div class="pinfo"><div class="t">${esc(tt(p.title))}</div>${note}<div class="pr">${old+priceLabel(p)}</div></div><button class="add-btn" ${act}>+</button></div>`;
 }
 
 
