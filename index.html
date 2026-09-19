@@ -151,12 +151,52 @@ body{
 }
 .chip.on{background:var(--accent);color:#000;border-color:var(--accent);box-shadow: 0 4px 15px rgba(255,255,255,0.15);}
 
-/* ===== CARD ===== */
-.card{
- display:flex;align-items:center;gap:16px;
- padding:16px;border-radius:var(--radius-md);margin-bottom:12px;
- background:var(--card-bg);border:1px solid var(--border);
- transition: all 0.2s ease;
+/* ===== DESIGNER BACKGROUND ===== */
+.bg-watermark {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(-10deg);
+  font-size: 18vw;
+  font-weight: 900;
+  color: rgba(255,255,255,0.02);
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  z-index: -1;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  animation: bgFloat 20s infinite alternate ease-in-out;
+}
+@keyframes bgFloat {
+  from { transform: translate(-52%, -48%) rotate(-10deg); }
+  to { transform: translate(-48%, -52%) rotate(-8deg); }
+}
+
+/* ===== CYCLING TEXT ===== */
+.cycling-text {
+  height: 20px;
+  overflow: hidden;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+#adv-text {
+  display: block;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  transform: translateY(0);
+}
+.text-out { opacity: 0!important; transform: translateY(-10px)!important; }
+.text-in { opacity: 0!important; transform: translateY(10px)!important; }
+
+/* ===== ANIMATIONS ===== */
+.card {
+  animation: cardFadeIn 0.5s ease backwards;
+}
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .card:active{transform: scale(0.98); background: rgba(255,255,255,0.08); border-color: var(--border-bright);}
 .pic{
@@ -387,6 +427,7 @@ body{
 </style>
 </head>
 <body>
+<div class='bg-watermark'>Oncedshop</div>
 <div id='login' class='login'></div>
 <div id='sent' class='sent-screen hidden'></div>
 <div id='app'>
@@ -643,14 +684,28 @@ function viewCatalog(){
  CATALOG.forEach(c=>{chips+='<div class="chip '+(state.cat===c.id?'on':''+'"')+'" data-cat="'+c.id+'">'+c.emoji+' '+esc(tt(c.title))+'</div>';});
  chips+='</div>';
  const rateNote='<div class="hero-rate">'+T('rateL')+': 1$ \u2248 '+state.rate.toFixed(2)+' \u20bd</div>';
- const hero=state.cat==='all'?('<div class="hero"><div class="hero-badge">\u25FC\uFE0F</div><h1>'+T('heroT')+'</h1><p>'+T('heroP')+'</p>'+rateNote+'</div>'):rateNote;
+ const hero=state.cat==='all'?('<div class="hero"><h1>ONCEDSHOP</h1><div class="cycling-text"><span id="adv-text">\u041b\u0443\u0447\u0448\u0438\u0435 \u0446\u0435\u043d\u044b</span></div>'+rateNote+'</div>'):rateNote;
  let body='';
  (state.cat==='all'?CATALOG:CATALOG.filter(c=>c.id===state.cat)).forEach(c=>{
   if(state.cat==='all')body+='<div class="sec-head">'+c.emoji+' '+esc(tt(c.title))+'</div>';
-  c.items.forEach(p=>{body+=productHTML(p);});
+  c.items.forEach((p, i)=>{
+    const delay = (i % 10) * 0.05;
+    body+=productHTML(p, delay);
+  });
  });
  return chips+hero+body;
 }
+
+function productHTML(p, delay = 0){
+  const note=p.note?'<div class="n">'+esc(tt(p.note))+'</div>':'';
+  const act=(p.kind==='per1000' || p.kind==='perUnit')?"data-sheet='"+p.id+"'":"data-add='"+p.id+"'";
+  const off=discPct(p);
+  const badge=off>0?'<div class="badge-tag">\u2212'+off+'%</div>':'';
+  const old=(p.face&&off>0)?'<span class="old">'+money(Number(p.face))+'</span>':'';
+  const img = p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">` : p.emoji;
+  return `<div class="card" style="animation-delay: ${delay}s">${badge}<div class="pic">${img}</div><div class="pinfo"><div class="t">${esc(tt(p.title))}</div>${note}<div class="pr">${old+priceLabel(p)}</div></div><button class="add-btn" ${act}>+</button></div>`;
+}
+
 
 function viewCart(){
  if(!state.cart.length)return '<div class="empty"><span class="big">\u2665</span><b>'+T('emptyCart')+'</b><div style="margin-top:8px">'+T('emptyCartP')+'</div></div>';
@@ -820,6 +875,29 @@ function initDragScroll(el) {
   el.style.cursor = 'grab';
 }
 
+const ADV = [
+  {ru:'\u041b\u0443\u0447\u0448\u0438\u0435 \u0446\u0435\u043d\u044b', en:'Best Prices'},
+  {ru:'\u041c\u0433\u043d\u043e\u0432\u0435\u043d\u043d\u0430\u044f \u0432\u044b\u0434\u0430\u0447\u0430', en:'Instant Delivery'},
+  {ru:'\u0413\u0430\u0440\u0430\u043d\u0442\u0438\u044f \u043a\u0430\u0447\u0435\u0441\u0442\u0432\u0430', en:'Quality Guarantee'},
+  {ru:'\u041f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0430 24/7', en:'24/7 Support'}
+];
+let advIdx = 0;
+
+function initCyclingText() {
+  setInterval(() => {
+    const el = document.getElementById('adv-text');
+    if(!el) return;
+    el.classList.add('text-out');
+    setTimeout(() => {
+      advIdx = (advIdx + 1) % ADV.length;
+      el.textContent = tt(ADV[advIdx]);
+      el.classList.remove('text-out');
+      el.classList.add('text-in');
+      setTimeout(() => el.classList.remove('text-in'), 50);
+    }, 500);
+  }, 3000);
+}
+
 function init(){
  document.documentElement.lang=state.lang;
  if(tg){
@@ -833,6 +911,7 @@ function init(){
  renderLogin();
  if(document.getElementById('login')&&state.authed)document.getElementById('login').classList.add('hidden');
  render();
+ initCyclingText();
  setTimeout(() => {
    updateMovers();
    const chips = document.querySelector('.chips');
