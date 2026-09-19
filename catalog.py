@@ -49,11 +49,11 @@ CATALOG = [
          'kind': 'per1000', 'base': 0.37, 'unit': '1kk', 'step': 1, 'def': 30, 'min': 30,
          'note': {'ru': '35р за 1кк', 'en': '35 RUB per 1m'}},
         {'id': 'p_majestic', 'emoji': '🚗', 'title': {'ru': 'Majestic Вирты', 'en': 'Majestic Virts'},
-         'kind': 'per1000', 'base': 0.0021, 'unit': '1k', 'step': 1000, 'def': 5500, 'min': 5500,
-         'note': {'ru': '0.20р за 1к', 'en': '0.20 RUB per 1k'}},
+         'kind': 'per1000', 'base': 2.11, 'unit': '1kk', 'step': 1, 'def': 25, 'min': 25,
+         'note': {'ru': '0.20р за 1к (200р за 1кк)', 'en': '0.20 RUB per 1k'}},
         {'id': 'p_arizona', 'emoji': '🚗', 'title': {'ru': 'Arizona RP Вирты', 'en': 'Arizona RP Virts'},
-         'kind': 'per1000', 'base': 0.0026, 'unit': '1kk', 'step': 1000, 'def': 5700, 'min': 5700,
-         'note': {'ru': '0.25р за 1кк', 'en': '0.25 RUB per 1m'}},
+         'kind': 'per1000', 'base': 2.63, 'unit': '1kkk', 'step': 1, 'def': 1, 'min': 1,
+         'note': {'ru': '0.25р за 1кк (250р за 1ккк)', 'en': '0.25 RUB per 1m'}},
     ]},
 ]
 
