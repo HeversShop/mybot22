@@ -961,13 +961,16 @@ function init(){
  render();
  initCyclingText();
  setTimeout(() => {
+   const splash = document.getElementById('splash');
+   if(splash) splash.classList.add('hide');
    updateMovers();
    const chips = document.querySelector('.chips');
    if(chips) initDragScroll(chips);
- }, 100);
+ }, 1800); // Показываем заставку 1.8 секунды
  loadRate();
  loadMe();
 }
+
 init();
 </script>
 </body>
