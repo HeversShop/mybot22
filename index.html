@@ -7,23 +7,22 @@
 <script src='https://telegram.org/js/telegram-web-app.js'></script>
 <style>
 :root{
-  --bg: #050505;
-  --bg-elevated: #0f0f0f;
+  --bg: #000000;
+  --bg-card: #0a0a0a;
   --accent: #ffffff;
-  --primary: #5865F2; /* Эстетичный фиолетово-синий */
+  --primary: #ffffff;
   --text: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.65);
-  --text-muted: rgba(255, 255, 255, 0.4);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-bright: rgba(255, 255, 255, 0.15);
-  --card-bg: rgba(255, 255, 255, 0.04);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.45);
+  --border: rgba(255, 255, 255, 0.1);
+  --border-bright: rgba(255, 255, 255, 0.2);
+  --radius-pill: 99px;
   --radius-lg: 20px;
-  --radius-md: 14px;
-  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --radius-md: 16px;
   --font-main: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;}
-html,body{margin:0;padding:0;min-height:100%;background:var(--bg);}
+html,body{margin:0;padding:0;min-height:100%;background:var(--bg);color-scheme: dark;}
 body{
  font-family:var(--font-main);
  color:var(--text);
@@ -31,17 +30,54 @@ body{
  overflow-x:hidden;
  -webkit-font-smoothing: antialiased;
 }
-#app{width:100%;max-width:480px;min-height:100vh;padding-bottom:120px;position:relative;}
+#app{width:100%;max-width:500px;min-height:100vh;padding-bottom:120px;position:relative;}
+
+/* ===== PREMIUM TOGGLES ===== */
+.pill-group {
+  display: flex;
+  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+  position: relative;
+  gap: 2px;
+  border: 1px solid var(--border);
+}
+.pill-group button {
+  all: unset;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  z-index: 2;
+  position: relative;
+  transition: color 0.3s ease;
+  min-width: 32px;
+  text-align: center;
+}
+.pill-group button.on {
+  color: #000;
+}
+.pill-mover {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: var(--radius-pill);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 1;
+}
 
 /* ===== TOPBAR ===== */
 .topbar{
  position:sticky;top:0;z-index:100;
  display:flex;align-items:center;justify-content:space-between;
- padding:18px 20px 14px;
- background:rgba(5, 5, 5, 0.8);
+ padding:20px 20px 16px;
+ background:rgba(0, 0, 0, 0.85);
  backdrop-filter: blur(20px);
  -webkit-backdrop-filter: blur(20px);
- border-bottom:1px solid var(--border);
+ border-bottom: 1px solid var(--border);
 }
 .brand{display:flex;align-items:center;gap:12px;}
 .logo{
@@ -360,11 +396,19 @@ body{
     <div class='brand-sub' id='tagline'>Digital Store</div>
    </div>
   </div>
-   <div class='topbar-right'>
-    <div class='pill-group'>
-     <button id='cusd' data-cur='USD'>$</button>
-     <button id='crub' data-cur='RUB'>&#8381;</button>
-    </div>
+  <div class='topbar-right'>
+   <div class='pill-group'>
+    <div class='pill-mover' id='curMover'></div>
+    <button id='cusd' data-cur='USD'>$</button>
+    <button id='crub' data-cur='RUB'>₽</button>
+   </div>
+   <div class='pill-group'>
+    <div class='pill-mover' id='langMover'></div>
+    <button id='lru' data-lang='ru'>RU</button>
+    <button id='len' data-lang='en'>EN</button>
+   </div>
+  </div>
+
 
    <div class='pill-group'>
     <button id='lru' data-lang='ru'>RU</button>
@@ -473,6 +517,7 @@ st_sent:'sent',items:'items',discount:'Discount'}
 let state={
  lang:localStorage.getItem('os_lang')||'ru',
  authed:localStorage.getItem('os_authed')==='1',
+ userData:JSON.parse(localStorage.getItem('os_user')||'null'),
  tab:'catalog',cat:'all',
  currency:localStorage.getItem('os_cur')||'USD',
  rate:parseFloat(localStorage.getItem('os_rate')||'')||USD_RUB_FALLBACK,
@@ -507,6 +552,7 @@ function minLine(p){return p.kind==='per1000'?Math.max(withMk(p.min||0),0):0;}
 function persist(){
  localStorage.setItem('os_lang',state.lang);
  localStorage.setItem('os_authed',state.authed?'1':'0');
+ localStorage.setItem('os_user',JSON.stringify(state.userData));
  localStorage.setItem('os_cur',state.currency);
  localStorage.setItem('os_rate',String(state.rate));
  localStorage.setItem('os_cart',JSON.stringify(state.cart));
@@ -536,6 +582,20 @@ function upsert1k(p,units){const line=price1k(p,units);let e=state.cart.find(c=>
 function changeQty(id,d){const e=state.cart.find(c=>c.id===id);if(!e)return;const p=findProduct(id);e.qty+=d;if(e.qty<=0)state.cart=state.cart.filter(c=>c.id!==id);else e.line=Math.round(unitPrice(p)*e.qty*100)/100;persist();haptic('light');render();updateBadges();updateMain();}
 function removeItem(id){state.cart=state.cart.filter(c=>c.id!==id);persist();haptic('light');toast(T('removed'));render();updateBadges();updateMain();}
 
+function updateMovers(){
+  const curBtn = document.getElementById(state.currency === 'RUB' ? 'crub' : 'cusd');
+  const langBtn = document.getElementById(state.lang === 'ru' ? 'lru' : 'len');
+  const cm = document.getElementById('curMover'), lm = document.getElementById('langMover');
+  if(curBtn && cm) {
+    cm.style.width = curBtn.offsetWidth + 'px';
+    cm.style.left = curBtn.offsetLeft + 'px';
+  }
+  if(langBtn && lm) {
+    lm.style.width = langBtn.offsetWidth + 'px';
+    lm.style.left = langBtn.offsetLeft + 'px';
+  }
+}
+
 function render(){
  document.getElementById('tagline').textContent=T('tagline');
  document.getElementById('nl-cat').textContent=T('catalog');
@@ -546,6 +606,7 @@ function render(){
  const cusd=document.getElementById('cusd'),crub=document.getElementById('crub');
  if(cusd)cusd.className=state.currency==='USD'?'on':'';
  if(crub)crub.className=state.currency==='RUB'?'on':'';
+ updateMovers();
  ['catalog','cart','cabinet'].forEach(t=>document.getElementById('nav-'+t).className=state.tab===t?'on':'');
  const v=document.getElementById('view');
  if(state.tab==='catalog')v.innerHTML=viewCatalog();
@@ -585,9 +646,10 @@ function viewCart(){
  if(!state.cart.length)return '<div class="empty"><span class="big">\u2665</span><b>'+T('emptyCart')+'</b><div style="margin-top:8px">'+T('emptyCartP')+'</div></div>';
  let lines='';
  state.cart.forEach(c=>{
+  const title = c.title ? tt(c.title) : 'Product';
   const sub=c.kind==='per1000'?(numf(c.qty)+' '+c.unit):(money(c.line/c.qty)+' \u00d7 '+c.qty);
   const ctrl=c.kind==='per1000'?('<button class="rm" data-rm="'+c.id+'">&times;</button>'):('<div class="qtybox"><button class="qbtn" data-qty="'+c.id+'" data-d="-1">\u2212</button><span class="qn">'+c.qty+'</span><button class="qbtn" data-qty="'+c.id+'" data-d="1">+</button></div>');
-  lines+='<div class="cart-item"><div class="pic">'+c.emoji+'</div><div class="t">'+esc(tt(c.title))+'<small>'+sub+'</small></div><div class="ln">'+money(c.line)+'</div>'+ctrl+'</div>';
+  lines+='<div class="cart-item"><div class="pic">'+(c.emoji||'📦')+'</div><div class="t">'+esc(title)+'<small>'+sub+'</small></div><div class="ln">'+money(c.line)+'</div>'+ctrl+'</div>';
  });
  const total=cartTotal(),ok=total>=MIN_ORDER,pct=Math.min(100,Math.round(total/MIN_ORDER*100));
  const progress=ok?'':('<div class="progress"><i style="width:'+pct+'%"></i></div><div class="hint">'+T('needMore')+': '+money(Math.max(0,MIN_ORDER-total))+'</div>');
@@ -604,8 +666,9 @@ function viewCabinet(){
  const uname=u.username?('@'+esc(u.username)):'';
  const init=esc((u.first_name||'O').charAt(0).toUpperCase());
  const ava=u.photo_url?'<img src="'+esc(u.photo_url)+'" alt="" />':init;
+ const phone = state.userData ? '<div style="margin-top:4px;color:var(--good);font-weight:700;font-size:12px;">📞 ' + esc(state.userData.phone_number) + '</div>' : '';
  const spent=state.history.reduce((s,o)=>s+(o.total||0),0);
- const profile='<div class="profile"><div class="ava">'+ava+'</div><div><div class="nm">'+name+'</div>'+(uname?'<div class="un">'+uname+'</div>':'')+'<div class="pid">ID: '+esc(String(u.id))+'</div></div></div>';
+ const profile='<div class="profile"><div class="ava">'+ava+'</div><div><div class="nm">'+name+'</div>'+(uname?'<div class="un">'+uname+'</div>':'') + phone + '<div class="pid">ID: '+esc(String(u.id))+'</div></div></div>';
  const stats='<div class="stats"><div class="stat"><b>'+state.history.length+'</b><span>'+T('ordersN')+'</span></div><div class="stat"><b>'+money(spent)+'</b><span>'+T('spent')+'</span></div></div>';
  const bal=state.balance||0,disc=state.discount||0;
  const balCard='<div class="bal-card"><div class="bal-row"><div><div class="bal-label">'+T('balance')+'</div><div class="bal-amount">'+money(bal)+'</div></div><button class="cta" style="width:auto;padding:10px 16px;margin:0" data-action="topup">'+T('topupBtn')+'</button></div>'+(disc>0?'<div style="margin-top:8px;font-size:12px;color:var(--muted)">\uD83C\uDFF7 '+T('discount')+': \u2212'+Math.round(disc)+'%</div>':'')+'</div>';
@@ -706,9 +769,15 @@ function renderLogin(){
  const ru=state.lang!=='en';
  el.innerHTML='<div class="lcard"><div class="lic">\u25FC\uFE0F</div><div class="lt">Oncedshop</div><div class="ls">'+(ru?'\u0412\u043e\u0439\u0434\u0438\u0442\u0435, \u0447\u0442\u043e\u0431\u044b \u043e\u0444\u043e\u0440\u043c\u0438\u0442\u044c \u0437\u0430\u043a\u0430\u0437.':'Log in to place your order.')+'</div><button class="cta" data-login="1">'+(ru?'\uD83D\uDCF1 \u0412\u043e\u0439\u0442\u0438':'\uD83D\uDCF1 Continue')+'</button><div class="lhint">'+(ru?'\u0422\u043e\u043b\u044c\u043a\u043e \u043d\u043e\u043c\u0435\u0440 \u0438\u0437 Telegram.':'We only get your Telegram number.')+'</div></div>';
 }
-function setAuthed(){state.authed=true;persist();const el=document.getElementById('login');if(el)el.classList.add('hidden');render();}
+function setAuthed(data){
+ state.authed=true;
+ if(data && data.phone_number) state.userData = data;
+ persist();
+ const el=document.getElementById('login');if(el)el.classList.add('hidden');
+ render();
+}
 function doLogin(){
- if(tg&&typeof tg.requestContact==='function'){try{tg.requestContact(r=>{if(r===true||(r&&(r.status==='sent'||r.status==='allowed')))setAuthed();});}catch(e){setAuthed();}}
+ if(tg&&typeof tg.requestContact==='function'){try{tg.requestContact(r=>{if(r && r.response && r.response.contact)setAuthed(r.response.contact); else if(r===true) setAuthed();});}catch(e){setAuthed();}}
  else setAuthed();
 }
 function showSent(oid,ok){
@@ -734,6 +803,7 @@ function init(){
  renderLogin();
  if(document.getElementById('login')&&state.authed)document.getElementById('login').classList.add('hidden');
  render();
+ setTimeout(updateMovers, 100);
  loadRate();
  loadMe();
 }
