@@ -35,24 +35,26 @@ body{
 /* ===== PREMIUM TOGGLES ===== */
 .pill-group {
   display: flex;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.08);
   border-radius: var(--radius-pill);
-  padding: 3px;
+  padding: 2px;
   position: relative;
-  gap: 2px;
   border: 1px solid var(--border);
+  width: 84px; /* Фиксированная ширина группы */
+  height: 32px;
+  align-items: center;
 }
 .pill-group button {
   all: unset;
-  padding: 6px 12px;
+  flex: 1;
+  height: 100%;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--text-muted);
   cursor: pointer;
   z-index: 2;
   position: relative;
   transition: color 0.3s ease;
-  min-width: 32px;
   text-align: center;
 }
 .pill-group button.on {
@@ -60,12 +62,12 @@ body{
 }
 .pill-mover {
   position: absolute;
-  top: 3px;
-  left: 3px;
-  bottom: 3px;
+  top: 2px;
+  bottom: 2px;
+  width: 40px; /* Ровно половина минус отступы */
   background: #fff;
   border-radius: var(--radius-pill);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
 }
 
@@ -583,17 +585,9 @@ function changeQty(id,d){const e=state.cart.find(c=>c.id===id);if(!e)return;cons
 function removeItem(id){state.cart=state.cart.filter(c=>c.id!==id);persist();haptic('light');toast(T('removed'));render();updateBadges();updateMain();}
 
 function updateMovers(){
-  const curBtn = document.getElementById(state.currency === 'RUB' ? 'crub' : 'cusd');
-  const langBtn = document.getElementById(state.lang === 'ru' ? 'lru' : 'len');
   const cm = document.getElementById('curMover'), lm = document.getElementById('langMover');
-  if(curBtn && cm) {
-    cm.style.width = curBtn.offsetWidth + 'px';
-    cm.style.left = curBtn.offsetLeft + 'px';
-  }
-  if(langBtn && lm) {
-    lm.style.width = langBtn.offsetWidth + 'px';
-    lm.style.left = langBtn.offsetLeft + 'px';
-  }
+  if(cm) cm.style.transform = state.currency === 'RUB' ? 'translateX(40px)' : 'translateX(0)';
+  if(lm) lm.style.transform = state.lang === 'en' ? 'translateX(40px)' : 'translateX(0)';
 }
 
 function render(){
@@ -616,7 +610,12 @@ function render(){
 }
 function go(tab){state.tab=tab;haptic('light');render();window.scrollTo(0,0);if(tab==='cabinet')loadMe();}
 function setLang(l){state.lang=l;document.documentElement.lang=l;persist();render();}
-function setCat(c){state.cat=c;render();}
+function setCat(c){
+  state.cat=c;
+  render();
+  const chips = document.querySelector('.chips');
+  if(chips) initDragScroll(chips);
+}
 function priceLabel(p){return p.kind==='per1000'?(money(withMk(p.base))+' <small>/ '+T('perK')+' '+p.unit+'</small>'):money(unitPrice(p));}
 
 function productHTML(p){
@@ -666,13 +665,13 @@ function viewCabinet(){
  const uname=u.username?('@'+esc(u.username)):'';
  const init=esc((u.first_name||'O').charAt(0).toUpperCase());
  const ava=u.photo_url?'<img src="'+esc(u.photo_url)+'" alt="" />':init;
- const phone = state.userData ? '<div style="margin-top:4px;color:var(--good);font-weight:700;font-size:12px;">📞 ' + esc(state.userData.phone_number) + '</div>' : '';
+ const phone = state.userData ? '<div style="margin-top:4px;color:#4ade80;font-weight:700;font-size:12px;">\uD83D\uDCDE ' + esc(state.userData.phone_number) + '</div>' : '';
  const spent=state.history.reduce((s,o)=>s+(o.total||0),0);
  const profile='<div class="profile"><div class="ava">'+ava+'</div><div><div class="nm">'+name+'</div>'+(uname?'<div class="un">'+uname+'</div>':'') + phone + '<div class="pid">ID: '+esc(String(u.id))+'</div></div></div>';
  const stats='<div class="stats"><div class="stat"><b>'+state.history.length+'</b><span>'+T('ordersN')+'</span></div><div class="stat"><b>'+money(spent)+'</b><span>'+T('spent')+'</span></div></div>';
  const bal=state.balance||0,disc=state.discount||0;
- const balCard='<div class="bal-card"><div class="bal-row"><div><div class="bal-label">'+T('balance')+'</div><div class="bal-amount">'+money(bal)+'</div></div><button class="cta" style="width:auto;padding:10px 16px;margin:0" data-action="topup">'+T('topupBtn')+'</button></div>'+(disc>0?'<div style="margin-top:8px;font-size:12px;color:var(--muted)">\uD83C\uDFF7 '+T('discount')+': \u2212'+Math.round(disc)+'%</div>':'')+'</div>';
- const tiles='<div class="tile" data-action="support"><span class="ic">\uD83D\uDCE8</span><div>'+T('support')+'<small>'+T('supportS')+'</small></div><span class="ar">\u203A</span></div><div class="tile" data-action="togglecur"><span class="ic">\uD83D\uDCB1</span><div>'+T('currency')+'<small>'+state.currency+' \u00b7 1$ \u2248 '+state.rate.toFixed(2)+' \u20bd</small></div><span class="ar">\u21C4</span></div><div class="tile" data-action="cryptoinfo"><span class="ic">\uD83E\uDE99</span><div>'+T('payCrypto')+'<small>TON, USDT, SOL, BTC</small></div><span class="ar">\u203A</span></div><div class="tile" data-action="togglelang"><span class="ic">\uD83C\uDF10</span><div>'+T('lang')+'<small>'+T('langS')+'</small></div><span class="ar">\u21C4</span></div>';
+ const balCard='<div class="bal-card"><div class="bal-row"><div><div class="bal-label">'+T('balance')+'</div><div class="bal-amount">'+money(bal)+'</div></div><button class="cta" style="width:auto;padding:10px 16px;margin:0" data-action="topup">'+T('topupBtn')+'</button></div>'+(disc>0?'<div style="margin-top:8px;font-size:12px;color:var(--text-muted)">\uD83C\uDFF7 '+T('discount')+': \u2212'+Math.round(disc)+'%</div>':'')+'</div>';
+ const tiles='<div class="tile" data-action="support"><span class="ic">\uD83D\uDCE8</span><div>'+T('support')+'<small>'+T('supportS')+'</small></div><span class="ar">\u203A</span></div><div class="tile" data-action="togglecur"><span class="ic">\uD83D\uDCB1</span><div>'+T('currency')+'<small>'+state.currency+'</small></div><span class="ar">\u21C4</span></div><div class="tile" data-action="cryptoinfo"><span class="ic">\uD83E\uDE99</span><div>'+T('payCrypto')+'<small>TON, USDT, SOL, BTC</small></div><span class="ar">\u203A</span></div><div class="tile" data-action="togglelang"><span class="ic">\uD83C\uDF10</span><div>'+T('lang')+'<small>'+T('langS')+'</small></div><span class="ar">\u21C4</span></div>';
  let ords='<div class="label">'+T('orders')+'</div>';
  if(!state.history.length)ords+='<div class="empty" style="padding:24px"><span class="big">\uD83D\uDCCB</span>'+T('noOrders')+'</div>';
  else state.history.slice(0,15).forEach(o=>{const d=new Date(o.ts).toLocaleDateString(state.lang==='ru'?'ru-RU':'en-US');ords+='<div class="ord"><div class="top"><span class="oid">'+esc(o.id)+'</span><span class="st">'+T('st_'+(o.status||'sent'))+'</span></div><div class="bt"><span>'+d+'</span><span>'+o.items+' '+T('items')+' \u2022 '+money(o.total)+'</span></div></div>';});
