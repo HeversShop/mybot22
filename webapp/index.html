@@ -16,7 +16,6 @@
   --border-bright: rgba(255, 255, 255, 0.2);
   --radius-pill: 99px;
   --radius-lg: 24px;
-  --radius-md: 18px;
   --font-main: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;}
@@ -32,78 +31,62 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 @keyframes logoPulse{from{transform:scale(1);}to{transform:scale(1.1);box-shadow:0 0 30px rgba(255,255,255,0.2);}}
 
 /* ===== TOPBAR ===== */
-.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
 .brand{display:flex;align-items:center;gap:12px;}
 .logo-sm{width:38px;height:38px;border-radius:11px;background:#fff;display:grid;place-items:center;font-size:18px;font-weight:900;color:#000;}
-.brand-name{font-size:17px;font-weight:800;letter-spacing:-0.3px;}
 
 .pill-group{display:flex;background:rgba(255,255,255,0.08);border-radius:var(--radius-pill);padding:2px;position:relative;border:1px solid var(--border);width:84px;height:32px;}
-.pill-group button{all:unset;flex:1;height:100%;font-size:11px;font-weight:800;color:var(--text-muted);cursor:pointer;z-index:2;position:relative;text-align:center;transition:color 0.3s;}
+.pill-group button{all:unset;flex:1;height:100%;font-size:11px;font-weight:800;color:var(--text-muted);cursor:pointer;z-index:2;position:relative;text-align:center;}
 .pill-group button.on{color:#000;}
-.pill-mover{position:absolute;top:2px;bottom:2px;width:40px;background:#fff;border-radius:var(--radius-pill);transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);z-index:1;}
+.pill-mover{position:absolute;top:2px;bottom:2px;width:40px;background:#fff;border-radius:var(--radius-pill);transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);z-index:1;pointer-events:none;}
 
 /* ===== HERO & BLACK HOLE ===== */
-.hero{margin:16px;padding:32px 24px;border-radius:var(--radius-lg);background:linear-gradient(145deg,rgba(255,255,255,0.06),rgba(0,0,0,0));border:1px solid var(--border);position:relative;overflow:hidden; cursor: default;}
-.hero h1{margin:0;font-size:28px;font-weight:900;letter-spacing:-1px; position: relative; z-index: 5;}
+.hero{margin:16px;padding:32px 24px;border-radius:var(--radius-lg);background:linear-gradient(145deg,rgba(255,255,255,0.06),rgba(0,0,0,0));border:1px solid var(--border);position:relative;overflow:hidden;}
+.hero h1{margin:0;font-size:28px;font-weight:900;letter-spacing:-1px;position:relative;z-index:5;}
 .black-hole {
-  position: absolute; right: -20px; top: -20px; width: 120px; height: 120px;
-  background: radial-gradient(circle, #000 20%, rgba(20,20,20,0.8) 40%, transparent 70%);
-  border-radius: 50%; opacity: 0.4; transform: scale(0.8); transition: 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  pointer-events: none; z-index: 1;
+  position: absolute; right: -20px; top: -10px; width: 100px; height: 100px;
+  background: radial-gradient(circle, #000 20%, #111 40%, transparent 70%);
+  border-radius: 50%; opacity: 0.5; animation: holeSpin 10s linear infinite;
+  z-index: 1; border: 1px solid rgba(255,255,255,0.05);
 }
-.hero:hover .black-hole { opacity: 1; transform: scale(1.5) rotate(180deg); box-shadow: 0 0 40px 10px rgba(255,255,255,0.05); }
-.hero:hover h1 { color: #fff; text-shadow: 0 0 20px rgba(255,255,255,0.3); }
-
-/* ===== CHIPS ===== */
-.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 20px 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.chips::-webkit-scrollbar{display:none;}
-.chip{flex:0 0 auto;padding:10px 18px;border-radius:14px;font-size:13px;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;transition:0.2s;}
-.chip.on{background:#fff;color:#000;box-shadow:0 4px 15px rgba(255,255,255,0.2);}
+@keyframes holeSpin { from{transform:rotate(0) scale(1);} to{transform:rotate(360deg) scale(1.1);} }
+.hero:hover .black-hole { opacity: 1; transform: scale(2); box-shadow: 0 0 50px rgba(255,255,255,0.1); }
 
 /* ===== CARDS ===== */
 .card{display:flex;align-items:center;gap:16px;padding:16px;border-radius:20px;margin:0 16px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);transition:0.2s;animation:cardIn 0.5s ease backwards;}
 @keyframes cardIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
-.card:active{transform:scale(0.97);background:rgba(255,255,255,0.08);}
-.pic{width:54px;height:54px;flex:0 0 54px;border-radius:14px;background:rgba(255,255,255,0.03);display:grid;place-items:center;font-size:26px;overflow:hidden;position:relative;}
-.pic img{width:100%;height:100%;object-fit:contain; padding: 4px;}
+.pic{width:54px;height:54px;flex:0 0 54px;border-radius:14px;background:rgba(255,255,255,0.03);display:grid;place-items:center;overflow:hidden;position:relative;}
+.pic img{width:80%;height:80%;object-fit:contain;}
 
-.pinfo{flex:1;min-width:0;}
-.pinfo .t{font-size:15px;font-weight:700;margin-bottom:2px;}
-.pinfo .pr{font-size:16px;font-weight:800;margin-top:4px;color:var(--accent);}
-.add-btn{all:unset;width:44px;height:44px;border-radius:14px;background:#fff;color:#000;display:grid;place-items:center;font-size:24px;cursor:pointer;transition:0.2s;}
-.add-btn:active{transform:scale(0.85);}
+.add-btn{all:unset;width:44px;height:44px;border-radius:14px;background:#fff;color:#000;display:grid;place-items:center;font-size:24px;cursor:pointer;margin-left:auto;}
+
+/* ===== NAV ===== */
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;width:calc(100% - 32px);max-width:440px;z-index:100;display:flex;padding:10px;background:rgba(20,20,20,0.85);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.12);border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,0.5);}
+.nav button{all:unset;flex:1;text-align:center;padding:8px 0;color:var(--text-muted);font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+.nav button.on{color:#fff;}
+.nav button .ic{font-size:22px;opacity:0.6;}
+.nav button.on .ic{opacity:1;transform:translateY(-2px);}
+
+/* ===== TILES ===== */
+.tile{display:flex;align-items:center;gap:14px;padding:18px;background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:18px;margin-bottom:12px;cursor:pointer;}
+.tile small{display:block;font-size:11px;color:var(--text-muted);margin-top:2px;}
 
 /* ===== REVIEWS ===== */
 .rev-card{padding:16px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:18px;margin:0 16px 12px;}
-.rev-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.rev-user{font-weight:800;font-size:14px;color:var(--accent);}
-.rev-date{font-size:11px;color:var(--text-muted);}
-.rev-text{font-size:14px;line-height:1.5;color:var(--text-secondary);}
-.rev-stars{color:#ffb800;font-size:12px;margin-top:4px;}
+.rev-top{display:flex;justify-content:space-between;font-size:13px;margin-bottom:8px;}
+.rev-text{font-size:14px;color:var(--text-secondary);line-height:1.5;}
 
-/* ===== NAV ===== */
-.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;width:calc(100% - 32px);max-width:440px;z-index:100;display:flex;padding:8px;background:rgba(20,20,20,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.12);border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,0.5);transition:0.3s;}
-.nav button{all:unset;flex:1;text-align:center;padding:8px 0;color:var(--text-muted);font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
-.nav button.on{color:#fff;}
-.nav button .ic{font-size:22px;opacity:0.6;transition:0.2s;}
-.nav button.on .ic{opacity:1;transform:translateY(-2px);}
-
-.bg-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-10deg);font-size:18vw;font-weight:900;color:rgba(255,255,255,0.015);z-index:-1;text-transform:uppercase;pointer-events:none;user-select:none;}
-.backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);opacity:0;pointer-events:none;transition:0.3s;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px);}
+.backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);opacity:0;pointer-events:none;transition:0.3s;display:flex;align-items:flex-end;justify-content:center;}
 .backdrop.show{opacity:1;pointer-events:auto;}
-.sheet{width:100%;max-width:500px;background:#0f0f0f;border-top:1px solid var(--border-bright);border-radius:32px 32px 0 0;padding:24px 24px 40px;transform:translateY(100%);transition:0.4s cubic-bezier(0.4,0,0.2,1);max-height:85vh;overflow-y:auto;}
+.sheet{width:100%;max-width:500px;background:#0f0f0f;border-top:1px solid var(--border-bright);border-radius:32px 32px 0 0;padding:24px 24px 40px;transform:translateY(100%);transition:0.4s cubic-bezier(0.4,0,0.2,1);}
 .backdrop.show .sheet{transform:translateY(0);}
-.backdrop.show ~ .nav{transform:translate(-50%,120px);opacity:0;}
-
-#toast{position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;opacity:0;transition:0.3s;pointer-events:none;z-index:1000}
 </style>
 </head>
 <body>
 <div id='splash' class='splash'><div class='splash-logo'>O</div></div>
-<div class='bg-watermark'>Oncedshop</div>
 <div id='app'>
   <div class='topbar'>
-    <div class='brand'><div class='logo-sm'>O</div><div><div class='brand-name'>Oncedshop</div><div style='font-size:9px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px'>Digital Store</div></div></div>
+    <div class='brand'><div class='logo-sm'>O</div><div style='font-weight:800'>Oncedshop</div></div>
     <div style='display:flex'>
       <div class='pill-group'><div class='pill-mover' id='curMover'></div><button data-cur='USD'>$</button><button data-cur='RUB'>₽</button></div>
       <div class='pill-group'><div class='pill-mover' id='langMover'></div><button data-lang='ru'>RU</button><button data-lang='en'>EN</button></div>
@@ -111,87 +94,73 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
   </div>
   <div id='view'></div>
 </div>
-<div class='nav' id='nav-bar'>
-  <button id='nav-catalog' data-tab='catalog'><span class='ic'>🛍️</span><span>Каталог</span></button>
-  <button id='nav-reviews' data-tab='reviews'><span class='ic'>💬</span><span>Отзывы</span></button>
-  <button id='nav-cart' data-tab='cart'><span class='ic'>❤️</span><span>Корзина</span><span id='cartBadge' style='display:none'>0</span></button>
-  <button id='nav-cabinet' data-tab='cabinet'><span class='ic'>👤</span><span>Профиль</span></button>
+<div class='nav'>
+  <button id='nav-cat' data-tab='catalog'><span class='ic'>🛍️</span><span>Каталог</span></button>
+  <button id='nav-rev' data-tab='reviews'><span class='ic'>💬</span><span>Отзывы</span></button>
+  <button id='nav-prof' data-tab='cabinet'><span class='ic'>👤</span><span>Профиль</span></button>
 </div>
-<div class='backdrop' id='backdrop'><div class='sheet' id='sheet'></div></div>
-<div id='toast'></div>
+<div class='backdrop' id='backdrop' onclick="closeSheet()"><div class='sheet' id='sheet' onclick="event.stopPropagation()"></div></div>
 
 <script>
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 const CATALOG = [
-  {id:'stars',emoji:'⭐',title:{ru:'Telegram Stars',en:'Stars'},items:[{id:'p1',title:{ru:'Stars 1000',en:'Stars 1000'},img:'https://img.icons8.com/color/96/telegram-app.png',base:12,unit:'Stars'}]},
-  {id:'tiktok',emoji:'📱',title:{ru:'TikTok',en:'TikTok'},items:[{id:'p2',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.0105,unit:'Монет',kind:'perUnit'}]},
-  {id:'virta',emoji:'💰',title:{ru:'Вирты',en:'Virts'},items:[
-    {id:'p3',title:{ru:'Majestic RP',en:'Majestic'},img:'https://img.icons8.com/fluency/96/car.png',base:2.11,unit:'1kk',kind:'perUnit',note:{ru:'0.20р за 1к',en:'0.20 RUB per 1k'}},
-    {id:'p4',title:{ru:'Arizona RP',en:'Arizona'},img:'https://img.icons8.com/fluency/96/money-bag.png',base:2.63,unit:'1kkk',kind:'perUnit',note:{ru:'0.25р за 1кк',en:'0.25 RUB per 1m'}}
-  ]},
-  {id:'ai',emoji:'🤖',title:{ru:'AI Подписки',en:'AI Subs'},items:[
-    {id:'p5',title:{ru:'ChatGPT Plus',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:3.15,unit:'мес'},
-    {id:'p6',title:{ru:'Gemini 18m',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:1.05,unit:'акк'}
+  {id:'stars',title:{ru:'Telegram Stars',en:'Stars'},items:[{id:'p1',title:{ru:'Stars 1000',en:'Stars 1000'},img:'https://img.icons8.com/color/96/telegram-app.png',base:12}]},
+  {id:'tiktok',title:{ru:'TikTok',en:'TikTok'},items:[{id:'p2',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.0105}]},
+  {id:'virta',title:{ru:'Вирты',en:'Virts'},items:[
+    {id:'p3',title:{ru:'Majestic RP',en:'Majestic'},img:'https://img.icons8.com/fluency/96/car.png',base:2.11},
+    {id:'p4',title:{ru:'Arizona RP',en:'Arizona'},img:'https://img.icons8.com/fluency/96/money-bag.png',base:2.63}
   ]}
 ];
-
 const REVIEWS = [
-  {u:'Аноним', d:'Сегодня, 14:22', t:'Все пришло быстро, спасибо! Лучшие цены на вирты.', s:5},
-  {u:'Аноним', d:'Вчера, 21:05', t:'Брал старс, выдали за 5 минут. Рекомендую.', s:5},
-  {u:'Аноним', d:'18.09.2026, 09:40', t:'Маджестик пришел за 15 минут. Топ сервис!', s:5},
-  {u:'Аноним', d:'15.09.2026, 18:12', t:'ChatGPT работает идеально. Гарантия на месте.', s:5},
-  {u:'Аноним', d:'12.09.2026, 23:55', t:'Лучший шоп, всё честно и без обмана.', s:5},
-  {u:'Аноним', d:'08.09.2026, 11:20', t:'Брал робуксы, пришлось подождать 3 дня, но всё пришло с комиссией!', s:5},
-  {u:'Аноним', d:'05.09.2026, 14:15', t:'TikTok монеты зачислили очень быстро. Спасибо!', s:5},
-  {u:'Аноним', d:'01.09.2026, 20:30', t:'Цены реально ниже чем везде. Буду брать еще.', s:5}
+  {u:'Аноним', d:'Сегодня, 12:40', t:'Все отлично, выдали Majestic за 10 минут!'},
+  {u:'Аноним', d:'Вчера, 19:15', t:'Лучший шоп, Stars прилетели мгновенно.'},
+  {u:'Аноним', d:'3 дня назад', t:'Цены в долларах радуют, очень выгодно.'},
+  {u:'Аноним', d:'1 неделя назад', t:'Брал TikTok монеты, все пришло. Спасибо!'}
 ];
-
-let state = {tab:'catalog', lang:'ru', currency:'USD', rate:95, cart:[], cat:'all'};
+let state = {tab:'catalog', lang:'ru', currency:'USD', rate:95};
 
 function render(){
   document.getElementById('curMover').style.transform = state.currency==='RUB'?'translateX(40px)':'translateX(0)';
   document.getElementById('langMover').style.transform = state.lang==='en'?'translateX(40px)':'translateX(0)';
-  
   const v = document.getElementById('view');
   if(state.tab==='catalog'){
-    let h = `<div class="chips"><div class="chip ${state.cat==='all'?'on':''}" data-cat="all">Все</div>`;
-    CATALOG.forEach(c => h += `<div class="chip ${state.cat===c.id?'on':''}" data-cat="${c.id}">${c.emoji} ${c.title[state.lang]}</div>`);
-    h += `</div><div class="hero"><div class="black-hole"></div><h1>ONCEDSHOP</h1><div class="cycling-text"><span id="adv-text">Лучшие цены и мгновенная выдача</span></div><div class="hero-rate">Курс: 1$ ≈ ${state.rate} ₽</div></div>`;
-    (state.cat==='all'?CATALOG:CATALOG.filter(c=>c.id===state.cat)).forEach(c => c.items.forEach(p => {
-      const pr = state.currency==='USD' ? ('$'+(p.base*1.12).toFixed(2)) : (Math.round(p.base*1.12*state.rate).toLocaleString()+' ₽');
-      h += `<div class="card"><div class="pic"><img src="${p.img}" onerror="this.src='https://img.icons8.com/color/96/box.png'"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="pr">${pr} <small>/ ${p.unit}</small></div></div><button class="add-btn" data-add="${p.id}">+</button></div>`;
+    let h = '<div class="hero"><div class="black-hole"></div><h1>ONCEDSHOP</h1><div style="font-size:14px;color:rgba(255,255,255,0.6);margin-top:8px">Лучшие цены и мгновенная выдача</div></div>';
+    CATALOG.forEach(c => c.items.forEach(p => {
+      h += `<div class="card"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="pr">${state.currency==='USD'?'$'+(p.base*1.12).toFixed(2):(Math.round(p.base*1.12*state.rate)+' ₽')}</div></div><button class="add-btn">+</button></div>`;
     }));
     v.innerHTML = h;
   } else if(state.tab==='reviews'){
-    let h = '<div class="hero"><h1>Отзывы</h1><p>Нам доверяют сотни клиентов</p></div>';
-    REVIEWS.forEach(r => h += `<div class="rev-card"><div class="rev-top"><span class="rev-user">${r.u}</span><span class="rev-date">${r.d}</span></div><div class="rev-text">${r.t}</div><div class="rev-stars">★★★★★</div></div>`);
-    v.innerHTML = h;
-  } else if(state.tab==='cabinet'){
-    v.innerHTML = '<div style="padding:20px"><div class="tile">👤 Guest<small>ID: ---</small></div><div class="tile">💎 Оплата криптой<small>Реквизиты</small></div></div>';
+    let h = '<div style="padding:20px"><h2>Отзывы</h2>';
+    REVIEWS.forEach(r => h += `<div class="rev-card"><div class="rev-top"><b>${r.u}</b><span>${r.d}</span></div><div class="rev-text">${r.t}</div></div>`);
+    v.innerHTML = h + '</div>';
   } else {
-    v.innerHTML = '<div style="padding:60px;text-align:center;color:var(--text-muted)">🛒 Корзина пуста</div>';
+    v.innerHTML = '<div style="padding:20px"><div class="tile" onclick="openCrypto()">💎 Оплата криптой<small>Реквизиты</small></div><div class="tile" onclick="state.tab=\'catalog\';render();">❓ FAQ<small>Помощь</small></div></div>';
   }
-  ['catalog','reviews','cart','cabinet'].forEach(t => {
-    const b = document.getElementById('nav-'+t);
-    if(b) b.className = state.tab===t?'on':'';
-  });
+  document.getElementById('nav-cat').className = state.tab==='catalog'?'on':'';
+  document.getElementById('nav-rev').className = state.tab==='reviews'?'on':'';
+  document.getElementById('nav-prof').className = state.tab==='cabinet'?'on':'';
 }
 
-function init(){
-  if(tg){tg.ready();tg.expand();tg.setHeaderColor('#000000');}
-  render();
-  setTimeout(()=>{document.getElementById('splash').classList.add('hide');document.getElementById('app').classList.add('show');},1200);
+function openCrypto(){
+  document.getElementById('sheet').innerHTML = '<h3>Реквизиты</h3><div class="tile">TON: UQDE...Ks2</div><button class="cta" onclick="closeSheet()">Закрыть</button>';
+  document.getElementById('backdrop').classList.add('show');
 }
+function closeSheet(){ document.getElementById('backdrop').classList.remove('show'); }
 
-document.addEventListener('click', e=>{
-  const d = e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat]')?.dataset;
-  if(!d)return;
-  if(d.tab){state.tab=d.tab;render();window.scrollTo(0,0);}
-  if(d.lang){state.lang=d.lang;render();}
-  if(d.cur){state.currency=d.cur;render();}
-  if(d.cat){state.cat=d.cat;render();}
+document.addEventListener('click', e => {
+  const d = e.target.closest('[data-tab],[data-lang],[data-cur]')?.dataset;
+  if(!d) return;
+  if(d.tab){ state.tab=d.tab; render(); }
+  if(d.lang){ state.lang=d.lang; render(); }
+  if(d.cur){ state.currency=d.cur; render(); }
 });
-document.addEventListener('DOMContentLoaded', init);
+
+document.addEventListener('DOMContentLoaded', () => {
+  if(tg){tg.ready();tg.expand();}
+  render();
+  setTimeout(()=>document.getElementById('splash').classList.add('hide'), 1200);
+  setTimeout(()=>document.getElementById('app').classList.add('show'), 1300);
+});
 </script>
 </body>
 </html>
