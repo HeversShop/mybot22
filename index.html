@@ -447,29 +447,25 @@ const tg=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 
 // ---- CATALOG ----
 const CATALOG=[
- {id:'stars',emoji:'\u2B50',title:{ru:'Telegram Stars',en:'Telegram Stars'},items:[
-  {id:'p_stars_1k',emoji:'\u2B50',title:{ru:'Telegram Stars',en:'Telegram Stars'},kind:'per1000',base:12.0,unit:'Stars',step:500,def:1000,min:1}]},
- {id:'tiktok',emoji:'\uD83D\uDCF1',title:{ru:'TikTok \u041c\u043e\u043d\u0435\u0442\u044b',en:'TikTok Coins'},items:[
-  {id:'p_tt_coins',emoji:'\uD83E\uDE99',title:{ru:'TikTok \u041c\u043e\u043d\u0435\u0442\u044b',en:'TikTok Coins'},kind:'per1000',base:11.05,unit:'\u041c\u043e\u043d\u0435\u0442',step:100,def:100,min:1,note:{ru:'\u0412\u0445\u043e\u0434 \u043d\u0430 \u0430\u043a\u043a\u0430\u0443\u043d\u0442 (1.05\u0440/\u0448\u0442)',en:'Account login (1.05 RUB/pc)'}}]},
- {id:'rbx',emoji:'\uD83D\uDFE9',title:{ru:'Roblox Robux',en:'Roblox Robux'},items:[
-  {id:'p_rbxgp_new',emoji:'\uD83D\uDFE6',title:{ru:'Robux GamePass',en:'Robux GamePass'},kind:'per1000',base:3.6,unit:'R\u24C1',step:1000,def:1000,min:1000,note:{ru:'\u0412\u044b\u0434\u0430\u0447\u0430 5 \u0434\u043d\u0435\u0439',en:'5 days delivery'}},
-  {id:'p_rbxpv_new',emoji:'\uD83D\uDFEA',title:{ru:'Robux Private Server',en:'Robux Private Server'},kind:'per1000',base:3.0,unit:'R\u24C1',step:1000,def:1000,min:1000,note:{ru:'\u0412\u044b\u0434\u0430\u0447\u0430 5 \u0434\u043d\u0435\u0439',en:'5 days delivery'}}]},
- {id:'brawl',emoji:'\uD83C\uDFAE',title:{ru:'Brawl Stars',en:'Brawl Stars'},items:[
-  {id:'p_brawl_pass',emoji:'\uD83C\uDFAE',title:{ru:'Brawl Pass',en:'Brawl Pass'},kind:'fixed',price:3.15,note:{ru:'300 \u0440\u0443\u0431\u043b\u0435\u0439',en:'300 RUB'}},
-  {id:'p_brawl_plus_new',emoji:'\uD83C\uDFAE',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},kind:'fixed',price:3.68,note:{ru:'350 \u0440\u0443\u0431\u043b\u0435\u0439',en:'350 RUB'}}]},
- {id:'ai',emoji:'\uD83E\uDD16',title:{ru:'AI \u041f\u043e\u0434\u043f\u0438\u0441\u043a\u0438',en:'AI Subscriptions'},items:[
-  {id:'p_gpt_plus_180',emoji:'\uD83D\uDCAC',title:{ru:'ChatGPT Plus (\u041b\u0438\u0447\u043d\u044b\u0439)',en:'ChatGPT Plus (Personal)'},kind:'fixed',price:1.89,note:{ru:'180 \u0440\u0443\u0431\u043b\u0435\u0439 / \u0413\u0430\u0440\u0430\u043d\u0442\u0438\u044f',en:'180 RUB / Warranty'}},
-  {id:'p_gpt_plus_300',emoji:'\uD83D\uDCAC',title:{ru:'ChatGPT Plus (\u0410\u043a\u043a\u0430\u0443\u043d\u0442)',en:'ChatGPT Plus (Account)'},kind:'fixed',price:3.15,note:{ru:'300 \u0440\u0443\u0431\u043b\u0435\u0439 / \u0413\u0430\u0440\u0430\u043d\u0442\u0438\u044f',en:'300 RUB / Warranty'}},
-  {id:'p_gemini_18m',emoji:'\u2728',title:{ru:'Gemini 18 \u043c\u0435\u0441 (\u0410\u043a\u043a\u0430\u0443\u043d\u0442)',en:'Gemini 18m (Account)'},kind:'fixed',price:1.05,note:{ru:'100 \u0440\u0443\u0431\u043b\u0435\u0439 / \u0413\u0430\u0440\u0430\u043d\u0442\u0438\u044f',en:'100 RUB / Warranty'}},
-  {id:'p_grok_300',emoji:'\u2716\uFE0F',title:{ru:'Super Grok 1 \u043c\u0435\u0441',en:'Super Grok 1m'},kind:'fixed',price:3.15,note:{ru:'300 \u0440\u0443\u0431\u043b\u0435\u0439 / \u0413\u0430\u0440\u0430\u043d\u0442\u0438\u044f',en:'300 RUB / Warranty'}},
-  {id:'p_claude_30d',emoji:'\uD83E\uDDE0',title:{ru:'Claude PRO 30 \u0434\u043d\u0435\u0439',en:'Claude PRO 30 days'},kind:'fixed',price:3.15,note:{ru:'300 \u0440\u0443\u0431\u043b\u0435\u0439',en:'300 RUB'}},
-  {id:'p_claude_365d',emoji:'\uD83E\uDDE0',title:{ru:'Claude PRO 365 \u0434\u043d\u0435\u0439',en:'Claude PRO 365 days'},kind:'fixed',price:15.79,note:{ru:'1500 \u0440\u0443\u0431\u043b\u0435\u0439',en:'1500 RUB'}}]},
- {id:'virta',emoji:'\uD83D\uDCB0',title:{ru:'\u0418\u0433\u0440\u043e\u0432\u0430\u044f \u0412\u0430\u043b\u044e\u0442\u0430',en:'Game Currency'},items:[
-  {id:'p_radmir',emoji:'\uD83D\uDE97',title:{ru:'Radmir \u0412\u0438\u0440\u0442\u044b',en:'Radmir Virts'},kind:'per1000',base:0.55,unit:'1kk',step:1,def:25,min:25,note:{ru:'52\u0440 \u0437\u0430 1\u043a\u043a',en:'52 RUB per 1m'}},
-  {id:'p_amazing',emoji:'\uD83D\uDE97',title:{ru:'Amazing \u0412\u0438\u0440\u0442\u044b',en:'Amazing Virts'},kind:'per1000',base:0.47,unit:'1kk',step:1,def:25,min:25,note:{ru:'45\u0440 \u0437\u0430 1\u043a\u043a',en:'45 RUB per 1m'}},
-  {id:'p_black_russia',emoji:'\uD83D\uDE97',title:{ru:'Black Russia \u0412\u0438\u0440\u0442\u044b',en:'Black Russia Virts'},kind:'per1000',base:0.37,unit:'1kk',step:1,def:30,min:30,note:{ru:'35\u0440 \u0437\u0430 1\u043a\u043a',en:'35 RUB per 1m'}},
-  {id:'p_majestic',emoji:'\uD83D\uDE97',title:{ru:'Majestic \u0412\u0438\u0440\u0442\u044b',en:'Majestic Virts'},kind:'per1000',price:2.11,unit:'1kk',step:1,def:25,min:25,note:{ru:'0.20\u0440 \u0437\u0430 1\u043a (200\u0440 \u0437\u0430 1\u043a\u043a)',en:'0.20 RUB per 1k'}},
-  {id:'p_arizona',emoji:'\uD83D\uDE97',title:{ru:'Arizona RP \u0412\u0438\u0440\u0442\u044b',en:'Arizona RP Virts'},kind:'per1000',base:2.63,unit:'1kkk',step:1,def:1,min:1,note:{ru:'0.25\u0440 \u0437\u0430 1\u043a\u043a (250\u0440 \u0437\u0430 1\u043a\u043a\u043a)',en:'0.25 RUB per 1m'}}]}
+ {id:'stars',emoji:'⭐',title:{ru:'Telegram Stars',en:'Telegram Stars'},items:[
+  {id:'p_stars_1k',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/stars.png',title:{ru:'Telegram Stars',en:'Telegram Stars'},kind:'per1000',base:12.0,unit:'Stars',step:500,def:1000,min:1}]},
+ {id:'tiktok',emoji:'📱',title:{ru:'TikTok Монеты',en:'TikTok Coins'},items:[
+  {id:'p_tt_coins',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/tiktok.png',title:{ru:'TikTok Монеты',en:'TikTok Coins'},kind:'perUnit',base:0.0105,unit:'Монет',step:100,def:100,min:100,note:{ru:'Вход на аккаунт (1.05р/шт)',en:'Account login (1.05 RUB/pc)'}}]},
+ {id:'rbx',emoji:'🟩',title:{ru:'Roblox Robux',en:'Roblox Robux'},items:[
+  {id:'p_rbxgp_new',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/roblox.png',title:{ru:'Robux GamePass',en:'Robux GamePass'},kind:'perUnit',base:0.0036,unit:'R$',step:1000,def:1000,min:1000,note:{ru:'Выдача 5 дней',en:'5 days delivery'}},
+  {id:'p_rbxpv_new',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/roblox.png',title:{ru:'Robux Private Server',en:'Robux Private Server'},kind:'perUnit',base:0.003,unit:'R$',step:1000,def:1000,min:1000,note:{ru:'Выдача 5 дней',en:'5 days delivery'}}]},
+ {id:'brawl',emoji:'🎮',title:{ru:'Brawl Stars',en:'Brawl Stars'},items:[
+  {id:'p_brawl_pass',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/brawlstars.png',title:{ru:'Brawl Pass',en:'Brawl Pass'},kind:'fixed',price:3.15,note:{ru:'300 рублей',en:'300 RUB'}},
+  {id:'p_brawl_plus_new',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/brawlstars.png',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},kind:'fixed',price:3.68,note:{ru:'350 рублей',en:'350 RUB'}}]},
+ {id:'ai',emoji:'🤖',title:{ru:'AI Подписки',en:'AI Subscriptions'},items:[
+  {id:'p_gpt_plus_180',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/chatgpt.png',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus (Personal)'},kind:'fixed',price:1.89,note:{ru:'180 рублей / Гарантия',en:'180 RUB / Warranty'}},
+  {id:'p_gemini_18m',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/gemini.png',title:{ru:'Gemini 18 мес',en:'Gemini 18m'},kind:'fixed',price:1.05,note:{ru:'100 рублей / Гарантия',en:'100 RUB / Warranty'}}]},
+ {id:'virta',emoji:'💰',title:{ru:'Игровая Валюта',en:'Game Currency'},items:[
+  {id:'p_radmir',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/radmir.png',title:{ru:'Radmir Вирты',en:'Radmir Virts'},kind:'perUnit',base:0.55,unit:'1kk',step:1,def:25,min:25,note:{ru:'52р за 1кк',en:'52 RUB per 1m'}},
+  {id:'p_amazing',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/amazing.png',title:{ru:'Amazing Вирты',en:'Amazing Virts'},kind:'perUnit',base:0.47,unit:'1kk',step:1,def:25,min:25,note:{ru:'45р за 1кк',en:'45 RUB per 1m'}},
+  {id:'p_black_russia',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/blackrussia.png',title:{ru:'Black Russia Вирты',en:'Black Russia Virts'},kind:'perUnit',base:0.37,unit:'1kk',step:1,def:30,min:30,note:{ru:'35р за 1кк',en:'35 RUB per 1m'}},
+  {id:'p_majestic',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/majestic.png',title:{ru:'Majestic Вирты',en:'Majestic Virts'},kind:'perUnit',base:0.0021,unit:'1k',step:1000,def:5500,min:5500,note:{ru:'0.20р за 1к',en:'0.20 RUB per 1k'}},
+  {id:'p_arizona',img:'https://raw.githubusercontent.com/HeversShop/mybot22/main/webapp/icons/arizona.png',title:{ru:'Arizona RP Вирты',en:'Arizona RP Virts'},kind:'perUnit',base:0.0026,unit:'1kk',step:1000,def:5700,min:5700,note:{ru:'0.25р за 1кк',en:'0.25 RUB per 1m'}}]}
 ];
 
 // ---- I18N ----
@@ -548,8 +544,17 @@ const withMk=u=>Math.round(u*(1+MARKUP)*100)/100;
 function unitPrice(p){return p.price!=null?Math.round(Number(p.price)*100)/100:withMk(p.base);}
 function discPct(p){if(!p.face)return 0;const pr=unitPrice(p);if(pr>=Number(p.face))return 0;return Math.round((1-pr/Number(p.face))*100);}
 function rateK(p,u){return (p.tierUnits&&u>=p.tierUnits)?p.tierRate:p.base;}
-function price1k(p,u){return Math.round(u/1000*rateK(p,u)*(1+MARKUP)*100)/100;}
-function minLine(p){return p.kind==='per1000'?Math.max(withMk(p.min||0),0):0;}
+function price1k(p,u){
+  const rate = rateK(p,u);
+  const mk = 1 + MARKUP;
+  if(p.kind === 'perUnit') return Math.round(u * rate * mk * 100) / 100;
+  return Math.round(u/1000*rate*mk*100)/100;
+}
+function minLine(p){
+  const mk = 1 + MARKUP;
+  if(p.kind==='per1000' || p.kind==='perUnit') return Math.max(Math.round((p.min||0)*rateK(p,0)*mk*100)/100, 0);
+  return 0;
+}
 
 function persist(){
  localStorage.setItem('os_lang',state.lang);
@@ -616,16 +621,22 @@ function setCat(c){
   const chips = document.querySelector('.chips');
   if(chips) initDragScroll(chips);
 }
-function priceLabel(p){return p.kind==='per1000'?(money(withMk(p.base))+' <small>/ '+T('perK')+' '+p.unit+'</small>'):money(unitPrice(p));}
+function priceLabel(p){
+  if(p.kind==='per1000') return money(withMk(p.base))+' <small>/ '+T('perK')+' '+p.unit+'</small>';
+  if(p.kind==='perUnit') return money(withMk(p.base))+' <small>/ '+p.unit+'</small>';
+  return money(unitPrice(p));
+}
 
 function productHTML(p){
- const note=p.note?'<div class="n">'+esc(tt(p.note))+'</div>':'';
- const act=p.kind==='per1000'?"data-sheet='"+p.id+"'":"data-add='"+p.id+"'";
- const off=discPct(p);
- const badge=off>0?'<div class="badge-tag">\u2212'+off+'%</div>':'';
- const old=(p.face&&off>0)?'<span class="old">'+money(Number(p.face))+'</span>':'';
- return '<div class="card">'+badge+'<div class="pic">'+p.emoji+'</div><div class="pinfo"><div class="t">'+esc(tt(p.title))+'</div>'+note+'<div class="pr">'+old+priceLabel(p)+'</div></div><button class="add-btn" '+act+'>+</button></div>';
+  const note=p.note?'<div class="n">'+esc(tt(p.note))+'</div>':'';
+  const act=(p.kind==='per1000' || p.kind==='perUnit')?"data-sheet='"+p.id+"'":"data-add='"+p.id+"'";
+  const off=discPct(p);
+  const badge=off>0?'<div class="badge-tag">\u2212'+off+'%</div>':'';
+  const old=(p.face&&off>0)?'<span class="old">'+money(Number(p.face))+'</span>':'';
+  const img = p.img ? `<img src="${p.img}" style="width:100%;height:100%;object-fit:contain;border-radius:8px;">` : p.emoji;
+  return '<div class="card">'+badge+'<div class="pic">'+img+'</div><div class="pinfo"><div class="t">'+esc(tt(p.title))+'</div>'+note+'<div class="pr">'+old+priceLabel(p)+'</div></div><button class="add-btn" '+act+'>+</button></div>';
 }
+
 
 function viewCatalog(){
  let chips='<div class="chips"><div class="chip '+(state.cat==='all'?'on':''+'"')+'" data-cat="all">'+T('all')+'</div>';
