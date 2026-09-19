@@ -544,7 +544,7 @@ const CATALOG=[
 
 // ---- I18N ----
 const I18N={
-ru:{tagline:'\u0426\u0438\u0444\u0440\u043e\u0432\u043e\u0439 \u043c\u0430\u0433\u0430\u0437\u0438\u043d',catalog:'\u041a\u0430\u0442\u0430\u043b\u043e\u0433',cart:'\u041a\u043e\u0440\u0437\u0438\u043d\u0430',cabinet:'\u041f\u0440\u043e\u0444\u0438\u043b\u044c',all:'\u0412\u0441\u0435',
+ru:{tagline:'\u0426\u0438\u0444\u0440\u043e\u0432\u043e\u0439 \u043c\u0430\u0433\u0430\u0437\u0438\u043d',catalog:'\u041a\u0430\u0442\u0430\u043b\u043e\u0433',cart:'\u041a\u043e\u0440\u0437\u0438\u043d\u0430',cabinet:'\u041f\u0440\u043e\u0444\u0438\u043b\u044c',all:'\u0412\u0441\u0435',faq:'\u0412\u043e\u043f\u0440\u043e\u0441\u044b',
 heroT:'Oncedshop',heroP:'\u041f\u043e\u0434\u043f\u0438\u0441\u043a\u0438, \u0438\u0433\u0440\u043e\u0432\u0430\u044f \u0432\u0430\u043b\u044e\u0442\u0430, Telegram Stars \u2014 \u0431\u044b\u0441\u0442\u0440\u043e \u0438 \u0432\u044b\u0433\u043e\u0434\u043d\u043e.',
 perK:'\u0437\u0430 1\u00a0000',emptyCart:'\u041a\u043e\u0440\u0437\u0438\u043d\u0430 \u043f\u0443\u0441\u0442\u0430',emptyCartP:'\u0414\u043e\u0431\u0430\u0432\u044c\u0442\u0435 \u0442\u043e\u0432\u0430\u0440\u044b \u0438\u0437 \u043a\u0430\u0442\u0430\u043b\u043e\u0433\u0430',
 subtotal:'\u0422\u043e\u0432\u0430\u0440\u044b',min:'\u041c\u0438\u043d\u0438\u043c\u0443\u043c',total:'\u0418\u0442\u043e\u0433\u043e',
@@ -564,7 +564,7 @@ balance:'\u0411\u0430\u043b\u0430\u043d\u0441',topupBtn:'\u041f\u043e\u043f\u043
 sendOrder:'\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u0437\u0430\u043a\u0430\u0437',payCrypto:'\u041e\u043f\u043b\u0430\u0442\u0430 \u043a\u0440\u0438\u043f\u0442\u043e\u0439',
 cryptoInfo:'\u0410\u0434\u0440\u0435\u0441\u0430 \u0434\u043b\u044f \u043e\u043f\u043b\u0430\u0442\u044b. \u0422\u043e\u0447\u043d\u0443\u044e \u0441\u0443\u043c\u043c\u0443 \u0440\u0430\u0441\u0441\u0447\u0438\u0442\u0430\u0435\u0442 \u0431\u043e\u0442.',
 st_sent:'\u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d',items:'\u043f\u043e\u0437.',discount:'\u0421\u043a\u0438\u0434\u043a\u0430'},
-en:{tagline:'Digital Store',catalog:'Catalog',cart:'Cart',cabinet:'Profile',all:'All',
+en:{tagline:'Digital Store',catalog:'Catalog',cart:'Cart',cabinet:'Profile',all:'All',faq:'FAQ',
 heroT:'Oncedshop',heroP:'Subscriptions, in-game currency & Telegram Stars.',
 perK:'per 1,000',emptyCart:'Cart is empty',emptyCartP:'Browse the catalog and add items',
 subtotal:'Items',min:'Minimum',total:'Total',
@@ -703,11 +703,15 @@ function render(){
  if(cusd)cusd.className=state.currency==='USD'?'on':'';
  if(crub)crub.className=state.currency==='RUB'?'on':'';
  updateMovers();
- ['catalog','cart','cabinet'].forEach(t=>document.getElementById('nav-'+t).className=state.tab===t?'on':'');
+ ['catalog','cart','cabinet','faq'].forEach(t=>{
+   const btn = document.getElementById('nav-'+t);
+   if(btn) btn.className = state.tab===t?'on':'';
+ });
  const v=document.getElementById('view');
  if(state.tab==='catalog')v.innerHTML=viewCatalog();
  else if(state.tab==='cart')v.innerHTML=viewCart();
- else v.innerHTML=viewCabinet();
+ else if(state.tab==='cabinet')v.innerHTML=viewCabinet();
+ else if(state.tab==='faq')v.innerHTML=viewFAQ();
  updateBadges();updateMain();
 }
 function go(tab){state.tab=tab;haptic('light');render();window.scrollTo(0,0);if(tab==='cabinet')loadMe();}
@@ -787,14 +791,39 @@ function viewCabinet(){
  const stats='<div class="stats"><div class="stat"><b>'+state.history.length+'</b><span>'+T('ordersN')+'</span></div><div class="stat"><b>'+money(spent)+'</b><span>'+T('spent')+'</span></div></div>';
  const bal=state.balance||0,disc=state.discount||0;
  const balCard='<div class="bal-card"><div class="bal-row"><div><div class="bal-label">'+T('balance')+'</div><div class="bal-amount">'+money(bal)+'</div></div><button class="cta" style="width:auto;padding:10px 16px;margin:0" data-action="topup">'+T('topupBtn')+'</button></div>'+(disc>0?'<div style="margin-top:8px;font-size:12px;color:var(--text-muted)">\uD83C\uDFF7 '+T('discount')+': \u2212'+Math.round(disc)+'%</div>':'')+'</div>';
- const tiles='<div class="tile" data-action="support"><span class="ic">\uD83D\uDCE8</span><div>'+T('support')+'<small>'+T('supportS')+'</small></div><span class="ar">\u203A</span></div><div class="tile" data-action="togglecur"><span class="ic">\uD83D\uDCB1</span><div>'+T('currency')+'<small>'+state.currency+'</small></div><span class="ar">\u21C4</span></div><div class="tile" data-action="cryptoinfo"><span class="ic">\uD83E\uDE99</span><div>'+T('payCrypto')+'<small>TON, USDT, SOL, BTC</small></div><span class="ar">\u203A</span></div><div class="tile" data-action="togglelang"><span class="ic">\uD83C\uDF10</span><div>'+T('lang')+'<small>'+T('langS')+'</small></div><span class="ar">\u21C4</span></div>';
+ const tiles='<div class="tile" data-action="support"><span class="ic">\uD83D\uDCE8</span><div>'+T('support')+'<small>'+T('supportS')+'</small></div><span class="ar">\u203A</span></div><div class="tile" data-tab="faq"><span class="ic">\u2754</span><div>'+T('faq')+'<small>'+(state.lang==='ru'?'\u0423\u0437\u043d\u0430\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u0435':'Learn more')+'</small></div><span class="ar">\u203A</span></div><div class="tile" data-action="togglecur"><span class="ic">\uD83D\uDCB1</span><div>'+T('currency')+'<small>'+state.currency+'</small></div><span class="ar">\u21C4</span></div><div class="tile" data-action="togglelang"><span class="ic">\uD83C\uDF10</span><div>'+T('lang')+'<small>'+T('langS')+'</small></div><span class="ar">\u21C4</span></div>';
  let ords='<div class="label">'+T('orders')+'</div>';
  if(!state.history.length)ords+='<div class="empty" style="padding:24px"><span class="big">\uD83D\uDCCB</span>'+T('noOrders')+'</div>';
  else state.history.slice(0,15).forEach(o=>{const d=new Date(o.ts).toLocaleDateString(state.lang==='ru'?'ru-RU':'en-US');ords+='<div class="ord"><div class="top"><span class="oid">'+esc(o.id)+'</span><span class="st">'+T('st_'+(o.status||'sent'))+'</span></div><div class="bt"><span>'+d+'</span><span>'+o.items+' '+T('items')+' \u2022 '+money(o.total)+'</span></div></div>';});
  return profile+stats+balCard+tiles+ords;
 }
 
-function openSheet(id){const p=findProduct(id);if(!p)return;sheetItem=p;sheetUnits=p.def||1000;renderSheet();document.getElementById('backdrop').classList.add('show');haptic('light');}
+function viewFAQ(){
+  const faqs = state.lang === 'ru' ? [
+    {q:'Как купить?', a:'Выберите товар в каталоге, добавьте его в корзину и введите ваши данные для выдачи. После нажатия "Оформить" бот пришлет вам реквизиты для оплаты.'},
+    {q:'Какие сроки выдачи?', a:'Большинство товаров выдаются в течение 5-15 минут после оплаты. Roblox и некоторые другие позиции могут занимать до 5 дней.'},
+    {q:'Какие есть гарантии?', a:'Мы предоставляем полную гарантию на весь срок действия подписки. Если возникнут проблемы — наша поддержка всегда на связи.'},
+    {q:'Как оплатить криптовалютой?', a:'При оформлении заказа выберите "Оплата криптой". Вы увидите адреса кошельков. После перевода отправьте чек в поддержку.'}
+  ] : [
+    {q:'How to buy?', a:'Choose a product in the catalog, add it to your cart, and enter your delivery details. After clicking "Checkout", the bot will send you payment details.'},
+    {q:'What are the delivery times?', a:'Most products are delivered within 5-15 minutes after payment. Roblox and some other items may take up to 5 days.'},
+    {q:'Are there any guarantees?', a:'We provide a full warranty for the entire duration of the subscription. If any issues arise, our support is always available.'},
+    {q:'How to pay with crypto?', a:'When placing an order, select "Pay with crypto". you will see wallet addresses. After the transfer, send the receipt to support.'}
+  ];
+
+  let html = '<div class="hero"><h1>FAQ</h1><p>'+(state.lang==='ru'?'Ответы на популярные вопросы':'Common questions and answers')+'</p></div>';
+  faqs.forEach(f => {
+    html += `<div class="tile" style="flex-direction:column; align-items:flex-start; gap:8px;">
+      <div style="font-weight:800; font-size:16px; color:var(--accent);">\u2022 ${f.q}</div>
+      <div style="font-size:14px; color:var(--text-secondary); line-height:1.5;">${f.a}</div>
+    </div>`;
+  });
+  html += `<button class="cta dark" style="margin-top:20px" onclick="go('cabinet')">${state.lang==='ru'?'Назад в профиль':'Back to Profile'}</button>`;
+  return html;
+}
+
+function openSheet(id){
+const p=findProduct(id);if(!p)return;sheetItem=p;sheetUnits=p.def||1000;renderSheet();document.getElementById('backdrop').classList.add('show');haptic('light');}
 function closeSheet(){document.getElementById('backdrop').classList.remove('show');sheetItem=null;}
 function sheetStep(d){if(!sheetItem)return;const st=sheetItem.step||1000;sheetUnits=Math.max(st,sheetUnits+d*st);renderSheet();}
 function sheetInput(v){sheetUnits=parseInt(v.replace(/[^0-9]/g,''))||0;renderSheetPrice();}
