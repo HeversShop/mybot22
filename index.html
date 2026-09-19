@@ -853,27 +853,28 @@ document.addEventListener('click',e=>{
  if(e.target&&e.target.id==='backdrop'){closeSheet();return;}
  const el=e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat],[data-add],[data-sheet],[data-qty],[data-rm],[data-action],[data-sheetstep],[data-sheetconfirm],[data-sheetclose],[data-checkout],[data-copy],[data-topup],[data-paycrypto],[data-paycryptoopen],[data-login]');
  if(!el)return;const d=el.dataset;
- if(d.tab)go(d.tab);
- else if(d.lang)setLang(d.lang);
- else if(d.cur){state.currency=d.cur==='RUB'?'RUB':'USD';persist();haptic('light');render();}
- else if(d.cat)setCat(d.cat);
- else if(d.add)addFixed(findProduct(d.add));
- else if(d.sheet)openSheet(d.sheet);
- else if(d.qty!==undefined&&d.qty!=='')changeQty(d.qty,parseInt(d.d));
- else if(d.rm)removeItem(d.rm);
- else if(d.action==='support')openSupport();
- else if(d.action==='togglelang')setLang(state.lang==='ru'?'en':'ru');
- else if(d.action==='togglecur'){state.currency=state.currency==='USD'?'RUB':'USD';persist();haptic('light');render();}
- else if(d.action==='topup')openTopup();
- else if(d.action==='cryptoinfo')openCryptoInfo();
- else if(d.sheetstep!==undefined)sheetStep(parseInt(d.sheetstep));
- else if(d.sheetconfirm!==undefined)confirmSheet();
- else if(d.sheetclose!==undefined)closeSheet();
- else if(d.checkout)checkout();
- else if(d.copy)copyText(d.copy);
- else if(d.paycryptoopen)openPayCrypto();
- else if(d.paycrypto){closeSheet();checkout();}
- else if(d.login)doLogin();
+  if(d.tab) { haptic('light'); go(d.tab); }
+  else if(d.lang) { haptic('light'); setLang(d.lang); }
+  else if(d.cur){ haptic('light'); state.currency=d.cur==='RUB'?'RUB':'USD';persist();render();}
+  else if(d.cat){ haptic('light'); setCat(d.cat); }
+  else if(d.add){ haptic('success'); playSound(); addFixed(findProduct(d.add)); }
+  else if(d.sheet){ haptic('med'); openSheet(d.sheet); }
+  else if(d.qty!==undefined&&d.qty!==''){ haptic('light'); changeQty(d.qty,parseInt(d.d)); }
+  else if(d.rm){ haptic('light'); removeItem(d.rm); }
+  else if(d.action==='support'){ haptic('light'); openSupport(); }
+  else if(d.action==='togglelang'){ haptic('light'); setLang(state.lang==='ru'?'en':'ru'); }
+  else if(d.action==='togglecur'){ haptic('light'); state.currency=state.currency==='USD'?'RUB':'USD';persist();render();}
+  else if(d.action==='topup'){ haptic('light'); openTopup(); }
+  else if(d.action==='cryptoinfo'){ haptic('light'); openCryptoInfo(); }
+  else if(d.sheetstep!==undefined){ haptic('light'); sheetStep(parseInt(d.sheetstep)); }
+  else if(d.sheetconfirm!==undefined){ haptic('success'); playSound(); confirmSheet(); }
+  else if(d.sheetclose!==undefined){ haptic('light'); closeSheet(); }
+  else if(d.checkout){ haptic('success'); checkout(); }
+  else if(d.copy){ haptic('success'); copyText(d.copy); }
+  else if(d.paycryptoopen){ haptic('light'); openPayCrypto(); }
+  else if(d.paycrypto){ haptic('success'); closeSheet(); checkout(); }
+  else if(d.login){ haptic('med'); doLogin(); }
+
 });
 document.addEventListener('input',e=>{
  if(!e.target)return;
@@ -950,11 +951,21 @@ function initCyclingText() {
   }, 3000);
 }
 
-function playStartSound() {
+function haptic(t){
+  try {
+    if(tg && tg.HapticFeedback) {
+      if(t === 'success') tg.HapticFeedback.notificationOccurred('success');
+      else if(t === 'light') tg.HapticFeedback.impactOccurred('light');
+      else if(t === 'med') tg.HapticFeedback.impactOccurred('medium');
+    }
+  } catch(e) {}
+}
+
+function playSound() {
   try {
     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2432/2432-preview.mp3');
-    audio.volume = 0.5;
-    audio.play();
+    audio.volume = 0.3;
+    audio.play().catch(e => {}); // Игнорируем ошибку автоплея
   } catch (e) {}
 }
 
@@ -972,16 +983,19 @@ function init(){
  if(document.getElementById('login')&&state.authed)document.getElementById('login').classList.add('hidden');
  render();
  initCyclingText();
+ 
+ // ГАРАНТИРОВАННЫЙ ЗАПУСК
  setTimeout(() => {
    const splash = document.getElementById('splash');
    const app = document.getElementById('app');
    if(splash) splash.classList.add('hide');
    if(app) app.classList.add('show');
-   playStartSound();
+   
    updateMovers();
    const chips = document.querySelector('.chips');
    if(chips) initDragScroll(chips);
- }, 1800); 
+ }, 1500); 
+
  loadRate();
  loadMe();
 }
