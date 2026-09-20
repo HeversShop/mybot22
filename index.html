@@ -522,34 +522,31 @@ document.addEventListener('click', e => {
     const errEl = document.getElementById('checkoutError');
     if(errEl) errEl.style.display = 'none';
 
-    // Visual feedback: Loading state
     btn.classList.add('loading');
     if(tg) tg.HapticFeedback.notificationOccurred('success');
 
     setTimeout(() => {
       const payMap = {sbp:'СБП', crypto:'USDT/BTC', card:'Карта РФ', market:'Баланс'};
-      const payText = payMap[state.payMethod] || 'Не выбран';
-      const text = encodeURIComponent(`Привет! Хочу оформить заказ. Способ оплаты: ${payText}`);
-      const supportUrl = `https://t.me/oncedshop_support?text=${text}`;
-      
-      try {
-        if(tg && tg.openTelegramLink) {
-          tg.openTelegramLink(supportUrl);
-        } else {
-          const win = window.open(supportUrl, '_blank');
-          if (!win || win.closed || typeof win.closed == 'undefined') {
-            throw new Error('Popup blocked');
-          }
-        }
+      const orderData = {
+        action: 'checkout_appeal',
+        payMethod: payMap[state.payMethod] || 'Не выбран',
+        currency: state.currency,
+        total: state.cart.reduce((sum, item) => {
+          const p = getProduct(item.id);
+          return sum + (p ? (p.kind==='perUnit' && p.base < 0.1 ? p.base * 1000 : p.base) * 1.12 : 0);
+        }, 0).toFixed(2),
+        items: state.cart.map(item => ({ id: item.id, name: getProduct(item.id)?.title[state.lang] }))
+      };
+
+      if(tg && tg.sendData) {
+        tg.sendData(JSON.stringify(orderData));
         btn.classList.remove('loading');
-      } catch (e) {
+      } else {
+        console.log('Order data:', orderData);
+        alert('Заявка отправлена в консоль (режим браузера)');
         btn.classList.remove('loading');
-        if(errEl) {
-          errEl.innerText = 'Не удалось открыть чат. Пожалуйста, напишите нам в @oncedshop_support напрямую.';
-          errEl.style.display = 'block';
-        }
       }
-    }, 600); // Small delay for visual impact
+    }, 600);
     return;
   }
   if(d.action === 'toggleRevForm') {
