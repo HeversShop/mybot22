@@ -216,6 +216,20 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
   75% { transform: translateX(5px); }
 }
 
+.qty-input {
+  width: 60px;
+  height: 36px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  font-weight: 800;
+  font-family: inherit;
+  margin-right: 8px;
+}
+.qty-input:focus { border-color: var(--accent); }
+
 .bg-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-10deg);font-size:18vw;font-weight:900;color:rgba(255,255,255,0.015);z-index:-1;text-transform:uppercase;pointer-events:none;user-select:none;}
 </style>
 
@@ -298,7 +312,10 @@ function render(){
         displayBase = p.base * 1000;
         displayUnit = '1000 ' + p.unit;
       }
-      const pr = state.currency==='USD' ? ('$'+(displayBase*1.12).toFixed(2)) : (Math.round(displayBase*1.12*state.rate).toLocaleString()+' ₽');
+      const rawUSD = displayBase * 1.12;
+      const roundedUSD = (Math.ceil(rawUSD * 20) / 20).toFixed(2); // Round up to nearest 0.05
+      const pr = state.currency==='USD' ? ('$'+roundedUSD) : (Math.round(displayBase*1.12*state.rate).toLocaleString()+' ₽');
+      
       h += `<div class="card"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="n">${p.note?p.note[state.lang]:''}</div><div class="pr">${pr} <small style="font-size:11px;opacity:0.5;font-weight:500">/ ${displayUnit}</small></div></div><button type="button" class="add-btn" data-add="${p.id}">+</button></div>`;
     }));
     v.innerHTML = h;
@@ -314,10 +331,10 @@ function render(){
         if(!p) return;
         let displayBase = p.base;
         if(p.kind==='perUnit' && p.base < 0.1) displayBase = p.base * 1000;
-        const priceNum = displayBase * 1.12;
+        const priceNum = displayBase * 1.12 * item.q;
         total += priceNum;
         const pr = state.currency==='USD' ? ('$'+priceNum.toFixed(2)) : (Math.round(priceNum*state.rate).toLocaleString()+' ₽');
-        h += `<div class="card" style="margin:0 0 12px 0"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="pr">${pr}</div></div><button type="button" class="add-btn" style="background:rgba(255,0,0,0.1);color:#ff4444;font-size:20px" data-rem="${idx}">×</button></div>`;
+        h += `<div class="card" style="margin:0 0 12px 0"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]} ${item.q > 1 ? 'x'+item.q : ''}</div><div class="pr">${pr}</div></div><button type="button" class="add-btn" style="background:rgba(255,0,0,0.1);color:#ff4444;font-size:20px" data-rem="${idx}">×</button></div>`;
       });
       const totalStr = state.currency==='USD' ? ('$'+total.toFixed(2)) : (Math.round(total*state.rate).toLocaleString()+' ₽');
       
@@ -583,7 +600,15 @@ document.addEventListener('click', e => {
   if(d.cur){ state.currency=d.cur; render(); }
   if(d.cat){ state.cat=d.cat; render(); }
   if(d.add){
-    state.cart.push({id:d.add, q:1});
+    const p = getProduct(d.add);
+    let qty = 1;
+    if(p && p.kind === 'perUnit') {
+      const input = prompt(state.lang === 'ru' ? 'Введите количество:' : 'Enter quantity:', '1');
+      qty = parseInt(input);
+      if(isNaN(qty) || qty <= 0) return;
+    }
+    
+    state.cart.push({id:d.add, q:qty});
     if(tg) tg.HapticFeedback.impactOccurred('medium');
     
     // Fly Animation
