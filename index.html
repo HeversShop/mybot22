@@ -12,7 +12,7 @@
   --text-muted: rgba(255, 255, 255, 0.45);
   --border: rgba(255, 255, 255, 0.1);
   --border-bright: rgba(255, 255, 255, 0.2);
-  --radius-pill: 99px; --radius-lg: 28px; --radius-md: 20px;
+  --radius-pill: 99px; --radius-lg: 28px; --radius-md: 20px; --radius-sm: 14px;
   --font-main: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;user-select:none;}
@@ -23,7 +23,7 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 .chips{display:flex;gap:8px;padding:4px 16px 12px;overflow-x:auto;scrollbar-width:none;cursor:grab;}
 .chips::-webkit-scrollbar{display:none;}
 .chips:active{cursor:grabbing;}
-.chip{padding:8px 16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:var(--radius-pill);font-size:12px;font-weight:700;white-space:nowrap;transition:0.2s;}
+.chip{padding:10px 18px;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:var(--radius-pill);font-size:13px;font-weight:700;white-space:nowrap;transition:0.2s;}
 .chip.on{background:#fff;color:#000;border-color:#fff;}
 #app{width:100%;max-width:500px;min-height:100vh;padding-bottom:140px;opacity:0;transition:opacity 0.6s ease;}
 #app.show{opacity:1;}
@@ -31,21 +31,21 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 /* ===== SPLASH ===== */
 .splash{position:fixed;inset:0;z-index:9999;background:#000;display:flex;align-items:center;justify-content:center;transition:0.5s;}
 .splash.hide{opacity:0;visibility:hidden;}
-.splash-logo{width:80px;height:80px;border-radius:22px;background:#fff;color:#000;font-size:40px;font-weight:900;display:grid;place-items:center;animation:logoPulse 1.5s infinite alternate ease-in-out;}
-@keyframes logoPulse{from{transform:scale(1);}to{transform:scale(1.1);box-shadow:0 0 30px rgba(255,255,255,0.2);}}
+.splash-logo{width:84px;height:84px;border-radius:24px;background:#fff;color:#000;font-size:44px;font-weight:900;display:grid;place-items:center;animation:logoPulse 1.5s infinite alternate ease-in-out;}
+@keyframes logoPulse{from{transform:scale(1);}to{transform:scale(1.1);box-shadow:0 0 35px rgba(255,255,255,0.25);}}
 
 /* ===== TOPBAR ===== */
-.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:rgba(0,0,0,0.8);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border-bottom:1px solid var(--border);}
 .brand{display:flex;align-items:center;gap:12px;}
 .logo-sm{width:38px;height:38px;border-radius:11px;background:#fff;display:grid;place-items:center;font-size:18px;font-weight:900;color:#000;}
 
-.pill-group{display:flex;background:rgba(255,255,255,0.08);border-radius:var(--radius-pill);padding:2px;position:relative;border:1px solid var(--border);width:84px;height:32px;margin-left:8px;}
+.pill-group{display:flex;background:rgba(255,255,255,0.1);border-radius:var(--radius-pill);padding:2px;position:relative;border:1px solid var(--border);width:84px;height:32px;margin-left:8px;}
 .pill-group button{all:unset;flex:1;height:100%;font-size:11px;font-weight:800;color:var(--text-muted);cursor:pointer;z-index:2;position:relative;text-align:center;}
 .pill-group button.on{color:#000;}
 .pill-mover{position:absolute;top:2px;bottom:2px;width:40px;background:#fff;border-radius:var(--radius-pill);transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);z-index:1;pointer-events:none;}
 
 /* ===== HERO & BLACK HOLE ===== */
-.hero{margin:16px;padding:50px 24px;border-radius:28px;background:#000;border:1px solid var(--border);position:relative;overflow:hidden;}
+.hero{margin:16px;padding:50px 24px;border-radius:var(--radius-lg);background:#000;border:1px solid var(--border);position:relative;overflow:hidden;}
 .hero h1{margin:0;font-size:36px;font-weight:900;letter-spacing:-2px;position:relative;z-index:10; color:#fff; text-shadow: 0 0 30px rgba(0,0,0,1);}
 .bh-container { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0.8; }
 .bh-core { width: 130px; height: 130px; background: #000; border-radius: 50%; box-shadow: 0 0 60px 10px rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.3); position: relative; z-index: 2; }
@@ -55,32 +55,168 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 @keyframes bhRotate { from{transform:rotate(0deg) scale(1);} to{transform:rotate(360deg) scale(1.05);} }
 
 /* ===== CARDS ===== */
-.card{display:flex;align-items:center;gap:16px;padding:18px;border-radius:24px;margin:0 16px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);transition:0.2s;animation:cardIn 0.5s ease backwards;}
+.card{display:flex;align-items:center;gap:16px;padding:18px;border-radius:var(--radius-md);margin:0 16px 12px;background:rgba(255,255,255,0.05);border:1px solid var(--border);transition:all 0.3s ease;animation:cardIn 0.5s ease backwards;will-change: transform, opacity;}
+.card.adding { transform: scale(1.02); border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); }
 @keyframes cardIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
-.pic{width:60px;height:60px;flex:0 0 60px;border-radius:16px;background:rgba(255,255,255,0.03);display:grid;place-items:center;overflow:hidden;position:relative;}
-.pic img{width:100%;height:100%;object-fit:contain;}
+.pic{width:82px;height:82px;flex:0 0 82px;border-radius:22px;background:rgba(255,255,255,0.03);border:1px solid var(--border);display:grid;place-items:center;overflow:hidden;position:relative;}
+.pic img{width:80%;height:80%;object-fit:contain;}
 
 .pinfo{flex:1;min-width:0;}
-.pinfo .t{font-size:15px;font-weight:800;}
-.pinfo .n{font-size:10px;color:var(--text-secondary);line-height:1.4;margin-top:4px;font-weight:500;}
-.pinfo .pr{font-size:16px;font-weight:900;margin-top:6px;color:var(--accent);}
-.add-btn{all:unset;width:44px;height:44px;border-radius:14px;background:#fff;color:#000;display:grid;place-items:center;font-size:24px;cursor:pointer;margin-left:auto;}
+.pinfo .t{font-size:16px;font-weight:800;letter-spacing:-0.3px;}
+.pinfo .n{font-size:11px;color:var(--text-secondary);line-height:1.4;margin-top:4px;font-weight:500;}
+.pinfo .pr{font-size:17px;font-weight:900;margin-top:6px;color:var(--accent);}
+
+.add-btn{all:unset;width:48px;height:48px;border-radius:16px;background:#fff;color:#000;display:grid;place-items:center;font-size:26px;font-weight:300;cursor:pointer;margin-left:auto;transition:all 0.2s cubic-bezier(0.4, 0, 0.2, 1);-webkit-tap-highlight-color: transparent;}
+.add-btn:active{transform:scale(0.85); background: #eee;}
+.add-btn.added-anim { background: #00ff88 !important; color: #000 !important; transform: scale(1.1); }
 
 /* ===== NAV ===== */
-.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;width:calc(100% - 32px);max-width:440px;z-index:100;display:flex;padding:10px;background:rgba(20,20,20,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.12);border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,0.5);}
-.nav button{all:unset;flex:1;text-align:center;padding:8px 0;color:var(--text-muted);font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
+.nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;width:calc(100% - 32px);max-width:440px;z-index:100;display:flex;padding:10px;background:rgba(22,22,22,0.85);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border:1px solid rgba(255,255,255,0.14);border-radius:var(--radius-lg);box-shadow:0 15px 45px rgba(0,0,0,0.6);}
+.nav button{all:unset;flex:1;text-align:center;padding:8px 0;color:var(--text-muted);font-size:10px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;transition:0.2s;-webkit-tap-highlight-color: transparent;}
 .nav button.on{color:#fff;}
-.nav button .ic{font-size:20px;opacity:0.6;transition:0.2s;}
-.nav button.on .ic{opacity:1;transform:translateY(-2px);}
-.nbadge{background:var(--accent);color:#000;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:900;margin-left:4px;display:inline-block;}
+.nav button .ic{font-size:22px;opacity:0.5;transition:0.2s;display:block;}
+.nav button.on .ic{opacity:1;transform:translateY(-3px) scale(1.1);}
+.nbadge{background:var(--accent);color:#000;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:900;position:absolute;top:-5px;right:calc(50% - 20px);border:2px solid #161616;}
 
 /* ===== REVIEWS ===== */
-.rev-card{padding:18px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:20px;margin:0 16px 12px;}
-.rev-top{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;}
-.rev-stars{color:#ffb800;font-size:10px;margin-top:6px;}
+.rev-card{padding:20px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);margin:0 16px 16px; animation: revIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) backwards;}
+@keyframes revIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.rev-top{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.rev-avatar{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);display:grid;place-items:center;font-weight:900;font-size:14px;color:var(--accent);border:1px solid var(--border);}
+.rev-stars{color:#ffb800;font-size:12px;margin-top:2px;}
+
+/* ===== CABINET & PROFILE ===== */
+.user-card {
+  padding: 24px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%);
+  border: 1px solid var(--border-bright);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+.user-card::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 120px;
+  height: 120px;
+  background: var(--accent);
+  filter: blur(80px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+.user-avatar-lg {
+  width: 64px;
+  height: 64px;
+  border-radius: 22px;
+  background: #fff;
+  color: #000;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 20px rgba(255,255,255,0.2);
+}
+.user-name-big { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; }
+.user-status-tag { display: inline-block; padding: 4px 10px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 10px; font-weight: 800; margin-top: 8px; color: var(--text-secondary); text-transform: uppercase; }
+
+.tile{padding:18px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);display:flex;align-items:center;gap:16px;margin-bottom:12px;transition: 0.3s;}
+.tile.active{border-color:var(--accent);background:rgba(255,255,255,0.07);box-shadow: 0 0 25px rgba(255,255,255,0.04);}
+.tile .icon{width:48px;height:48px;border-radius:14px;background:rgba(255,255,255,0.06);display:grid;place-items:center;font-size:24px;border:1px solid var(--border);transition: 0.3s;}
+.tile.active .icon{background: #fff; color: #000; transform: scale(1.05);}
+.tile .info{flex:1;}
+.tile .label{font-size:11px;color:var(--text-muted);margin-bottom:2px;text-transform: uppercase; letter-spacing: 0.5px;}
+.tile .value{font-size:16px;font-weight:800;}
+
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;}
+.pay-item{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:20px;padding:18px 8px;text-align:center;transition:0.3s;}
+.pay-item:hover { background: rgba(255,255,255,0.06); transform: translateY(-2px); }
+.pay-item img{width:32px;height:32px;margin-bottom:8px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));}
+.pay-item .name{font-size:12px;font-weight:800;color:var(--text-secondary);}
+
+.status-pill{font-size:9px;font-weight:900;padding:4px 8px;border-radius:8px;background:var(--accent);color:#000;text-transform:uppercase;margin-left:auto; box-shadow: 0 0 10px rgba(255,255,255,0.3);}
+
+.pay-selector{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:20px 0;}
+.pay-opt{padding:14px 8px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:16px;text-align:center;font-size:12px;font-weight:700;transition:0.2s;cursor:pointer;white-space:nowrap;}
+.pay-opt.on{background:#fff;color:#000;border-color:#fff;}
+
+.rev-form{padding:20px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);margin-bottom:20px;}
+.rev-stars-select{display:flex;gap:8px;margin-bottom:16px;font-size:24px;cursor:pointer;}
+.rev-stars-select span{opacity:0.3;transition:0.2s;}
+.rev-stars-select span.on{opacity:1;filter:drop-shadow(0 0 5px rgba(255,184,0,0.5));}
+.rev-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;padding:12px;color:#fff;font-family:inherit;margin-bottom:12px;resize:none;}
+.rev-submit{width:100%;height:44px;background:var(--accent);color:#000;border-radius:12px;font-weight:800;border:none;cursor:pointer;}
+
+/* ===== FLYING ITEM ===== */
+.flying-item {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* ===== ABOUT PAGE ===== */
+.about-box { padding: 20px; }
+.about-card {
+  padding: 24px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+}
+.about-card h3 { margin: 0 0 12px; color: var(--accent); }
+.about-card p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--text-secondary); }
+
+.btn-primary.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  position: relative;
+  color: transparent !important;
+}
+.btn-primary.loading::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: calc(50% - 10px);
+  left: calc(50% - 10px);
+  border: 3px solid rgba(0,0,0,0.1);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.error-msg {
+  background: rgba(255, 68, 68, 0.1);
+  border: 1px solid rgba(255, 68, 68, 0.2);
+  color: #ff4444;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 13px;
+  margin-top: 12px;
+  text-align: center;
+  display: none;
+  animation: shake 0.4s ease;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
 
 .bg-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-10deg);font-size:18vw;font-weight:900;color:rgba(255,255,255,0.015);z-index:-1;text-transform:uppercase;pointer-events:none;user-select:none;}
 </style>
+
 </head>
 <body>
 <div id='splash' class='splash'><div class='splash-logo'>O</div></div>
@@ -89,43 +225,44 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
   <div class='topbar'>
     <div class='brand'><div class='logo-sm'>O</div><div><div style='font-weight:800'>Oncedshop</div><div style='font-size:10px;color:var(--text-muted)'>Digital Store</div></div></div>
     <div style='display:flex;gap:8px'>
-      <div class='pill-group'><div class='pill-mover' id='curMover'></div><button data-cur='USD'>$</button><button data-cur='RUB'>₽</button></div>
-      <div class='pill-group'><div class='pill-mover' id='langMover'></div><button data-lang='ru'>RU</button><button data-lang='en'>EN</button></div>
+      <div class='pill-group'><div class='pill-mover' id='curMover'></div><button type="button" data-cur='USD'>$</button><button type="button" data-cur='RUB'>₽</button></div>
+      <div class='pill-group'><div class='pill-mover' id='langMover'></div><button type="button" data-lang='ru'>RU</button><button type="button" data-lang='en'>EN</button></div>
     </div>
   </div>
   <div id='view'></div>
 </div>
 <div class='nav' id='nav-bar'>
-  <button id='nav-catalog' data-tab='catalog'><span class='ic'>🛍️</span><span>Каталог</span></button>
+  <button id='nav-catalog' data-tab='catalog'><span class='ic'>⚡</span><span>Магазин</span></button>
+  <button id='nav-cart' data-tab='cart' style='position:relative'><span class='ic'>🛍️</span><span>Корзина</span><span id='cartBadge' style='display:none' class='nbadge'>0</span></button>
   <button id='nav-reviews' data-tab='reviews'><span class='ic'>💬</span><span>Отзывы</span></button>
-  <button id='nav-cart' data-tab='cart'><span class='ic'>❤️</span><span>Корзина<span id='cartBadge' style='display:none' class='nbadge'>0</span></span></button>
   <button id='nav-cabinet' data-tab='cabinet'><span class='ic'>👤</span><span>Профиль</span></button>
+  <button id='nav-about' data-tab='about'><span class='ic'>ℹ️</span><span>О нас</span></button>
 </div>
 
 <script>
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 const CATALOG = [
   {id:'stars',emoji:'⭐',title:{ru:'Telegram Stars',en:'Stars'},items:[{id:'p_stars_1k',title:{ru:'Stars 1000',en:'Stars 1000'},img:'https://img.icons8.com/color/96/telegram-app.png',base:12,unit:'Stars'}]},
-  {id:'tiktok',emoji:'📱',title:{ru:'TikTok',en:'TikTok'},items:[{id:'p_tt_coins',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.0105,unit:'шт',kind:'perUnit',note:{ru:'Вход на аккаунт. 1.05р за 1 шт.',en:'Account login. 1.05 RUB per pc.'}}]},
+  {id:'tiktok',emoji:'📱',title:{ru:'TikTok',en:'TikTok'},items:[{id:'p_tt_coins',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.0105,unit:'шт',kind:'perUnit',note:{ru:'Вход на аккаунт.',en:'Account login.'}}]},
   {id:'rbx',emoji:'🟩',title:{ru:'Roblox',en:'Roblox'},items:[
-    {id:'p_rbx_acc',title:{ru:'Robux Account',en:'Robux Account'},img:'https://img.icons8.com/color/96/roblox.png',base:0.0034,unit:'R$',kind:'perUnit',note:{ru:'$3.4 - 1000 R$ (Аккаунт). Выдача 5 дней.',en:'$3.4 - 1000 R$ (Account). 5 days delivery.'}},
-    {id:'p_rbxgp_new',title:{ru:'Robux GP',en:'Robux GP'},img:'https://img.icons8.com/color/96/roblox.png',base:0.0036,unit:'R$',kind:'perUnit',note:{ru:'$3.6 - 1000 рб (геймпасс). Выдача 5 дней.',en:'$3.6 - 1000 rb (GP). 5 days delivery.'}},
-    {id:'p_rbxpv_new',title:{ru:'Robux Private',en:'Robux Private'},img:'https://img.icons8.com/color/96/roblox-studio.png',base:0.003,unit:'R$',kind:'perUnit',note:{ru:'$3 - 1000 рб (приватный сервер). 5 дней.',en:'$3 - 1000 rb (PV). 5 days delivery.'}}
+    {id:'p_rbx_acc',title:{ru:'Robux Account',en:'Robux Account'},img:'https://sc04.alicdn.com/kf/A78437d31bfba404e8c5e09f12f481e87w.jpg',base:0.0034,unit:'R$',kind:'perUnit',note:{ru:'1000 R$ (Аккаунт). Выдача 5 дней.',en:'1000 R$ (Account). 5 days delivery.'}},
+    {id:'p_rbxgp_new',title:{ru:'Robux GP',en:'Robux GP'},img:'https://sc04.alicdn.com/kf/A78437d31bfba404e8c5e09f12f481e87w.jpg',base:0.0036,unit:'R$',kind:'perUnit',note:{ru:'1000 рб (геймпасс). Выдача 5 дней.',en:'1000 rb (GP). 5 days delivery.'}},
+    {id:'p_rbxpv_new',title:{ru:'Robux Private',en:'Robux Private'},img:'https://sc04.alicdn.com/kf/A78437d31bfba404e8c5e09f12f481e87w.jpg',base:0.003,unit:'R$',kind:'perUnit',note:{ru:'1000 рб (приватный сервер). 5 дней.',en:'1000 rb (PV). 5 days delivery.'}}
   ]},
   {id:'brawl',emoji:'🎮',title:{ru:'Brawl Stars',en:'Brawl Stars'},items:[
     {id:'p_brawl_pass',title:{ru:'Brawl Pass',en:'Brawl Pass'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.15,unit:'акк'},
     {id:'p_brawl_plus_new',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.68,unit:'акк'}
   ]},
   {id:'ai',emoji:'🤖',title:{ru:'AI Подписки',en:'AI Subs'},items:[
-    {id:'p_gpt_p',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:1.89,unit:'мес',note:{ru:'180р. Личный акк, гарантия.',en:'180 RUB. Personal, warranty.'}},
-    {id:'p_gpt_acc',title:{ru:'ChatGPT Plus (Аккаунт)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:3.16,unit:'мес',note:{ru:'300р. Гарантия на весь срок.',en:'300 RUB. Full warranty.'}},
-    {id:'p_gem_g',title:{ru:'Gemini 18м (Гарантия)',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:1.05,unit:'акк',note:{ru:'100р. Гарантия на весь срок.',en:'100 RUB. Full warranty.'}},
-    {id:'p_gem_ng',title:{ru:'Gemini 18м (Без гар.)',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:0.37,unit:'акк',note:{ru:'35р. Без гарантии.',en:'35 RUB. No warranty.'}},
-    {id:'p_grok_g',title:{ru:'Super Grok (Гарантия)',en:'Super Grok'},img:'https://img.icons8.com/color/96/x.png',base:3.16,unit:'мес',note:{ru:'300р. Гарантия на весь срок.',en:'300 RUB. Full warranty.'}},
-    {id:'p_grok_ng',title:{ru:'Super Grok (Без гар.)',en:'Super Grok'},img:'https://img.icons8.com/color/96/x.png',base:2.11,unit:'мес',note:{ru:'200р. Без гарантии.',en:'200 RUB. No warranty.'}},
-    {id:'p_cld_30_ng',title:{ru:'Claude PRO 30д (Без гар.)',en:'Claude PRO 30d'},img:'https://img.icons8.com/color/96/brain.png',base:3.16,unit:'мес',note:{ru:'300р. Без гарантии.',en:'300 RUB. No warranty.'}},
-    {id:'p_cld_365_ng',title:{ru:'Claude PRO 365д (Без гар.)',en:'Claude PRO 365d'},img:'https://img.icons8.com/color/96/brain.png',base:15.79,unit:'год',note:{ru:'1500р. Без гарантии.',en:'1500 RUB. No warranty.'}},
-    {id:'p_cld_30_g',title:{ru:'Claude PRO 30д (Гарантия)',en:'Claude PRO 30d'},img:'https://img.icons8.com/color/96/brain.png',base:10.53,unit:'мес',note:{ru:'1000р. Способ, с гарантией.',en:'1000 RUB. Method, warranty.'}}
+    {id:'p_gpt_p',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:1.89,unit:'мес',note:{ru:'Личный акк, гарантия.',en:'Personal, warranty.'}},
+    {id:'p_gpt_acc',title:{ru:'ChatGPT Plus (Аккаунт)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:3.16,unit:'мес',note:{ru:'Гарантия на весь срок.',en:'Full warranty.'}},
+    {id:'p_gem_g',title:{ru:'Gemini 18м (Гарантия)',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:1.05,unit:'акк',note:{ru:'Гарантия на весь срок.',en:'Full warranty.'}},
+    {id:'p_gem_ng',title:{ru:'Gemini 18м (Без гар.)',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:0.37,unit:'акк',note:{ru:'Без гарантии.',en:'No warranty.'}},
+    {id:'p_grok_g',title:{ru:'Super Grok (Гарантия)',en:'Super Grok'},img:'https://sc04.alicdn.com/kf/Ab72368fd872646eba30b39f09ac99abdU.jpg',base:3.16,unit:'мес',note:{ru:'Гарантия на весь срок.',en:'Full warranty.'}},
+    {id:'p_grok_ng',title:{ru:'Super Grok (Без гар.)',en:'Super Grok'},img:'https://sc04.alicdn.com/kf/Ab72368fd872646eba30b39f09ac99abdU.jpg',base:2.11,unit:'мес',note:{ru:'Без гарантии.',en:'No warranty.'}},
+    {id:'p_cld_30_ng',title:{ru:'Claude PRO 30д (Без гар.)',en:'Claude PRO 30d'},img:'https://sc04.alicdn.com/kf/A79e1b8b316634ff785f4ab05f341d0e59.jpg',base:3.16,unit:'мес',note:{ru:'Без гарантии.',en:'No warranty.'}},
+    {id:'p_cld_365_ng',title:{ru:'Claude PRO 365д (Без гар.)',en:'Claude PRO 365d'},img:'https://sc04.alicdn.com/kf/A79e1b8b316634ff785f4ab05f341d0e59.jpg',base:15.79,unit:'год',note:{ru:'Без гарантии.',en:'No warranty.'}},
+    {id:'p_cld_30_g',title:{ru:'Claude PRO 30д (Гарантия)',en:'Claude PRO 30d'},img:'https://sc04.alicdn.com/kf/A79e1b8b316634ff785f4ab05f341d0e59.jpg',base:10.53,unit:'мес',note:{ru:'Способ, с гарантией.',en:'Method, warranty.'}}
   ]},
   {id:'virta',emoji:'💰',title:{ru:'Вирты',en:'Virts'},items:[
     {id:'p_rad',title:{ru:'Radmir RP',en:'Radmir'},img:'https://sc04.alicdn.com/kf/A9212c3b0f6d44b9c90de0a8d54f2ad4cx.jpg',base:0.55,unit:'1kk'},
@@ -135,7 +272,7 @@ const CATALOG = [
     {id:'p_arz',title:{ru:'Arizona RP',en:'Arizona'},img:'https://sc04.alicdn.com/kf/A356ac4bfea8f4fbe902d356556a27f210.jpg',base:2.63,unit:'1kkk'}
   ]}
 ];
-let state = {tab:'catalog', lang:'ru', currency:'USD', rate:95, cart:[], cat:'all'};
+let state = {tab:'catalog', lang:'ru', currency:'USD', rate:84.08, cart:[], cat:'all', payMethod:'sbp', showRevForm:false, revStars:5};
 
 function getProduct(pid){
   for(let c of CATALOG) for(let p of c.items) if(p.id===pid) return p;
@@ -159,13 +296,13 @@ function render(){
         displayUnit = '1000 ' + p.unit;
       }
       const pr = state.currency==='USD' ? ('$'+(displayBase*1.12).toFixed(2)) : (Math.round(displayBase*1.12*state.rate).toLocaleString()+' ₽');
-      h += `<div class="card"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="n">${p.note?p.note[state.lang]:''}</div><div class="pr">${pr} <small>/ ${displayUnit}</small></div></div><button class="add-btn" data-add="${p.id}">+</button></div>`;
+      h += `<div class="card"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="n">${p.note?p.note[state.lang]:''}</div><div class="pr">${pr} <small style="font-size:11px;opacity:0.5;font-weight:500">/ ${displayUnit}</small></div></div><button type="button" class="add-btn" data-add="${p.id}">+</button></div>`;
     }));
     v.innerHTML = h;
     setupDragScroll('chipsScroll');
   } else if(state.tab==='cart'){
     if(state.cart.length === 0){
-      v.innerHTML = '<div style="padding:60px;text-align:center;color:var(--text-muted)">🛒 Корзина пуста</div>';
+      v.innerHTML = '<div style="padding:100px 20px;text-align:center;color:var(--text-muted)"><div style="font-size:48px;margin-bottom:16px">🛒</div><div>Корзина пуста</div></div>';
     } else {
       let h = '<div style="padding:20px"><h2>Корзина</h2>';
       let total = 0;
@@ -177,38 +314,131 @@ function render(){
         const priceNum = displayBase * 1.12;
         total += priceNum;
         const pr = state.currency==='USD' ? ('$'+priceNum.toFixed(2)) : (Math.round(priceNum*state.rate).toLocaleString()+' ₽');
-        h += `<div class="card" style="margin:0 0 12px 0"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="pr">${pr}</div></div><button class="add-btn" style="background:rgba(255,0,0,0.1);color:#ff4444;font-size:18px" data-rem="${idx}">×</button></div>`;
+        h += `<div class="card" style="margin:0 0 12px 0"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="pr">${pr}</div></div><button type="button" class="add-btn" style="background:rgba(255,0,0,0.1);color:#ff4444;font-size:20px" data-rem="${idx}">×</button></div>`;
       });
       const totalStr = state.currency==='USD' ? ('$'+total.toFixed(2)) : (Math.round(total*state.rate).toLocaleString()+' ₽');
-      h += `<div style="padding:16px;background:rgba(255,255,255,0.05);border-radius:20px;margin-top:10px;display:flex;justify-content:space-between;align-items:center"><b>Итого:</b><b style="font-size:20px;color:var(--accent)">${totalStr}</b></div>`;
-      h += `<button class="add-btn" style="width:100%;margin-top:20px;background:#fff;color:#000;font-weight:900" id="checkoutBtn">Оформить заказ</button></div>`;
+      
+      h += '<div style="margin-top:24px"><div style="font-size:12px;font-weight:800;opacity:0.6;text-transform:uppercase">Способ оплаты</div>';
+      h += `<div class="pay-selector">
+        <div class="pay-opt ${state.payMethod==='sbp'?'on':''}" data-pay="sbp">СБП 🚀</div>
+        <div class="pay-opt ${state.payMethod==='crypto'?'on':''}" data-pay="crypto">USDT / BTC 💎</div>
+        <div class="pay-opt ${state.payMethod==='card'?'on':''}" data-pay="card">Карта РФ 💳</div>
+        <div class="pay-opt ${state.payMethod==='market'?'on':''}" data-pay="market">Баланс 👤</div>
+      </div></div>`;
+
+      h += `<div style="padding:20px;background:rgba(255,255,255,0.05);border-radius:var(--radius-md);margin-top:12px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border)"><b>Итого:</b><b style="font-size:22px;color:var(--accent)">${totalStr}</b></div>`;
+      h += `<button type="button" class="btn-primary" data-action="checkout">Связаться с поддержкой</button>`;
+      h += `<div id="checkoutError" class="error-msg"></div></div>`;
       v.innerHTML = h;
     }
+
   } else if(state.tab==='reviews'){
     const revs = [
-      {u:'Vaugham', t:'Лучший шоп! Все пришло быстро.', s:5},
-      {u:'Feryl', t:'Majestic RP вирты получил через 10 минут. Рекомендую!', s:5},
-      {u:'Mandr', t:'Цены на робуксы просто огонь.', s:5},
-      {u:'Cotyl', t:'Были задержки с AI подпиской, но поддержка помогла.', s:4},
-      {u:'Relitha', t:'Gemini 18m работает без нареканий.', s:5}
+      {u:'Zxc_Ghoul', t:'Имба рили, вирты прилетели за 5 мин, я в шоке. Всем советовать буду 😎', s:5},
+      {u:'Danya_Top', t:'Робуксы купил, всё чётко. Не заскамили, рил ток. Чекайте цены, тут реально топ за свои деньги.', s:5},
+      {u:'Kira07', t:'Gemini подписка работает, теперь домашка сама делается. Красава админ!', s:5},
+      {u:'Shadow', t:'Немного тупил бот в начале, но саппорт быстро ответили и всё пофиксили. Пон.', s:4},
+      {u:'Lil_Pump', t:'Лучший шоп в тг, цены пушка. Купил Старс, всё пришло. Факты.', s:5}
     ];
-    let h = '<div style="padding:20px"><h2>Отзывы</h2>';
-    revs.forEach(r => {
-      h += `<div class="rev-card"><b>${r.u}</b><div class="rev-stars">${'⭐'.repeat(r.s)}</div><p style="margin:8px 0 0;font-size:14px">${r.t}</p></div>`;
+    let h = '<div style="padding:20px;display:flex;justify-content:space-between;align-items:center"><h2>Отзывы</h2><button type="button" class="chip on" data-action="toggleRevForm">Написать</button></div>';
+    
+    if(state.showRevForm) {
+      h += `<div style="padding:0 20px"><div class="rev-form">
+        <div style="font-size:14px;font-weight:800;margin-bottom:12px">Ваша оценка</div>
+        <div class="rev-stars-select">
+          ${[1,2,3,4,5].map(n => `<span class="${state.revStars>=n?'on':''}" data-revstars="${n}">⭐</span>`).join('')}
+        </div>
+        <div style="font-size:14px;font-weight:800;margin-bottom:12px">Текст отзыва</div>
+        <textarea class="rev-input" placeholder="Напишите пару слов..."></textarea>
+        <button type="button" class="rev-submit" data-action="submitRev">Опубликовать</button>
+      </div></div>`;
+    }
+
+    revs.forEach((r, idx) => {
+      const avatar = r.u[0];
+      h += `<div class="rev-card" style="animation-delay: ${idx * 0.1}s">
+        <div class="rev-top">
+          <div class="rev-avatar">${avatar}</div>
+          <div>
+            <div style="font-weight:800;font-size:14px">${r.u}</div>
+            <div class="rev-stars">${'⭐'.repeat(r.s)}</div>
+          </div>
+        </div>
+        <p style="margin:0;font-size:14px;line-height:1.5;color:var(--text-secondary)">${r.t}</p>
+      </div>`;
     });
     h += '</div>';
     v.innerHTML = h;
   } else {
-    v.innerHTML = '<div style="padding:20px"><h2>Профиль</h2><div class="tile">👤 Guest</div><div class="tile" style="margin-top:12px;opacity:0.6">ID: 000000</div><div style="margin-top:40px;padding:20px;background:rgba(255,255,255,0.05);border-radius:20px;text-align:center">Способ оплаты: Crypto Pay</div></div>';
+    h = '<div style="padding:20px"><h2>Профиль</h2>';
+    h += `<div class="user-card"><div class="user-avatar-lg">G</div><div class="user-name-big">Guest User</div><div class="user-status-tag">Verified Buyer</div></div>`;
+    
+    h += `<div class="tile active"><div class="icon">💎</div><div class="info"><div class="label">Способ оплаты</div><div class="value">Crypto Pay</div></div><div class="status-pill">Active</div></div>`;
+    h += `<div class="tile"><div class="icon">🆔</div><div class="info"><div class="label">Telegram ID</div><div class="value">000000000</div></div></div>`;
+    
+    h += '<div style="margin-top:32px"><div style="font-size:13px;font-weight:800;margin-bottom:16px;opacity:0.6;text-transform:uppercase;letter-spacing:1px">Доступные валюты</div>';
+    h += '<div class="pay-grid">';
+    h += '<div class="pay-item"><img src="https://img.icons8.com/color/96/bitcoin.png"><div class="name">BTC</div></div>';
+    h += '<div class="pay-item"><img src="https://img.icons8.com/color/96/ethereum.png"><div class="name">ETH</div></div>';
+    h += '<div class="pay-item"><img src="https://img.icons8.com/color/96/tether.png"><div class="name">USDT</div></div>';
+    h += '</div></div>';
+
+    h += '<button class="btn-primary" style="background:rgba(255,255,255,0.06);color:#fff;border:1px solid var(--border);margin-top:40px" onclick="window.open(\'https://t.me/oncedshop_support\')">Написать в поддержку</button>';
+    h += '</div>';
+    v.innerHTML = h;
+  } else if(state.tab==='about'){
+    let h = '<div class="about-box"><h2>О магазине</h2>';
+    h += '<div class="about-card"><h3>🚀 Oncedshop</h3><p>Мы — ваш надежный проводник в мире цифровых товаров. Наша миссия — предоставлять качественные подписки и валюту по самым низким ценам на рынке.</p></div>';
+    h += '<div class="about-card"><h3>⚡ Мгновенная доставка</h3><p>Большинство товаров доставляются автоматически сразу после оплаты. Мы ценим ваше время.</p></div>';
+    h += '<div class="about-card"><h3>💎 Гарантия качества</h3><p>На все товары с пометкой "Гарантия" распространяется полная поддержка на весь срок действия подписки.</p></div>';
+    h += '<div style="text-align:center;padding:20px;opacity:0.5;font-size:12px">© 2026 Oncedshop. Все права защищены.</div>';
+    h += '</div>';
+    v.innerHTML = h;
   }
   
   document.getElementById('cartBadge').innerText = state.cart.length;
   document.getElementById('cartBadge').style.display = state.cart.length > 0 ? 'inline-block' : 'none';
 
-  ['catalog','reviews','cart','cabinet'].forEach(t => {
-    const b = document.getElementById('nav-'+(t==='cabinet'?'cabinet':t==='reviews'?'reviews':t==='cart'?'cart':'catalog'));
+  ['catalog','reviews','cart','cabinet','about'].forEach(t => {
+    const b = document.getElementById('nav-'+t);
     if(b) b.className = state.tab===t?'on':'';
   });
+}
+
+function animateFly(targetEl) {
+  const card = targetEl.closest('.card');
+  const img = card.querySelector('.pic img');
+  const cartBtn = document.getElementById('nav-cart');
+  
+  if(!img || !cartBtn) return;
+
+  const rect = img.getBoundingClientRect();
+  const cartRect = cartBtn.getBoundingClientRect();
+
+  const clone = img.cloneNode(true);
+  clone.className = 'flying-item';
+  clone.style.width = rect.width + 'px';
+  clone.style.height = rect.height + 'px';
+  clone.style.top = rect.top + 'px';
+  clone.style.left = rect.left + 'px';
+  
+  document.body.appendChild(clone);
+
+  // Trigger reflow
+  clone.offsetWidth;
+
+  clone.style.top = (cartRect.top + cartRect.height/2) + 'px';
+  clone.style.left = (cartRect.left + cartRect.width/2) + 'px';
+  clone.style.width = '20px';
+  clone.style.height = '20px';
+  clone.style.opacity = '0';
+  clone.style.transform = 'scale(0.1) rotate(360deg)';
+
+  setTimeout(() => {
+    clone.remove();
+    cartBtn.style.transform = 'scale(1.2)';
+    setTimeout(() => cartBtn.style.transform = '', 200);
+  }, 800);
 }
 
 function setupDragScroll(id){
@@ -221,18 +451,88 @@ function setupDragScroll(id){
   el.addEventListener('mousemove', e => { if(!isDown) return; e.preventDefault(); const x=e.pageX-el.offsetLeft; const walk=(x-startX)*2; el.scrollLeft=scrollLeft-walk; });
 }
 
+async function updateRate() {
+  try {
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const data = await res.json();
+    if(data && data.rates && data.rates.RUB) {
+      state.rate = data.rates.RUB;
+      render();
+    }
+  } catch (e) {}
+}
+
 function init(){
   if(tg){tg.ready();tg.expand();tg.setHeaderColor('#000000');}
+  updateRate();
   render();
   setTimeout(() => { document.getElementById('splash').classList.add('hide'); document.getElementById('app').classList.add('show'); }, 1200);
 }
 document.addEventListener('click', e => {
-  const d = e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat],[data-add],[data-rem]')?.dataset;
-  if(!d) {
-    if(e.target.id === 'checkoutBtn') {
-      if(tg) tg.sendData(JSON.stringify({action:'checkout', cart:state.cart, currency:state.currency}));
-      else alert('Заказ оформлен (тестовый режим)');
+  const el = e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat],[data-add],[data-rem],[data-action],[data-pay],[data-revstars]');
+  const d = el?.dataset;
+  if(!d) return;
+  e.preventDefault();
+  
+  if(d.action === 'checkout') {
+    const btn = el;
+    const errEl = document.getElementById('checkoutError');
+    if(errEl) errEl.style.display = 'none';
+
+    // Visual feedback: Loading state
+    btn.classList.add('loading');
+    if(tg) tg.HapticFeedback.notificationOccurred('success');
+
+    setTimeout(() => {
+      const payMap = {sbp:'СБП', crypto:'USDT/BTC', card:'Карта РФ', market:'Баланс'};
+      const payText = payMap[state.payMethod] || 'Не выбран';
+      const text = encodeURIComponent(`Привет! Хочу оформить заказ. Способ оплаты: ${payText}`);
+      const supportUrl = `https://t.me/oncedshop_support?text=${text}`;
+      
+      try {
+        if(tg && tg.openTelegramLink) {
+          tg.openTelegramLink(supportUrl);
+        } else {
+          const win = window.open(supportUrl, '_blank');
+          if (!win || win.closed || typeof win.closed == 'undefined') {
+            throw new Error('Popup blocked');
+          }
+        }
+        btn.classList.remove('loading');
+      } catch (e) {
+        btn.classList.remove('loading');
+        if(errEl) {
+          errEl.innerText = 'Не удалось открыть чат. Пожалуйста, напишите нам в @oncedshop_support напрямую.';
+          errEl.style.display = 'block';
+        }
+      }
+    }, 600); // Small delay for visual impact
+    return;
+  }
+  if(d.action === 'toggleRevForm') {
+    state.showRevForm = !state.showRevForm;
+    render();
+    return;
+  }
+  if(d.action === 'submitRev') {
+    if(tg && tg.showPopup) {
+      tg.showPopup({title:'Успешно', message:'Ваш отзыв отправлен на модерацию!', buttons:[{type:'ok'}]});
+    } else {
+      alert('Ваш отзыв отправлен на модерацию!');
     }
+    state.showRevForm = false;
+    render();
+    return;
+  }
+  if(d.revstars) {
+    state.revStars = parseInt(d.revstars);
+    render();
+    return;
+  }
+  if(d.pay) {
+    state.payMethod = d.pay;
+    if(tg) tg.HapticFeedback.impactOccurred('light');
+    render();
     return;
   }
   if(d.tab){ state.tab=d.tab; render(); window.scrollTo(0,0); }
@@ -242,7 +542,24 @@ document.addEventListener('click', e => {
   if(d.add){
     state.cart.push({id:d.add, q:1});
     if(tg) tg.HapticFeedback.impactOccurred('medium');
-    render();
+    
+    // Fly Animation
+    animateFly(el);
+    
+    // Button and card highlight
+    const btn = el;
+    const card = el.closest('.card');
+    if(btn && card) {
+      btn.classList.add('added-anim');
+      card.classList.add('adding');
+      setTimeout(() => { 
+        btn.classList.remove('added-anim'); 
+        card.classList.remove('adding');
+        render(); 
+      }, 400);
+    } else {
+      render();
+    }
   }
   if(d.rem !== undefined){
     state.cart.splice(parseInt(d.rem), 1);
