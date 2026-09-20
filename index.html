@@ -54,13 +54,14 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 .card{display:flex;align-items:center;gap:16px;padding:16px;border-radius:20px;margin:0 16px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);transition:0.2s;animation:cardIn 0.5s ease backwards;}
 @keyframes cardIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
 .pic{width:56px;height:56px;flex:0 0 56px;border-radius:14px;background:rgba(255,255,255,0.03);display:grid;place-items:center;overflow:hidden;}
-.pic img{width:80%;height:80%;object-fit:contain; padding:2px;}
+.pic img{width:100%;height:100%;object-fit:contain; padding:2px;}
 
 .pinfo{flex:1;min-width:0;}
 .pinfo .t{font-size:14px;font-weight:800;margin-bottom:2px;}
-.pinfo .n{font-size:11px;color:var(--text-secondary);line-height:1.4;margin-top:4px;font-weight:500;}
-.add-btn{all:unset;width:44px;height:44px;border-radius:14px;background:#fff;color:#000;display:grid;place-items:center;font-size:24px;cursor:pointer;margin-left:auto;box-shadow: 0 4px 10px rgba(255,255,255,0.15);}
+.pinfo .n{font-size:10px;color:var(--text-secondary);line-height:1.4;margin-top:4px;font-weight:500;}
+.pinfo .pr{font-size:15px;font-weight:900;margin-top:6px;color:var(--accent);}
 
+.add-btn{all:unset;width:44px;height:44px;border-radius:14px;background:#fff;color:#000;display:grid;place-items:center;font-size:24px;cursor:pointer;margin-left:auto;box-shadow: 0 4px 10px rgba(255,255,255,0.15);}
 
 .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;width:calc(100% - 32px);max-width:440px;z-index:100;display:flex;padding:10px;background:rgba(20,20,20,0.85);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.12);border-radius:28px;}
 .nav button{all:unset;flex:1;text-align:center;padding:8px 0;color:var(--text-muted);font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
@@ -78,7 +79,6 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 .backdrop.show{opacity:1;pointer-events:auto;}
 .sheet{width:100%;max-width:500px;background:#0f0f0f;border-top:1px solid var(--border-bright);border-radius:32px 32px 0 0;padding:24px 24px 40px;transform:translateY(100%);transition:0.4s cubic-bezier(0.4,0,0.2,1);max-height:85vh;overflow-y:auto;}
 .backdrop.show .sheet{transform:translateY(0);}
-.backdrop.show ~ .nav{transform:translate(-50%,120px);opacity:0;}
 
 .tile{display:flex;align-items:center;gap:14px;padding:18px;background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:18px;margin-bottom:12px;cursor:pointer;}
 </style>
@@ -102,32 +102,37 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
   <button id='nav-cabinet' data-tab='cabinet'><span class='ic'>👤</span><span>Профиль</span></button>
 </div>
 <div class='backdrop' id='backdrop' onclick="closeSheet()"><div class='sheet' id='sheet' onclick="event.stopPropagation()"></div></div>
+<div id='toast' style='position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:#fff;color:#000;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:800;opacity:0;transition:0.3s;pointer-events:none;z-index:1000'></div>
 
 <script>
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 const MARKUP = 0.12;
 const CATALOG = [
+  {id:'stars',emoji:'⭐',title:{ru:'Telegram Stars',en:'Stars'},items:[
+    {id:'p_stars',title:{ru:'Telegram Stars 1000',en:'Stars 1000'},img:'https://img.icons8.com/color/96/telegram-app.png',base:12,unit:'Stars'}
+  ]},
   {id:'tiktok',emoji:'📱',title:{ru:'TikTok',en:'TikTok'},items:[
-    {id:'p_tt_1',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.011,unit:'шт',kind:'perUnit',note:{ru:'Вход на аккаунт. 1.05р за 1 монету.',en:'Account login. 1.05 RUB per coin.'}}
+    {id:'p_tt',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.0105,unit:'шт',kind:'perUnit',note:{ru:'Вход на аккаунт. 1.05р за 1 шт.',en:'Account login. 1.05 RUB per pc.'}}
   ]},
   {id:'rbx',emoji:'🟩',title:{ru:'Roblox',en:'Roblox'},items:[
-    {id:'p_rbx_gp',title:{ru:'Robux GamePass',en:'Robux GP'},img:'https://img.icons8.com/color/96/roblox.png',base:0.0036,unit:'R$',kind:'perUnit',note:{ru:'5 дней. Комиссия на нас!',en:'5 days. Fee covered!'}},
-    {id:'p_rbx_pv',title:{ru:'Robux Private',en:'Robux Private'},img:'https://img.icons8.com/color/96/roblox.png',base:0.003,unit:'R$',kind:'perUnit',note:{ru:'5 дней. Через VIP Server.',en:'5 days. via VIP Server.'}}
+    {id:'p_rbx_gp',title:{ru:'Robux GamePass',en:'Robux GP'},img:'https://img.icons8.com/color/96/roblox.png',base:0.0036,unit:'R$',kind:'perUnit',note:{ru:'Выдача 5 дней. Без комиссии.',en:'5 days delivery. No fee.'}},
+    {id:'p_rbx_pv',title:{ru:'Robux Private Server',en:'Robux Private'},img:'https://img.icons8.com/color/96/roblox-studio.png',base:0.003,unit:'R$',kind:'perUnit',note:{ru:'Выдача 5 дней. VIP Server.',en:'5 days delivery. VIP Server.'}}
   ]},
   {id:'brawl',emoji:'🎮',title:{ru:'Brawl Stars',en:'Brawl Stars'},items:[
-    {id:'p_bp_reg',title:{ru:'Brawl Pass',en:'Brawl Pass'},img:'https://img.icons8.com/color/96/supercell.png',base:3.15,unit:'акк',note:{ru:'300р. Код или вход.',en:'300 RUB. Code or login.'}},
-    {id:'p_bp_plus',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},img:'https://img.icons8.com/color/96/supercell.png',base:3.68,unit:'акк',note:{ru:'350р. Код или вход.',en:'350 RUB. Code or login.'}}
+    {id:'p_bp_reg',title:{ru:'Brawl Pass',en:'Brawl Pass'},img:'https://img.icons8.com/color/96/brawl-stars.png',base:3.15,unit:'акк',note:{ru:'300р. Код или вход на акк.',en:'300 RUB. Code or login.'}},
+    {id:'p_bp_plus',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},img:'https://img.icons8.com/color/96/brawl-stars.png',base:3.68,unit:'акк',note:{ru:'350р. Код или вход на акк.',en:'350 RUB. Code or login.'}}
   ]},
   {id:'ai',emoji:'🤖',title:{ru:'AI Подписки',en:'AI Subs'},items:[
-    {id:'p_gpt_p',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:1.89,unit:'мес',note:{ru:'180р. Гарантия.',en:'180 RUB. Warranty.'}},
-    {id:'p_gem_18',title:{ru:'Gemini 18 мес',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:1.05,unit:'акк',note:{ru:'100р. Гарантия.',en:'100 RUB. Warranty.'}},
+    {id:'p_gpt_p',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:1.89,unit:'мес',note:{ru:'180р. Гарантия весь срок.',en:'180 RUB. Full warranty.'}},
+    {id:'p_gem_18',title:{ru:'Gemini 18 мес',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:1.05,unit:'акк',note:{ru:'100р. Гарантия весь срок.',en:'100 RUB. Full warranty.'}},
     {id:'p_claude_30',title:{ru:'Claude PRO 30д',en:'Claude PRO 30d'},img:'https://img.icons8.com/color/96/brain.png',base:3.15,unit:'мес',note:{ru:'300р. Без гарантии.',en:'300 RUB. No warranty.'}}
   ]},
   {id:'virta',emoji:'💰',title:{ru:'Вирты',en:'Virts'},items:[
-    {id:'p_rad',title:{ru:'Radmir RP',en:'Radmir'},img:'https://img.icons8.com/color/96/get-revenue.png',base:0.55,unit:'1kk',kind:'perUnit',note:{ru:'52р/1кк. Мин 25кк.',en:'52r/1m. Min 25m.'}},
-    {id:'p_ama',title:{ru:'Amazing RP',en:'Amazing'},img:'https://img.icons8.com/color/96/get-revenue.png',base:0.47,unit:'1kk',kind:'perUnit',note:{ru:'45р/1кк. Мин 25кк.',en:'45r/1m. Min 25m.'}},
-    {id:'p_maj',title:{ru:'Majestic RP',en:'Majestic'},img:'https://sun9-24.userapi.com/impf/c850624/v850624383/107f9c/7p5G-QxX_z0.jpg?size=200x200&quality=96&type=album',base:2.11,unit:'1kk',kind:'perUnit',note:{ru:'0.20р/1к. Мин 5.5кк.',en:'0.20r/1k. Min 5.5m.'}},
-    {id:'p_arz',title:{ru:'Arizona RP',en:'Arizona'},img:'https://sun9-62.userapi.com/impf/c855224/v855224098/197b10/Vn9mX3R297U.jpg?size=200x200&quality=96&type=album',base:2.63,unit:'1kkk',kind:'perUnit',note:{ru:'0.25р/1кк. Мин 5.7ккк.',en:'0.25r/1m. Min 5.7b.'}}
+    {id:'p_rad',title:{ru:'Radmir RP',en:'Radmir'},img:'https://radmir.online/images/logo.png',base:0.55,unit:'1kk',kind:'perUnit',note:{ru:'52р/1кк. Выдача: Банк/Трейд.',en:'52r/1m. Delivery: Bank/Trade.'}},
+    {id:'p_ama',title:{ru:'Amazing RP',en:'Amazing'},img:'https://amazing-online.com/assets/images/logo.png',base:0.47,unit:'1kk',kind:'perUnit',note:{ru:'45р/1кк. Выдача: Банк/Трейд.',en:'45r/1m. Delivery: Bank/Trade.'}},
+    {id:'p_br',title:{ru:'Black Russia',en:'Black Russia'},img:'https://blackrussia.online/img/logo.png',base:0.37,unit:'1kk',kind:'perUnit',note:{ru:'35р/1кк. Выдача: Банк/Трейд.',en:'35r/1m. Delivery: Bank/Trade.'}},
+    {id:'p_maj',title:{ru:'Majestic RP',en:'Majestic'},img:'https://gta5majestic.com/img/logo.png',base:2.11,unit:'1kk',kind:'perUnit',note:{ru:'0.20р/1к. Выдача: Покер/Банк.',en:'0.20r/1k. Delivery: Poker/Bank.'}},
+    {id:'p_arz',title:{ru:'Arizona RP',en:'Arizona'},img:'https://arizona-rp.com/img/logo.png',base:2.63,unit:'1kkk',kind:'perUnit',note:{ru:'0.25р/1кк. Выдача: Банк/Трейд.',en:'0.25r/1m. Delivery: Bank/Trade.'}}
   ]}
 ];
 
@@ -144,7 +149,9 @@ const REVIEWS = [
   {u:'Jarolla', d:'3 недели назад', t:'Brawl Pass Plus активировали через код за 10 минут. Красавцы!', s:5}
 ];
 
-let state = {tab:'catalog', lang:'ru', currency:'USD', rate:95, cat:'all'};
+let state = {tab:'catalog', lang:'ru', currency:'USD', rate:95, cat:'all', cart:[]};
+
+function money(x){ return state.currency==='RUB'?(Math.round(x*state.rate).toLocaleString()+' ₽'):('$'+x.toFixed(2)); }
 
 function render(){
   document.getElementById('curMover').style.transform = state.currency==='RUB'?'translateX(40px)':'translateX(0)';
@@ -156,15 +163,15 @@ function render(){
     CATALOG.forEach(c => h += `<div class="chip ${state.cat===c.id?'on':''}" data-cat="${c.id}">${c.emoji} ${c.title[state.lang]}</div>`);
     h += `</div><div class="hero"><div class="black-hole"></div><h1>ONCEDSHOP</h1><div class="cycling-text"><span id="adv-text">Лучшие цены и мгновенная выдача</span></div></div>`;
     (state.cat==='all'?CATALOG:CATALOG.filter(c=>c.id===state.cat)).forEach(c => c.items.forEach(p => {
-      const pr = state.currency==='USD' ? ('$'+p.base.toFixed(2)) : (Math.round(p.base*state.rate).toLocaleString()+' ₽');
-      h += `<div class="card"><div class="pic"><img src="${p.img}" onerror="this.src='https://img.icons8.com/color/96/box.png'"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="n">${p.note?p.note[state.lang]:''}</div><div class="pr">${pr} <small>/ ${p.unit}</small></div></div><button class="add-btn">+</button></div>`;
+      const pr = money(p.base * 1.12);
+      h += `<div class="card"><div class="pic"><img src="${p.img}" onerror="this.src='https://img.icons8.com/color/96/box.png'"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="n">${p.note?p.note[state.lang]:''}</div><div class="pr">${pr} <small>/ ${p.unit}</small></div></div><button class="add-btn" data-add="${p.id}">+</button></div>`;
     }));
     v.innerHTML = h;
   } else if(state.tab==='reviews'){
     let h = '<div style="padding:20px"><h2>Отзывы клиентов</h2>';
     REVIEWS.forEach(r => {
       let st = ''; for(let i=0;i<5;i++) st += (i<r.s?'★':'☆');
-      h += `<div class="rev-card"><div class="rev-top"><b>${r.u}</b><span>${r.d}</span></div><div class="rev-text">${r.t}</div><div class="rev-stars">${st}</div></div>`;
+      h += `<div class="rev-card"><div class="rev-top"><b class="rev-user">${r.u}</b><span class="rev-date">${r.d}</span></div><div class="rev-text">${r.t}</div><div class="rev-stars">${st}</div></div>`;
     });
     v.innerHTML = h + '</div>';
   } else {
@@ -175,41 +182,25 @@ function render(){
   document.getElementById('nav-cabinet').className = state.tab==='cabinet'?'on':'';
 }
 
-function openCrypto(){
-  document.getElementById('sheet').innerHTML = '<h3>Реквизиты</h3><div class="tile">TON: UQDE...Ks2</div><button class="cta" onclick="closeSheet()" style="all:unset;display:block;text-align:center;padding:16px;background:#fff;color:#000;border-radius:14px;font-weight:800;cursor:pointer;width:100%;">Закрыть</button>';
-  document.getElementById('backdrop').classList.add('show');
+function init(){
+  if(tg){tg.ready();tg.expand();tg.setHeaderColor('#000000');}
+  render();
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+    document.getElementById('app').classList.add('show');
+    setTimeout(() => { document.getElementById('splash').remove(); }, 600);
+  }, 1200);
 }
-function closeSheet(){ document.getElementById('backdrop').classList.remove('show'); }
 
 document.addEventListener('click', e => {
   const d = e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat]')?.dataset;
   if(!d) return;
-  if(d.tab){ state.tab=d.tab; render(); window.scrollTo(0,0); if(tg) tg.HapticFeedback.impactOccurred('light'); }
-  if(d.lang){ state.lang=d.lang; render(); if(tg) tg.HapticFeedback.impactOccurred('light'); }
-  if(d.cur){ state.currency=d.cur; render(); if(tg) tg.HapticFeedback.impactOccurred('light'); }
-  if(d.cat){ state.cat=d.cat; render(); if(tg) tg.HapticFeedback.impactOccurred('light'); }
+  if(d.tab){ state.tab=d.tab; render(); window.scrollTo(0,0); }
+  if(d.lang){ state.lang=d.lang; render(); }
+  if(d.cur){ state.currency=d.cur; render(); }
+  if(d.cat){ state.cat=d.cat; render(); }
+  if(tg) tg.HapticFeedback.impactOccurred('light');
 });
-
-function init(){
-  if(tg){
-    try {
-      tg.ready(); tg.expand();
-      tg.setHeaderColor('#000000');
-    } catch(e) {}
-  }
-  render();
-  
-  // Надежное скрытие заставки
-  const splash = document.getElementById('splash');
-  const app = document.getElementById('app');
-  
-  setTimeout(() => {
-    if(splash) splash.classList.add('hide');
-    if(app) app.classList.add('show');
-    // Удаляем из DOM через полсекунды после завершения анимации
-    setTimeout(() => { if(splash) splash.remove(); }, 600);
-  }, 1000); 
-}
 
 document.addEventListener('DOMContentLoaded', init);
 </script>
