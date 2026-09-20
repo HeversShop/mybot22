@@ -268,11 +268,11 @@ const CATALOG = [
     {id:'p_cld_30_g',title:{ru:'Claude PRO 30д (Гарантия)',en:'Claude PRO 30d'},img:'https://sc04.alicdn.com/kf/A79e1b8b316634ff785f4ab05f341d0e59.jpg',base:10.53,unit:'мес',note:{ru:'Способ, с гарантией.',en:'Method, warranty.'}}
   ]},
   {id:'virta',emoji:'💰',title:{ru:'Вирты',en:'Virts'},items:[
-    {id:'p_rad',title:{ru:'Radmir RP',en:'Radmir'},img:'https://sc04.alicdn.com/kf/A9212c3b0f6d44b9c90de0a8d54f2ad4cx.jpg',base:0.55,unit:'1kk'},
-    {id:'p_ama',title:{ru:'Amazing RP',en:'Amazing'},img:'https://sc04.alicdn.com/kf/A73993f3356a7447187b73f4b8b4fea8dP.jpg',base:0.47,unit:'1kk'},
-    {id:'p_br',title:{ru:'Black Russia',en:'Black Russia'},img:'https://sc04.alicdn.com/kf/A0e637ec6d6f141e39e483a5fc88d325bH.jpg',base:0.37,unit:'1kk'},
-    {id:'p_maj',title:{ru:'Majestic RP',en:'Majestic'},img:'https://sc04.alicdn.com/kf/A6fab1941243d4afaa1f1641cd9e3f6cfk.jpg',base:3.16,unit:'1kk'},
-    {id:'p_arz',title:{ru:'Arizona RP',en:'Arizona'},img:'https://sc04.alicdn.com/kf/A356ac4bfea8f4fbe902d356556a27f210.jpg',base:2.63,unit:'1kkk'}
+    {id:'p_rad',title:{ru:'Radmir RP',en:'Radmir'},img:'https://sc04.alicdn.com/kf/A9212c3b0f6d44b9c90de0a8d54f2ad4cx.jpg',base:0.265,unit:'1kk'},
+    {id:'p_ama',title:{ru:'Amazing RP',en:'Amazing'},img:'https://sc04.alicdn.com/kf/A73993f3356a7447187b73f4b8b4fea8dP.jpg',base:0.212,unit:'1kk'},
+    {id:'p_br',title:{ru:'Black Russia',en:'Black Russia'},img:'https://sc04.alicdn.com/kf/A0e637ec6d6f141e39e483a5fc88d325bH.jpg',base:0.106,unit:'1kk'},
+    {id:'p_maj',title:{ru:'Majestic RP',en:'Majestic'},img:'https://sc04.alicdn.com/kf/A6fab1941243d4afaa1f1641cd9e3f6cfk.jpg',base:2.124,unit:'1kk'},
+    {id:'p_arz',title:{ru:'Arizona RP',en:'Arizona'},img:'https://sc04.alicdn.com/kf/A356ac4bfea8f4fbe902d356556a27f210.jpg',base:1.752,unit:'1kkk'}
   ]}
 ];
 let state = {tab:'catalog', lang:'ru', currency:'USD', rate:84.08, rateLoading: false, cart:[], cat:'all', payMethod:'sbp', showRevForm:false, revStars:5};
@@ -337,11 +337,11 @@ function render(){
 
   } else if(state.tab==='reviews'){
     const revs = [
-      {u:'vlad_07', t:'купил робуксы всё пришло за пару минут спасибо', s:5},
-      {u:'kirill_pro', t:'взял старс всё ок не обман рекомендую', s:5},
-      {u:'sonya_v', t:'подписка работает теперь нейронка всё за меня делает ахах', s:5},
-      {u:'denis_one', t:'была задержка небольшая но админ всё решил быстро пон', s:4},
-      {u:'artem_k', t:'лучшие цены которые нашел спс за вирты', s:5}
+      {u:'Angarleenari', t:'купил робуксы всё пришло за пару минут спасибо', s:5, d:'Сегодня, 14:20'},
+      {u:'Falal', t:'взял старс всё ок не обман рекомендую', s:5, d:'Сегодня, 12:05'},
+      {u:'Gange', t:'подписка работает теперь нейронка всё за меня делает ахах', s:5, d:'Вчера, 23:45'},
+      {u:'elaisergal', t:'была задержка небольшая но админ всё решил быстро пон', s:4, d:'Вчера, 21:10'},
+      {u:'Yalenalda', t:'лучшие цены которые нашел спс за вирты', s:5, d:'18.09.2026'}
     ];
     let h = '<div style="padding:20px;display:flex;justify-content:space-between;align-items:center"><h2>Отзывы</h2><button type="button" class="chip on" data-action="toggleRevForm">Написать</button></div>';
     
@@ -362,9 +362,12 @@ function render(){
       h += `<div class="rev-card" style="animation-delay: ${idx * 0.1}s">
         <div class="rev-top">
           <div class="rev-avatar">${avatar}</div>
-          <div>
-            <div style="font-weight:800;font-size:14px">${r.u}</div>
-            <div class="rev-stars">${'⭐'.repeat(r.s)}</div>
+          <div style="flex:1; display:flex; justify-content:space-between; align-items:flex-start">
+            <div>
+              <div style="font-weight:800;font-size:14px">${r.u}</div>
+              <div class="rev-stars">${'⭐'.repeat(r.s)}</div>
+            </div>
+            <div style="font-size:10px;opacity:0.4;font-weight:600;margin-top:2px">${r.d}</div>
           </div>
         </div>
         <p style="margin:0;font-size:14px;line-height:1.5;color:var(--text-secondary)">${r.t}</p>
