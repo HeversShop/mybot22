@@ -21,8 +21,10 @@ MIN_ORDER_USD  = 7.0
 # ---- Throttling ----
 THROTTLE_RATE_SECONDS = 0.7
 
-# ---- CryptoBot ----
+# ---- CryptoBot / CryptoPay ----
 CRYPTOBOT_URL = 'https://t.me/CryptoBot'
+CRYPTO_PAY_TOKEN = os.getenv('CRYPTO_PAY_TOKEN', '').strip()
+CRYPTO_PAY_TESTNET = os.getenv('CRYPTO_PAY_TESTNET', '0') == '1'
 
 # ---- Crypto wallets ----
 CRYPTO_WALLETS = {
