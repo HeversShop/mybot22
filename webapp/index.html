@@ -38,8 +38,8 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 .pill-mover{position:absolute;top:2px;bottom:2px;width:40px;background:#fff;border-radius:var(--radius-pill);transition:transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);z-index:1;pointer-events:none;}
 
 /* ===== HERO & BLACK HOLE ===== */
-.hero{margin:16px;padding:50px 24px;border-radius:32px;background:#000;border:1px solid var(--border);position:relative;overflow:hidden;cursor:default;display:flex;flex-direction:column;align-items:center;text-align:center;}
-.hero h1{margin:0;font-size:38px;font-weight:900;letter-spacing:-2px;position:relative;z-index:10; color:#fff; text-shadow: 0 0 30px rgba(0,0,0,1);}
+.hero{margin:16px;padding:50px 24px;border-radius:28px;background:#000;border:1px solid var(--border);position:relative;overflow:hidden;}
+.hero h1{margin:0;font-size:36px;font-weight:900;letter-spacing:-2px;position:relative;z-index:10; color:#fff; text-shadow: 0 0 30px rgba(0,0,0,1);}
 .bh-container { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; pointer-events: none; opacity: 0.8; }
 .bh-core { width: 130px; height: 130px; background: #000; border-radius: 50%; box-shadow: 0 0 60px 10px rgba(255,255,255,0.15), inset 0 0 20px rgba(255,255,255,0.3); position: relative; z-index: 2; }
 .bh-ring { position: absolute; width: 320px; height: 320px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.08); animation: bhRotate 15s linear infinite; }
@@ -47,42 +47,32 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 .bh-ring:nth-child(2) { animation-duration: 25s; width: 260px; height: 260px; opacity: 0.6; }
 @keyframes bhRotate { from{transform:rotate(0deg) scale(1);} to{transform:rotate(360deg) scale(1.05);} }
 
-/* ===== CHIPS ===== */
-.chips{display:flex;gap:8px;overflow-x:auto;padding:4px 20px 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch; cursor: grab;}
-.chips::-webkit-scrollbar{display:none;}
-.chip{flex:0 0 auto;padding:12px 20px;border-radius:16px;font-size:13px;font-weight:700;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text-secondary);cursor:pointer;transition:0.2s;}
-.chip.on{background:#fff;color:#000;box-shadow:0 4px 20px rgba(255,255,255,0.25);}
-
 /* ===== CARDS ===== */
 .card{display:flex;align-items:center;gap:16px;padding:18px;border-radius:24px;margin:0 16px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);transition:0.2s;animation:cardIn 0.5s ease backwards;}
 @keyframes cardIn{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
-.card:active{transform:scale(0.97);background:rgba(255,255,255,0.08);}
 .pic{width:60px;height:60px;flex:0 0 60px;border-radius:16px;background:rgba(255,255,255,0.03);display:grid;place-items:center;overflow:hidden;position:relative;}
-.pic img{width:85%;height:80%;object-fit:contain;}
+.pic img{width:100%;height:100%;object-fit:contain;}
 
 .pinfo{flex:1;min-width:0;}
-.pinfo .t{font-size:15px;font-weight:800;margin-bottom:2px;}
-.pinfo .n{font-size:11px;color:var(--text-secondary);line-height:1.4;margin-top:4px;font-weight:500;}
+.pinfo .t{font-size:15px;font-weight:800;}
+.pinfo .n{font-size:10px;color:var(--text-secondary);line-height:1.4;margin-top:4px;font-weight:500;}
 .pinfo .pr{font-size:16px;font-weight:900;margin-top:6px;color:var(--accent);}
-
-.add-btn{all:unset;width:44px;height:44px;border-radius:14px;background:#fff;color:#000;display:grid;place-items:center;font-size:24px;cursor:pointer;margin-left:auto;box-shadow: 0 4px 10px rgba(255,255,255,0.1);}
+.add-btn{all:unset;width:44px;height:44px;border-radius:14px;background:#fff;color:#000;display:grid;place-items:center;font-size:24px;cursor:pointer;margin-left:auto;}
 
 /* ===== NAV ===== */
 .nav{position:fixed;left:50%;transform:translateX(-50%);bottom:20px;width:calc(100% - 32px);max-width:440px;z-index:100;display:flex;padding:10px;background:rgba(20,20,20,0.85);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.12);border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,0.5);}
 .nav button{all:unset;flex:1;text-align:center;padding:8px 0;color:var(--text-muted);font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;}
 .nav button.on{color:#fff;}
-.nav button .ic{font-size:22px;opacity:0.6;transition:0.2s;}
+.nav button .ic{font-size:20px;opacity:0.6;transition:0.2s;}
 .nav button.on .ic{opacity:1;transform:translateY(-2px);}
+.nbadge{background:var(--accent);color:#000;font-size:10px;padding:2px 6px;border-radius:10px;font-weight:900;margin-left:4px;display:inline-block;}
+
+/* ===== REVIEWS ===== */
+.rev-card{padding:18px;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:20px;margin:0 16px 12px;}
+.rev-top{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px;}
+.rev-stars{color:#ffb800;font-size:10px;margin-top:6px;}
 
 .bg-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-10deg);font-size:18vw;font-weight:900;color:rgba(255,255,255,0.015);z-index:-1;text-transform:uppercase;pointer-events:none;user-select:none;}
-
-/* ===== BACKDROP & SHEET ===== */
-.backdrop{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.85);opacity:0;pointer-events:none;transition:0.3s;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px);}
-.backdrop.show{opacity:1;pointer-events:auto;}
-.sheet{width:100%;max-width:500px;background:#0f0f0f;border-top:1px solid var(--border-bright);border-radius:32px 32px 0 0;padding:24px 24px 40px;transform:translateY(100%);transition:0.4s cubic-bezier(0.4,0,0.2,1);max-height:85vh;overflow-y:auto;}
-.backdrop.show .sheet{transform:translateY(0);}
-
-.tile{display:flex;align-items:center;gap:14px;padding:18px;background:linear-gradient(135deg,rgba(255,255,255,0.06),rgba(255,255,255,0.01));border:1px solid var(--border);border-radius:18px;margin-bottom:12px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -90,7 +80,7 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 <div class='bg-watermark'>Oncedshop</div>
 <div id='app'>
   <div class='topbar'>
-    <div class='brand'><div class='logo-sm'>O</div><div><div style='font-weight:800'>Oncedshop</div><div style='font-size:10px;color:var(--text-muted)' id='tagline'>Digital Store</div></div></div>
+    <div class='brand'><div class='logo-sm'>O</div><div><div style='font-weight:800'>Oncedshop</div><div style='font-size:10px;color:var(--text-muted)'>Digital Store</div></div></div>
     <div style='display:flex;gap:8px'>
       <div class='pill-group'><div class='pill-mover' id='curMover'></div><button data-cur='USD'>$</button><button data-cur='RUB'>₽</button></div>
       <div class='pill-group'><div class='pill-mover' id='langMover'></div><button data-lang='ru'>RU</button><button data-lang='en'>EN</button></div>
@@ -101,36 +91,28 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 <div class='nav' id='nav-bar'>
   <button id='nav-catalog' data-tab='catalog'><span class='ic'>🛍️</span><span>Каталог</span></button>
   <button id='nav-reviews' data-tab='reviews'><span class='ic'>💬</span><span>Отзывы</span></button>
+  <button id='nav-cart' data-tab='cart'><span class='ic'>❤️</span><span>Корзина<span id='cartBadge' style='display:none' class='nbadge'>0</span></span></button>
   <button id='nav-cabinet' data-tab='cabinet'><span class='ic'>👤</span><span>Профиль</span></button>
 </div>
-<div class='backdrop' id='backdrop' onclick="closeSheet()"><div class='sheet' id='sheet' onclick="event.stopPropagation()"></div></div>
 
 <script>
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 const CATALOG = [
-  {id:'tiktok',emoji:'📱',title:{ru:'TikTok',en:'TikTok'},items:[
-    {id:'p_tt',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.011,unit:'шт',note:{ru:'Вход на аккаунт. 1.05р за 1 шт.',en:'Account login. 1.05 RUB per pc.'}}
-  ]},
-  {id:'rbx',emoji:'🟩',title:{ru:'Roblox',en:'Roblox'},items:[
-    {id:'p_rbx_gp',title:{ru:'Robux GamePass',en:'Robux GP'},img:'https://img.icons8.com/color/96/roblox.png',base:0.0036,unit:'R$',note:{ru:'$3.6 - 1000 рб (геймпасс). Выдача 5 дней.',en:'$3.6 - 1000 rb (GP). 5 days delivery.'}},
-    {id:'p_rbx_pv',title:{ru:'Robux Private',en:'Robux Private'},img:'https://img.icons8.com/color/96/roblox-studio.png',base:0.003,unit:'R$',note:{ru:'$3 - 1000 рб (приватный сервер). 5 дней.',en:'$3 - 1000 rb (PV). 5 days delivery.'}}
-  ]},
+  {id:'stars',emoji:'⭐',title:{ru:'Telegram Stars',en:'Stars'},items:[{id:'p_stars',title:{ru:'Stars 1000',en:'Stars 1000'},img:'https://img.icons8.com/color/96/telegram-app.png',base:12,unit:'Stars'}]},
+  {id:'tiktok',emoji:'📱',title:{ru:'TikTok',en:'TikTok'},items:[{id:'p_tt',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.0105,unit:'шт',kind:'perUnit',note:{ru:'Вход на аккаунт. 1.05р за 1 шт.',en:'Account login. 1.05 RUB per pc.'}}]},
   {id:'brawl',emoji:'🎮',title:{ru:'Brawl Stars',en:'Brawl Stars'},items:[
-    {id:'p_bp_reg',title:{ru:'Brawl Pass',en:'Brawl Pass'},img:'https://img.icons8.com/color/96/supercell.png',base:3.15,unit:'акк',note:{ru:'300р. Код или вход на акк.',en:'300 RUB. Code or login.'}},
-    {id:'p_bp_plus',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},img:'https://img.icons8.com/color/96/supercell.png',base:3.68,unit:'акк',note:{ru:'350р. Код или вход на акк.',en:'350 RUB. Code or login.'}}
-  ]},
-  {id:'ai',emoji:'🤖',title:{ru:'AI Подписки',en:'AI Subs'},items:[
-    {id:'p_gpt_p',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:1.89,unit:'мес',note:{ru:'180р. Гарантия весь срок.',en:'180 RUB. Full warranty.'}},
-    {id:'p_gem_18',title:{ru:'Gemini 18 мес',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:1.05,unit:'акк',note:{ru:'100р. Гарантия весь срок.',en:'100 RUB. Full warranty.'}},
-    {id:'p_claude_365',title:{ru:'Claude PRO 365д',en:'Claude PRO 365d'},img:'https://img.icons8.com/color/96/brain.png',base:15.79,unit:'год',note:{ru:'1500р. Без гарантии.',en:'1500 RUB. No warranty.'}}
+    {id:'p_bp',title:{ru:'Brawl Pass',en:'Brawl Pass'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.15,unit:'акк'},
+    {id:'p_bp_plus',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.68,unit:'акк'}
   ]},
   {id:'virta',emoji:'💰',title:{ru:'Вирты',en:'Virts'},items:[
-    {id:'p_rad',title:{ru:'Radmir RP',en:'Radmir'},img:'https://sc04.alicdn.com/kf/A9212c3b0f6d44b9c90de0a8d54f2ad4cx.jpg',base:0.55,unit:'1kk',note:{ru:'52р/1кк. Банк, трейд, авто.',en:'52r/1m. Delivery: Bank/Trade.'}},
-    {id:'p_maj',title:{ru:'Majestic RP',en:'Majestic'},img:'https://sc04.alicdn.com/kf/A6fab1941243d4afaa1f1641cd9e3f6cfk.jpg',base:3.16,unit:'1kk',note:{ru:'0.30р/1к. Покер, банк, авто.',en:'0.30r/1k. Poker, bank, car.'}},
-    {id:'p_arz',title:{ru:'Arizona RP',en:'Arizona'},img:'https://sc04.alicdn.com/kf/A356ac4bfea8f4fbe902d356556a27f210.jpg',base:2.63,unit:'1kkk',note:{ru:'0.25р/1кк. Банк, трейд, авто.',en:'0.25r/1m. Delivery: Bank/Trade.'}}
+    {id:'p_rad',title:{ru:'Radmir RP',en:'Radmir'},img:'https://sc04.alicdn.com/kf/A9212c3b0f6d44b9c90de0a8d54f2ad4cx.jpg',base:0.55,unit:'1kk'},
+    {id:'p_ama',title:{ru:'Amazing RP',en:'Amazing'},img:'https://sc04.alicdn.com/kf/A73993f3356a7447187b73f4b8b4fea8dP.jpg',base:0.47,unit:'1kk'},
+    {id:'p_br',title:{ru:'Black Russia',en:'Black Russia'},img:'https://sc04.alicdn.com/kf/A0e637ec6d6f141e39e483a5fc88d325bH.jpg',base:0.37,unit:'1kk'},
+    {id:'p_maj',title:{ru:'Majestic RP',en:'Majestic'},img:'https://sc04.alicdn.com/kf/A6fab1941243d4afaa1f1641cd9e3f6cfk.jpg',base:3.16,unit:'1kk'},
+    {id:'p_arz',title:{ru:'Arizona RP',en:'Arizona'},img:'https://sc04.alicdn.com/kf/A356ac4bfea8f4fbe902d356556a27f210.jpg',base:2.63,unit:'1kkk'}
   ]}
 ];
-let state = {tab:'catalog', lang:'ru', currency:'USD', rate:95, cat:'all'};
+let state = {tab:'catalog', lang:'ru', currency:'USD', rate:95, cart:[], cat:'all'};
 
 function render(){
   document.getElementById('curMover').style.transform = state.currency==='RUB'?'translateX(40px)':'translateX(0)';
@@ -141,16 +123,21 @@ function render(){
     CATALOG.forEach(c => h += `<div class="chip ${state.cat===c.id?'on':''}" data-cat="${c.id}">${c.emoji} ${c.title[state.lang]}</div>`);
     h += `</div><div class="hero"><div class="bh-container"><div class="bh-ring"></div><div class="bh-ring"></div><div class="bh-core"></div></div><h1>ONCEDSHOP</h1><div style="font-size:14px;color:rgba(255,255,255,0.6);margin-top:8px;position:relative;z-index:10">Лучшие цены и мгновенная выдача</div></div>`;
     (state.cat==='all'?CATALOG:CATALOG.filter(c=>c.id===state.cat)).forEach(c => c.items.forEach(p => {
-      const pr = state.currency==='USD' ? ('$'+p.base.toFixed(2)) : (Math.round(p.base*state.rate)+' ₽');
-      h += `<div class="card"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="n">${p.note?p.note[state.lang]:''}</div><div class="pr">${pr} <small>/ ${p.unit}</small></div></div><button class="add-btn">+</button></div>`;
+      const pr = state.currency==='USD' ? ('$'+(p.base*1.12).toFixed(2)) : (Math.round(p.base*1.12*state.rate).toLocaleString()+' ₽');
+      h += `<div class="card"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="n">${p.note?p.note[state.lang]:''}</div><div class="pr">${pr} <small>/ ${p.unit}</small></div></div><button class="add-btn" data-add="${p.id}">+</button></div>`;
     }));
     v.innerHTML = h;
+  } else if(state.tab==='cart'){
+    v.innerHTML = '<div style="padding:60px;text-align:center;color:var(--text-muted)">🛒 Корзина пуста</div>';
   } else if(state.tab==='reviews'){
-    v.innerHTML = '<div style="padding:20px"><h2>Отзывы</h2><div class="rev-card"><div class="rev-top"><b>Vaugham</b><span>Сегодня</span></div><div class="rev-text">Взял вирты на Majestic. Лучший курс!</div></div></div>';
-  } else { v.innerHTML = '<div style="padding:20px"><div class="tile">👤 Guest</div></div>'; }
-  document.getElementById('nav-catalog').className = state.tab==='catalog'?'on':'';
-  document.getElementById('nav-reviews').className = state.tab==='reviews'?'on':'';
-  document.getElementById('nav-cabinet').className = state.tab==='cabinet'?'on':'';
+    v.innerHTML = '<div style="padding:20px"><h2>Отзывы</h2><div class="rev-card"><b>Vaugham</b><p>Лучший шоп!</p></div></div>';
+  } else {
+    v.innerHTML = '<div style="padding:20px"><div class="tile">👤 Guest</div><div class="tile">💎 Оплата криптой</div></div>';
+  }
+  ['catalog','reviews','cart','cabinet'].forEach(t => {
+    const b = document.getElementById('nav-'+(t==='cabinet'?'cabinet':t==='reviews'?'reviews':t==='cart'?'cart':'catalog'));
+    if(b) b.className = state.tab===t?'on':'';
+  });
 }
 
 function init(){
