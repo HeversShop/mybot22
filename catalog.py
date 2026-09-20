@@ -11,6 +11,9 @@ CATALOG = [
          'note': {'ru': 'Вход на аккаунт. 1.05р за 1 шт.', 'en': 'Account login. 1.05 RUB per pc.'}},
     ]},
     {'id': 'rbx', 'emoji': '🟩', 'title': {'ru': 'Roblox', 'en': 'Roblox'}, 'items': [
+        {'id': 'p_rbx_acc', 'img': 'https://img.icons8.com/color/96/roblox.png', 'title': {'ru': 'Robux Account', 'en': 'Robux Account'},
+         'kind': 'perUnit', 'base': 0.0034, 'unit': 'R$', 'step': 1000, 'def': 1000, 'min': 1000,
+         'note': {'ru': '$3.4 - 1000 R$ (Аккаунт). Выдача 5 дней.', 'en': '$3.4 - 1000 R$ (Account). 5 days delivery.'}},
         {'id': 'p_rbxgp_new', 'img': 'https://img.icons8.com/color/96/roblox.png', 'title': {'ru': 'Robux GamePass', 'en': 'Robux GP'},
          'kind': 'perUnit', 'base': 0.0036, 'unit': 'R$', 'step': 1000, 'def': 1000, 'min': 1000,
          'note': {'ru': '$3.6 - 1000 рб (геймпасс). Выдача 5 дней.', 'en': '$3.6 - 1000 rb (GP). 5 days delivery.'}},

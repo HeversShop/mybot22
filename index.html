@@ -15,9 +15,16 @@
   --radius-pill: 99px; --radius-lg: 28px; --radius-md: 20px;
   --font-main: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;}
-html,body{margin:0;padding:0;min-height:100%;background:#000;color-scheme: dark; overflow-x: hidden;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;outline:none;user-select:none;}
+html,body{margin:0;padding:0;min-height:100%;background:#000;color-scheme: dark; overflow-x: hidden; touch-action: pan-y;}
 body{font-family:var(--font-main); color:var(--text); display:flex;justify-content:center; -webkit-font-smoothing: antialiased;}
+
+/* ===== CHIPS ===== */
+.chips{display:flex;gap:8px;padding:4px 16px 12px;overflow-x:auto;scrollbar-width:none;cursor:grab;}
+.chips::-webkit-scrollbar{display:none;}
+.chips:active{cursor:grabbing;}
+.chip{padding:8px 16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:var(--radius-pill);font-size:12px;font-weight:700;white-space:nowrap;transition:0.2s;}
+.chip.on{background:#fff;color:#000;border-color:#fff;}
 #app{width:100%;max-width:500px;min-height:100vh;padding-bottom:140px;opacity:0;transition:opacity 0.6s ease;}
 #app.show{opacity:1;}
 
@@ -98,11 +105,16 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 <script>
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 const CATALOG = [
-  {id:'stars',emoji:'⭐',title:{ru:'Telegram Stars',en:'Stars'},items:[{id:'p_stars',title:{ru:'Stars 1000',en:'Stars 1000'},img:'https://img.icons8.com/color/96/telegram-app.png',base:12,unit:'Stars'}]},
-  {id:'tiktok',emoji:'📱',title:{ru:'TikTok',en:'TikTok'},items:[{id:'p_tt',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.0105,unit:'шт',kind:'perUnit',note:{ru:'Вход на аккаунт. 1.05р за 1 шт.',en:'Account login. 1.05 RUB per pc.'}}]},
+  {id:'stars',emoji:'⭐',title:{ru:'Telegram Stars',en:'Stars'},items:[{id:'p_stars_1k',title:{ru:'Stars 1000',en:'Stars 1000'},img:'https://img.icons8.com/color/96/telegram-app.png',base:12,unit:'Stars'}]},
+  {id:'tiktok',emoji:'📱',title:{ru:'TikTok',en:'TikTok'},items:[{id:'p_tt_coins',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.0105,unit:'шт',kind:'perUnit',note:{ru:'Вход на аккаунт. 1.05р за 1 шт.',en:'Account login. 1.05 RUB per pc.'}}]},
+  {id:'rbx',emoji:'🟩',title:{ru:'Roblox',en:'Roblox'},items:[
+    {id:'p_rbx_acc',title:{ru:'Robux Account',en:'Robux Account'},img:'https://img.icons8.com/color/96/roblox.png',base:0.0034,unit:'R$',kind:'perUnit',note:{ru:'$3.4 - 1000 R$ (Аккаунт). Выдача 5 дней.',en:'$3.4 - 1000 R$ (Account). 5 days delivery.'}},
+    {id:'p_rbxgp_new',title:{ru:'Robux GP',en:'Robux GP'},img:'https://img.icons8.com/color/96/roblox.png',base:0.0036,unit:'R$',kind:'perUnit',note:{ru:'$3.6 - 1000 рб (геймпасс). Выдача 5 дней.',en:'$3.6 - 1000 rb (GP). 5 days delivery.'}},
+    {id:'p_rbxpv_new',title:{ru:'Robux Private',en:'Robux Private'},img:'https://img.icons8.com/color/96/roblox-studio.png',base:0.003,unit:'R$',kind:'perUnit',note:{ru:'$3 - 1000 рб (приватный сервер). 5 дней.',en:'$3 - 1000 rb (PV). 5 days delivery.'}}
+  ]},
   {id:'brawl',emoji:'🎮',title:{ru:'Brawl Stars',en:'Brawl Stars'},items:[
-    {id:'p_bp',title:{ru:'Brawl Pass',en:'Brawl Pass'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.15,unit:'акк'},
-    {id:'p_bp_plus',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.68,unit:'акк'}
+    {id:'p_brawl_pass',title:{ru:'Brawl Pass',en:'Brawl Pass'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.15,unit:'акк'},
+    {id:'p_brawl_plus_new',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.68,unit:'акк'}
   ]},
   {id:'ai',emoji:'🤖',title:{ru:'AI Подписки',en:'AI Subs'},items:[
     {id:'p_gpt_p',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:1.89,unit:'мес',note:{ru:'180р. Личный акк, гарантия.',en:'180 RUB. Personal, warranty.'}},
@@ -125,30 +137,88 @@ const CATALOG = [
 ];
 let state = {tab:'catalog', lang:'ru', currency:'USD', rate:95, cart:[], cat:'all'};
 
+function getProduct(pid){
+  for(let c of CATALOG) for(let p of c.items) if(p.id===pid) return p;
+  return null;
+}
+
 function render(){
   document.getElementById('curMover').style.transform = state.currency==='RUB'?'translateX(40px)':'translateX(0)';
   document.getElementById('langMover').style.transform = state.lang==='en'?'translateX(40px)':'translateX(0)';
   const v = document.getElementById('view');
+  
   if(state.tab==='catalog'){
-    let h = `<div class="chips"><div class="chip ${state.cat==='all'?'on':''}" data-cat="all">Все</div>`;
+    let h = `<div class="chips" id="chipsScroll"><div class="chip ${state.cat==='all'?'on':''}" data-cat="all">Все</div>`;
     CATALOG.forEach(c => h += `<div class="chip ${state.cat===c.id?'on':''}" data-cat="${c.id}">${c.emoji} ${c.title[state.lang]}</div>`);
     h += `</div><div class="hero"><div class="bh-container"><div class="bh-ring"></div><div class="bh-ring"></div><div class="bh-core"></div></div><h1>ONCEDSHOP</h1><div style="font-size:14px;color:rgba(255,255,255,0.6);margin-top:8px;position:relative;z-index:10">Лучшие цены и мгновенная выдача</div></div>`;
     (state.cat==='all'?CATALOG:CATALOG.filter(c=>c.id===state.cat)).forEach(c => c.items.forEach(p => {
-      const pr = state.currency==='USD' ? ('$'+(p.base*1.12).toFixed(2)) : (Math.round(p.base*1.12*state.rate).toLocaleString()+' ₽');
-      h += `<div class="card"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="n">${p.note?p.note[state.lang]:''}</div><div class="pr">${pr} <small>/ ${p.unit}</small></div></div><button class="add-btn" data-add="${p.id}">+</button></div>`;
+      let displayBase = p.base;
+      let displayUnit = p.unit;
+      if(p.kind==='perUnit' && p.base < 0.1) {
+        displayBase = p.base * 1000;
+        displayUnit = '1000 ' + p.unit;
+      }
+      const pr = state.currency==='USD' ? ('$'+(displayBase*1.12).toFixed(2)) : (Math.round(displayBase*1.12*state.rate).toLocaleString()+' ₽');
+      h += `<div class="card"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="n">${p.note?p.note[state.lang]:''}</div><div class="pr">${pr} <small>/ ${displayUnit}</small></div></div><button class="add-btn" data-add="${p.id}">+</button></div>`;
     }));
     v.innerHTML = h;
+    setupDragScroll('chipsScroll');
   } else if(state.tab==='cart'){
-    v.innerHTML = '<div style="padding:60px;text-align:center;color:var(--text-muted)">🛒 Корзина пуста</div>';
+    if(state.cart.length === 0){
+      v.innerHTML = '<div style="padding:60px;text-align:center;color:var(--text-muted)">🛒 Корзина пуста</div>';
+    } else {
+      let h = '<div style="padding:20px"><h2>Корзина</h2>';
+      let total = 0;
+      state.cart.forEach((item, idx) => {
+        const p = getProduct(item.id);
+        if(!p) return;
+        let displayBase = p.base;
+        if(p.kind==='perUnit' && p.base < 0.1) displayBase = p.base * 1000;
+        const priceNum = displayBase * 1.12;
+        total += priceNum;
+        const pr = state.currency==='USD' ? ('$'+priceNum.toFixed(2)) : (Math.round(priceNum*state.rate).toLocaleString()+' ₽');
+        h += `<div class="card" style="margin:0 0 12px 0"><div class="pic"><img src="${p.img}"></div><div class="pinfo"><div class="t">${p.title[state.lang]}</div><div class="pr">${pr}</div></div><button class="add-btn" style="background:rgba(255,0,0,0.1);color:#ff4444;font-size:18px" data-rem="${idx}">×</button></div>`;
+      });
+      const totalStr = state.currency==='USD' ? ('$'+total.toFixed(2)) : (Math.round(total*state.rate).toLocaleString()+' ₽');
+      h += `<div style="padding:16px;background:rgba(255,255,255,0.05);border-radius:20px;margin-top:10px;display:flex;justify-content:space-between;align-items:center"><b>Итого:</b><b style="font-size:20px;color:var(--accent)">${totalStr}</b></div>`;
+      h += `<button class="add-btn" style="width:100%;margin-top:20px;background:#fff;color:#000;font-weight:900" id="checkoutBtn">Оформить заказ</button></div>`;
+      v.innerHTML = h;
+    }
   } else if(state.tab==='reviews'){
-    v.innerHTML = '<div style="padding:20px"><h2>Отзывы</h2><div class="rev-card"><b>Vaugham</b><p>Лучший шоп!</p></div></div>';
+    const revs = [
+      {u:'Vaugham', t:'Лучший шоп! Все пришло быстро.', s:5},
+      {u:'Feryl', t:'Majestic RP вирты получил через 10 минут. Рекомендую!', s:5},
+      {u:'Mandr', t:'Цены на робуксы просто огонь.', s:5},
+      {u:'Cotyl', t:'Были задержки с AI подпиской, но поддержка помогла.', s:4},
+      {u:'Relitha', t:'Gemini 18m работает без нареканий.', s:5}
+    ];
+    let h = '<div style="padding:20px"><h2>Отзывы</h2>';
+    revs.forEach(r => {
+      h += `<div class="rev-card"><b>${r.u}</b><div class="rev-stars">${'⭐'.repeat(r.s)}</div><p style="margin:8px 0 0;font-size:14px">${r.t}</p></div>`;
+    });
+    h += '</div>';
+    v.innerHTML = h;
   } else {
-    v.innerHTML = '<div style="padding:20px"><div class="tile">👤 Guest</div><div class="tile">💎 Оплата криптой</div></div>';
+    v.innerHTML = '<div style="padding:20px"><h2>Профиль</h2><div class="tile">👤 Guest</div><div class="tile" style="margin-top:12px;opacity:0.6">ID: 000000</div><div style="margin-top:40px;padding:20px;background:rgba(255,255,255,0.05);border-radius:20px;text-align:center">Способ оплаты: Crypto Pay</div></div>';
   }
+  
+  document.getElementById('cartBadge').innerText = state.cart.length;
+  document.getElementById('cartBadge').style.display = state.cart.length > 0 ? 'inline-block' : 'none';
+
   ['catalog','reviews','cart','cabinet'].forEach(t => {
     const b = document.getElementById('nav-'+(t==='cabinet'?'cabinet':t==='reviews'?'reviews':t==='cart'?'cart':'catalog'));
     if(b) b.className = state.tab===t?'on':'';
   });
+}
+
+function setupDragScroll(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  let isDown = false, startX, scrollLeft;
+  el.addEventListener('mousedown', e => { isDown=true; el.classList.add('active'); startX=e.pageX-el.offsetLeft; scrollLeft=el.scrollLeft; });
+  el.addEventListener('mouseleave', () => { isDown=false; el.classList.remove('active'); });
+  el.addEventListener('mouseup', () => { isDown=false; el.classList.remove('active'); });
+  el.addEventListener('mousemove', e => { if(!isDown) return; e.preventDefault(); const x=e.pageX-el.offsetLeft; const walk=(x-startX)*2; el.scrollLeft=scrollLeft-walk; });
 }
 
 function init(){
@@ -157,13 +227,29 @@ function init(){
   setTimeout(() => { document.getElementById('splash').classList.add('hide'); document.getElementById('app').classList.add('show'); }, 1200);
 }
 document.addEventListener('click', e => {
-  const d = e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat]')?.dataset;
-  if(!d) return;
+  const d = e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat],[data-add],[data-rem]')?.dataset;
+  if(!d) {
+    if(e.target.id === 'checkoutBtn') {
+      if(tg) tg.sendData(JSON.stringify({action:'checkout', cart:state.cart, currency:state.currency}));
+      else alert('Заказ оформлен (тестовый режим)');
+    }
+    return;
+  }
   if(d.tab){ state.tab=d.tab; render(); window.scrollTo(0,0); }
   if(d.lang){ state.lang=d.lang; render(); }
   if(d.cur){ state.currency=d.cur; render(); }
   if(d.cat){ state.cat=d.cat; render(); }
-  if(tg) tg.HapticFeedback.impactOccurred('light');
+  if(d.add){
+    state.cart.push({id:d.add, q:1});
+    if(tg) tg.HapticFeedback.impactOccurred('medium');
+    render();
+  }
+  if(d.rem !== undefined){
+    state.cart.splice(parseInt(d.rem), 1);
+    if(tg) tg.HapticFeedback.impactOccurred('light');
+    render();
+  }
+  if(tg && !d.add && d.rem===undefined) tg.HapticFeedback.impactOccurred('light');
 });
 document.addEventListener('DOMContentLoaded', init);
 </script>
