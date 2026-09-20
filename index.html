@@ -35,6 +35,8 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 @keyframes logoPulse{from{transform:scale(1);}to{transform:scale(1.1);box-shadow:0 0 35px rgba(255,255,255,0.25);}}
 
 /* ===== TOPBAR ===== */
+@keyframes pulse { from { opacity: 0.2; } to { opacity: 0.8; } }
+
 .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:rgba(0,0,0,0.8);backdrop-filter:blur(25px);-webkit-backdrop-filter:blur(25px);border-bottom:1px solid var(--border);}
 .brand{display:flex;align-items:center;gap:12px;}
 .logo-sm{width:38px;height:38px;border-radius:11px;background:#fff;display:grid;place-items:center;font-size:18px;font-weight:900;color:#000;}
@@ -224,7 +226,8 @@ body{font-family:var(--font-main); color:var(--text); display:flex;justify-conte
 <div id='app'>
   <div class='topbar'>
     <div class='brand'><div class='logo-sm'>O</div><div><div style='font-weight:800'>Oncedshop</div><div style='font-size:10px;color:var(--text-muted)'>Digital Store</div></div></div>
-    <div style='display:flex;gap:8px'>
+    <div style='display:flex;gap:8px;align-items:center'>
+      <div id="rateStatus" style="font-size:10px;color:var(--accent);opacity:0.6;display:none;margin-right:-4px;animation: pulse 1s infinite alternate">●</div>
       <div class='pill-group'><div class='pill-mover' id='curMover'></div><button type="button" data-cur='USD'>$</button><button type="button" data-cur='RUB'>₽</button></div>
       <div class='pill-group'><div class='pill-mover' id='langMover'></div><button type="button" data-lang='ru'>RU</button><button type="button" data-lang='en'>EN</button></div>
     </div>
@@ -272,7 +275,7 @@ const CATALOG = [
     {id:'p_arz',title:{ru:'Arizona RP',en:'Arizona'},img:'https://sc04.alicdn.com/kf/A356ac4bfea8f4fbe902d356556a27f210.jpg',base:2.63,unit:'1kkk'}
   ]}
 ];
-let state = {tab:'catalog', lang:'ru', currency:'USD', rate:84.08, cart:[], cat:'all', payMethod:'sbp', showRevForm:false, revStars:5};
+let state = {tab:'catalog', lang:'ru', currency:'USD', rate:84.08, rateLoading: false, cart:[], cat:'all', payMethod:'sbp', showRevForm:false, revStars:5};
 
 function getProduct(pid){
   for(let c of CATALOG) for(let p of c.items) if(p.id===pid) return p;
@@ -369,8 +372,8 @@ function render(){
     });
     h += '</div>';
     v.innerHTML = h;
-  } else {
-    h = '<div style="padding:20px"><h2>Профиль</h2>';
+  } else if(state.tab==='cabinet'){
+    let h = '<div style="padding:20px"><h2>Профиль</h2>';
     h += `<div class="user-card"><div class="user-avatar-lg">G</div><div class="user-name-big">Guest User</div><div class="user-status-tag">Verified Buyer</div></div>`;
     
     h += `<div class="tile active"><div class="icon">💎</div><div class="info"><div class="label">Способ оплаты</div><div class="value">Crypto Pay</div></div><div class="status-pill">Active</div></div>`;
@@ -383,7 +386,7 @@ function render(){
     h += '<div class="pay-item"><img src="https://img.icons8.com/color/96/tether.png"><div class="name">USDT</div></div>';
     h += '</div></div>';
 
-    h += '<button class="btn-primary" style="background:rgba(255,255,255,0.06);color:#fff;border:1px solid var(--border);margin-top:40px" onclick="window.open(\'https://t.me/oncedshop_support\')">Написать в поддержку</button>';
+    h += '<button type="button" class="btn-primary" style="background:rgba(255,255,255,0.06);color:#fff;border:1px solid var(--border);margin-top:40px" onclick="window.open(\'https://t.me/oncedshop_support\')">Написать в поддержку</button>';
     h += '</div>';
     v.innerHTML = h;
   } else if(state.tab==='about'){
@@ -452,21 +455,61 @@ function setupDragScroll(id){
 }
 
 async function updateRate() {
+  state.rateLoading = true;
+  document.getElementById('rateStatus').style.display = 'block';
+  
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 3500); // 3s timeout for slow net
+
   try {
-    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD', { signal: controller.signal });
     const data = await res.json();
     if(data && data.rates && data.rates.RUB) {
       state.rate = data.rates.RUB;
       render();
     }
-  } catch (e) {}
+  } catch (e) {
+    console.log('Rate fetch failed/timed out, using fallback');
+  } finally {
+    clearTimeout(timeoutId);
+    state.rateLoading = false;
+    const statusEl = document.getElementById('rateStatus');
+    if(statusEl) statusEl.style.display = 'none';
+  }
 }
 
+// Backup: force hide splash after 3.5s no matter what
+setTimeout(() => {
+  const s = document.getElementById('splash');
+  const a = document.getElementById('app');
+  if(s && !s.classList.contains('hide')) {
+    console.log('Forced splash removal');
+    s.classList.add('hide');
+    if(a) a.classList.add('show');
+  }
+}, 3500);
+
 function init(){
-  if(tg){tg.ready();tg.expand();tg.setHeaderColor('#000000');}
-  updateRate();
-  render();
-  setTimeout(() => { document.getElementById('splash').classList.add('hide'); document.getElementById('app').classList.add('show'); }, 1200);
+  console.log('Init started');
+  try {
+    if(tg){
+      tg.ready();
+      tg.expand();
+      try { tg.setHeaderColor('#000000'); } catch(e) {}
+    }
+    updateRate();
+    render();
+  } catch (e) {
+    console.error('Init error:', e);
+  } finally {
+    setTimeout(() => {
+      const s = document.getElementById('splash');
+      const a = document.getElementById('app');
+      if(s) s.classList.add('hide');
+      if(a) a.classList.add('show');
+      console.log('Splash hidden');
+    }, 800); // Faster splash
+  }
 }
 document.addEventListener('click', e => {
   const el = e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat],[data-add],[data-rem],[data-action],[data-pay],[data-revstars]');
