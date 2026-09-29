@@ -13,6 +13,7 @@ from handlers import router
 from shopflow import shop_router
 from admin import admin_router
 from support import staff_router, support_router
+from notifier import notify_loop
 import database as db
 
 logging.basicConfig(level=logging.INFO,
@@ -120,6 +121,11 @@ async def main():
         await bot.delete_webhook(drop_pending_updates=True)
         await setup_commands(bot)
         log.info('Polling is active. Send /start to @%s.', me.username)
+
+        # Start new-product notification scheduler (every 3–12 h, no BP/Stars)
+        asyncio.create_task(notify_loop(bot))
+        log.info('New-product notifier scheduled (3–12 h interval).')
+
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
     finally:
         if runner:

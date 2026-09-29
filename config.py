@@ -18,8 +18,17 @@ USD_TO_RUB     = 95.0
 STARS_PER_RUB  = 0.9
 MIN_ORDER_USD  = 7.0
 
+# ---- Gold currency ----
+# 1 Gold = 0.29 RUB  →  price_gold = price_rub / GOLD_PER_RUB
+GOLD_PER_RUB   = 0.29
+
 # ---- Throttling ----
 THROTTLE_RATE_SECONDS = 0.7
+
+# ---- New-product notifications scheduler ----
+# Random interval in seconds between notifications (3–12 hours)
+NOTIFY_MIN_SEC = 3 * 3600
+NOTIFY_MAX_SEC = 12 * 3600
 
 # ---- CryptoBot / CryptoPay ----
 CRYPTOBOT_URL = 'https://t.me/CryptoBot'

@@ -1,4 +1,4 @@
-'''Async SQLite storage for users, orders and leads.'''
+﻿'''Async SQLite storage for users, orders and leads.'''
 import aiosqlite
 import os
 from datetime import datetime, timezone
@@ -524,3 +524,12 @@ async def support_map_get(chat_id, message_id):
         ) as cur:
             row = await cur.fetchone()
             return int(row[0]) if row else None
+
+
+async def get_all_user_ids() -> list[int]:
+    """Return all user_id values stored in the users table."""
+    async with aiosqlite.connect(DB_PATH) as conn:
+        async with conn.execute('SELECT user_id FROM users') as cur:
+            rows = await cur.fetchall()
+    return [int(r[0]) for r in rows]
+
