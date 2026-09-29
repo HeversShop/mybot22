@@ -18,15 +18,13 @@ USD_TO_RUB     = 95.0
 STARS_PER_RUB  = 0.9
 MIN_ORDER_USD  = 7.0
 
-# ---- Gold currency ----
-# 1 Gold = 0.29 RUB  →  price_gold = price_rub / GOLD_PER_RUB
+# ---- Gold currency: 1 Gold = 0.29 RUB ----
 GOLD_PER_RUB   = 0.29
 
 # ---- Throttling ----
 THROTTLE_RATE_SECONDS = 0.7
 
-# ---- New-product notifications scheduler ----
-# Random interval in seconds between notifications (3–12 hours)
+# ---- New-product notifications scheduler (3-12 hours) ----
 NOTIFY_MIN_SEC = 3 * 3600
 NOTIFY_MAX_SEC = 12 * 3600
 
@@ -39,27 +37,27 @@ CRYPTO_PAY_TESTNET = os.getenv('CRYPTO_PAY_TESTNET', '0') == '1'
 CRYPTO_WALLETS = {
     'TON': {
         'address': 'UQDEvKC6YHjTxgq8nsJyK33LRPcqHUEtgebTIM1oPGyPzKs2',
-        'usd': 5.50, 'dp': 4, 'emoji': '💎', 'label': 'TON',
+        'usd': 5.50, 'dp': 4, 'emoji': '\U0001f48e', 'label': 'TON',
     },
     'USDT_TRC20': {
         'address': 'TTaXvZ3g9qnLnEGKd9NBP6CNrH5tk35eB6',
-        'usd': 1.00, 'dp': 2, 'emoji': '🟢', 'label': 'USDT (TRC20)',
+        'usd': 1.00, 'dp': 2, 'emoji': '\U0001f7e2', 'label': 'USDT (TRC20)',
     },
     'USDT_ERC20': {
         'address': '0x532689544E299bF588fd17C5805f1eA8bF5A4AF1',
-        'usd': 1.00, 'dp': 2, 'emoji': '🔷', 'label': 'USDT (ERC20)',
+        'usd': 1.00, 'dp': 2, 'emoji': '\U0001f537', 'label': 'USDT (ERC20)',
     },
     'SOL': {
         'address': 'EEBe7mg1e69BDxvuazFjHASK12Pjsu1EZNZFAMjbnTYT',
-        'usd': 145.0, 'dp': 4, 'emoji': '🟣', 'label': 'Solana',
+        'usd': 145.0, 'dp': 4, 'emoji': '\U0001f7e3', 'label': 'Solana',
     },
     'BTC': {
         'address': 'bc1qc7j2jnt3sdrnwhkf9l3uudjan3y3qjjuv0park',
-        'usd': 65000.0, 'dp': 8, 'emoji': '🟠', 'label': 'Bitcoin',
+        'usd': 65000.0, 'dp': 8, 'emoji': '\U0001f7e0', 'label': 'Bitcoin',
     },
     'BNB_BEP20': {
         'address': '0xE1a98Db3060D6803c7CA220BB00fF74e420515b9',
-        'usd': 600.0, 'dp': 5, 'emoji': '🟡', 'label': 'BNB (BEP20)',
+        'usd': 600.0, 'dp': 5, 'emoji': '\U0001f7e1', 'label': 'BNB (BEP20)',
     },
 }
 
@@ -68,13 +66,11 @@ ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'oncedshopsupport').lstrip('@').low
 _admin_ids = os.getenv('ADMIN_IDS', '')
 ADMIN_IDS = set(int(x) for x in _admin_ids.replace(' ', '').split(',') if x.strip().lstrip('-').isdigit())
 
-# Optional: a staff group/supergroup where customer messages are delivered
-# (negative id, e.g. -1001234567890). Leave empty to deliver to ADMIN_IDS in private.
 _support_chat = os.getenv('SUPPORT_CHAT_ID', '').strip()
 SUPPORT_CHAT_ID = int(_support_chat) if _support_chat.lstrip('-').isdigit() else 0
 
 # ---- Web server ----
-PORT         = int(os.getenv('PORT', '8080'))
+PORT          = int(os.getenv('PORT', '8080'))
 RUN_WEBSERVER = os.getenv('RUN_WEBSERVER', '1') not in ('0', 'false', 'False', 'no', '')
 WEBAPP_ORIGIN = os.getenv('WEBAPP_ORIGIN', '*')
 
@@ -84,5 +80,5 @@ TG_API_HASH    = os.getenv('TG_API_HASH', '')
 TG_SESSION     = os.getenv('TG_SESSION', '')
 MONITOR_CHATS  = [c.strip() for c in os.getenv('MONITOR_CHATS', 'FunPayPlace').split(',') if c.strip()]
 MONITOR_TRIGGERS = [t.strip().lower() for t in os.getenv(
-    'MONITOR_TRIGGERS', 'поставщик,постав,#ищу,#куплю').split(',') if t.strip()]
+    'MONITOR_TRIGGERS', '\u043f\u043e\u0441\u0442\u0430\u0432\u0449\u0438\u043a,\u043f\u043e\u0441\u0442\u0430\u0432,#\u0438\u0449\u0443,#\u043a\u0443\u043f\u043b\u044e').split(',') if t.strip()]
 MONITOR_NOTIFY_ADMIN = os.getenv('MONITOR_NOTIFY_ADMIN', '1') not in ('0', 'false', 'False', 'no', '')
