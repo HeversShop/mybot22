@@ -9,7 +9,7 @@ from urllib.parse import parse_qsl
 
 from aiohttp import web
 
-from config import BOT_TOKEN, WEBAPP_ORIGIN, PORT, ADMIN_IDS
+from config import BOT_TOKEN, WEBAPP_ORIGIN, PORT, ADMIN_IDS, SUPPORT_URL
 from orders import send_order_from_raw
 from common import esc
 import database as db
@@ -55,6 +55,10 @@ for _p in (os.path.join(_here, 'webapp', 'index.html'), 'webapp/index.html', 'in
             WEBAPP_HTML = WEBAPP_HTML.replace(
                 "const API_BASE='';",
                 "const API_BASE=(location.protocol==='https:'?location.origin:'');", 1)
+            # Inject real support URL from config
+            WEBAPP_HTML = WEBAPP_HTML.replace(
+                "const SUPPORT_URL='https://t.me/oncedshopsupport';",
+                f"const SUPPORT_URL='{SUPPORT_URL}';", 1)
             break
     except Exception:
         pass

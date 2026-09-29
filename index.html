@@ -146,6 +146,8 @@ body{font-family:var(--font-main);color:var(--text);display:flex;justify-content
 
 .btn-primary{display:block;width:100%;height:50px;background:var(--accent);color:#000;border-radius:var(--radius-md);font-weight:800;font-size:15px;border:none;cursor:pointer;margin-top:20px;transition:opacity 0.2s,transform 0.15s;}
 .btn-primary:active{transform:scale(0.97);}
+.btn-support{display:block;width:100%;height:50px;background:rgba(37,211,102,0.12);color:#25d366;border:1px solid rgba(37,211,102,0.35);border-radius:var(--radius-md);font-weight:800;font-size:15px;cursor:pointer;margin-top:12px;transition:background 0.2s,transform 0.15s;}
+.btn-support:active{transform:scale(0.97);background:rgba(37,211,102,0.2);}
 .btn-primary.loading{opacity:0.7;pointer-events:none;position:relative;color:transparent!important;}
 .btn-primary.loading::after{content:'';position:absolute;width:20px;height:20px;top:calc(50% - 10px);left:calc(50% - 10px);border:3px solid rgba(0,0,0,0.15);border-top-color:#000;border-radius:50%;animation:spin 0.8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
@@ -305,6 +307,7 @@ body{font-family:var(--font-main);color:var(--text);display:flex;justify-content
 
 /* ===================== SHOP LOGIC ===================== */
 const API_BASE='';
+const SUPPORT_URL='https://t.me/oncedshopsupport';
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 const GOLD_PER_RUB = 0.29;
 
@@ -431,9 +434,11 @@ function render(){
         <div class="pay-opt ${state.payMethod==='crypto'?'on':''}" data-pay="crypto">USDT / BTC 💎</div>
         <div class="pay-opt ${state.payMethod==='card'?'on':''}" data-pay="card">Карта РФ 💳</div>
         <div class="pay-opt ${state.payMethod==='market'?'on':''}" data-pay="market">Баланс 👤</div>
+        <div class="pay-opt ${state.payMethod==='support'?'on':''}" data-pay="support">У поддержки 💬</div>
       </div></div>`;
       h += `<div style="padding:20px;background:rgba(255,255,255,0.05);border-radius:var(--radius-md);margin-top:12px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border)"><b>Итого:</b><b style="font-size:22px;color:var(--accent)">${totalStr}</b></div>`;
-      h += `<button type="button" class="btn-primary" data-action="checkout">Связаться с поддержкой</button>`;
+      h += `<button type="button" class="btn-primary" data-action="checkout">Оформить заказ</button>`;
+      h += `<button type="button" class="btn-support" data-action="opensupport">💬 Написать в поддержку</button>`;
       h += `<div id="checkoutError" class="error-msg"></div></div>`;
       v.innerHTML = h;
     }
@@ -477,12 +482,19 @@ function render(){
     h += `<div class="tile active"><div class="icon">💎</div><div class="info"><div class="label">Способ оплаты</div><div class="value">Crypto Pay</div></div><div class="status-pill">Active</div></div>`;
     h += `<div class="tile"><div class="icon">🆔</div><div class="info"><div class="label">Telegram ID</div><div class="value">000000000</div></div></div>`;
     h += `<div class="tile"><div class="icon">🪙</div><div class="info"><div class="label">Курс Gold</div><div class="value" style="color:var(--gold)">1 Gold = 0.29 ₽</div></div></div>`;
-    h += '<div style="margin-top:32px"><div style="font-size:13px;font-weight:800;margin-bottom:16px;opacity:0.6;text-transform:uppercase;letter-spacing:1px">Доступные валюты</div><div class="pay-grid">';
-    h += '<div class="pay-item"><img src="https://img.icons8.com/color/96/bitcoin.png"><div class="name">BTC</div></div>';
-    h += '<div class="pay-item"><img src="https://img.icons8.com/color/96/ethereum.png"><div class="name">ETH</div></div>';
-    h += '<div class="pay-item"><img src="https://img.icons8.com/color/96/tether.png"><div class="name">USDT</div></div>';
-    h += '</div></div>';
-    h += '<button type="button" class="btn-primary" style="background:rgba(255,255,255,0.06);color:#fff;border:1px solid var(--border);margin-top:40px" onclick="window.open(\'https://t.me/oncedshop_support\')">Написать в поддержку</button>';
+
+    h += '<div style="margin-top:28px;margin-bottom:12px"><div style="font-size:13px;font-weight:800;opacity:0.6;text-transform:uppercase;letter-spacing:1px">Пополнение баланса</div></div>';
+    h += `<div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px">Выберите монету и свяжитесь с поддержкой для пополнения баланса</div>
+      <div class="pay-grid">
+        <div class="pay-item"><img src="https://img.icons8.com/color/96/bitcoin.png"><div class="name">BTC</div></div>
+        <div class="pay-item"><img src="https://img.icons8.com/color/96/ethereum.png"><div class="name">ETH</div></div>
+        <div class="pay-item"><img src="https://img.icons8.com/color/96/tether.png"><div class="name">USDT</div></div>
+      </div>
+      <button type="button" class="btn-support" style="margin-top:16px" data-action="opensupport">💬 Оплата у поддержки</button>
+    </div>`;
+
+    h += '<button type="button" class="btn-support" data-action="opensupport">💬 Связаться с поддержкой</button>';
     h += '</div>';
     v.innerHTML = h;
 
@@ -572,13 +584,24 @@ document.addEventListener('click',e=>{
   const el=e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat],[data-add],[data-rem],[data-action],[data-pay],[data-revstars]');
   const d=el?.dataset; if(!d) return;
   e.preventDefault();
+  if(d.action==='opensupport'){
+    if(tg) tg.openTelegramLink(SUPPORT_URL);
+    else window.open(SUPPORT_URL,'_blank');
+    return;
+  }
   if(d.action==='checkout'){
     const btn=el,errEl=document.getElementById('checkoutError');
     if(errEl)errEl.style.display='none';
+    // If "pay at support" method selected — just open support chat directly
+    if(state.payMethod==='support'){
+      if(tg) tg.openTelegramLink(SUPPORT_URL);
+      else window.open(SUPPORT_URL,'_blank');
+      return;
+    }
     btn.classList.add('loading');
     if(tg)tg.HapticFeedback.notificationOccurred('success');
     setTimeout(()=>{
-      const payMap={sbp:'СБП',crypto:'USDT/BTC',card:'Карта РФ',market:'Баланс'};
+      const payMap={sbp:'СБП',crypto:'USDT/BTC',card:'Карта РФ',market:'Баланс',support:'У поддержки'};
       const orderData={action:'checkout_appeal',payMethod:payMap[state.payMethod]||'Не выбран',currency:state.currency,lang:state.lang,
         total:state.cart.reduce((sum,item)=>{const p=getProduct(item.id);return sum+(p?(p.kind==='perUnit'&&p.base<0.1?p.base*1000:p.base)*1.12:0);},0).toFixed(2),
         items:state.cart.map(item=>({id:item.id,name:getProduct(item.id)?.title[state.lang]}))};
