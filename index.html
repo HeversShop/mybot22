@@ -304,6 +304,7 @@ body{font-family:var(--font-main);color:var(--text);display:flex;justify-content
 })();
 
 /* ===================== SHOP LOGIC ===================== */
+const API_BASE='';
 const tg = window.Telegram ? window.Telegram.WebApp : null;
 const GOLD_PER_RUB = 0.29;
 
@@ -335,10 +336,10 @@ const CATALOG = [
     {id:'p_cld_30_g',title:{ru:'Claude PRO 30д (Гарантия)',en:'Claude PRO 30d'},img:'https://sc04.alicdn.com/kf/A79e1b8b316634ff785f4ab05f341d0e59.jpg',base:11.794,unit:'мес',note:{ru:'Способ, с гарантией.',en:'Method, warranty.'}}
   ]},
   {id:'standoff',emoji:'🔫',title:{ru:'Standoff 2',en:'Standoff 2'},items:[
-    {id:'p_so2_gold_100',title:{ru:'Голда 100',en:'Gold 100'},img:'https://img.icons8.com/color/96/gold-bars.png',base:1.12,unit:'шт',note:{ru:'~106р. Пополнение на аккаунт.',en:'~106 RUB. Top-up to account.'}},
-    {id:'p_so2_gold_500',title:{ru:'Голда 500',en:'Gold 500'},img:'https://img.icons8.com/color/96/gold-bars.png',base:5.28,unit:'шт',note:{ru:'~502р. Пополнение на аккаунт.',en:'~502 RUB. Top-up to account.'}},
-    {id:'p_so2_gold_1000',title:{ru:'Голда 1000',en:'Gold 1000'},img:'https://img.icons8.com/color/96/gold-bars.png',base:9.86,unit:'шт',note:{ru:'~937р. Пополнение на аккаунт.',en:'~937 RUB. Top-up to account.'}},
-    {id:'p_so2_gold_2000',title:{ru:'Голда 2000',en:'Gold 2000'},img:'https://img.icons8.com/color/96/gold-bars.png',base:18.48,unit:'шт',note:{ru:'~1756р. Пополнение на аккаунт.',en:'~1756 RUB. Top-up to account.'}}
+    {id:'p_so2_gold_100',title:{ru:'Голда 100',en:'Gold 100'},img:'https://img.icons8.com/color/96/gold-bars.png',base:0.28,unit:'шт',note:{ru:'~27р. Пополнение на аккаунт.',en:'~27 RUB. Top-up to account.'}},
+    {id:'p_so2_gold_500',title:{ru:'Голда 500',en:'Gold 500'},img:'https://img.icons8.com/color/96/gold-bars.png',base:1.32,unit:'шт',note:{ru:'~125р. Пополнение на аккаунт.',en:'~125 RUB. Top-up to account.'}},
+    {id:'p_so2_gold_1000',title:{ru:'Голда 1000',en:'Gold 1000'},img:'https://img.icons8.com/color/96/gold-bars.png',base:2.465,unit:'шт',note:{ru:'~234р. Пополнение на аккаунт.',en:'~234 RUB. Top-up to account.'}},
+    {id:'p_so2_gold_2000',title:{ru:'Голда 2000',en:'Gold 2000'},img:'https://img.icons8.com/color/96/gold-bars.png',base:4.62,unit:'шт',note:{ru:'~439р. Пополнение на аккаунт.',en:'~439 RUB. Top-up to account.'}}
   ]},
   {id:'virta',emoji:'💰',title:{ru:'Вирты',en:'Virts'},items:[
     {id:'p_rad',title:{ru:'Radmir RP',en:'Radmir'},img:'https://sc04.alicdn.com/kf/A9212c3b0f6d44b9c90de0a8d54f2ad4cx.jpg',base:0.616,unit:'1kk',note:{ru:'~58р/1кк. Банк, трейд.',en:'~58r/1m.'}},
@@ -578,11 +579,35 @@ document.addEventListener('click',e=>{
     if(tg)tg.HapticFeedback.notificationOccurred('success');
     setTimeout(()=>{
       const payMap={sbp:'СБП',crypto:'USDT/BTC',card:'Карта РФ',market:'Баланс'};
-      const orderData={action:'checkout_appeal',payMethod:payMap[state.payMethod]||'Не выбран',currency:state.currency,
+      const orderData={action:'checkout_appeal',payMethod:payMap[state.payMethod]||'Не выбран',currency:state.currency,lang:state.lang,
         total:state.cart.reduce((sum,item)=>{const p=getProduct(item.id);return sum+(p?(p.kind==='perUnit'&&p.base<0.1?p.base*1000:p.base)*1.12:0);},0).toFixed(2),
         items:state.cart.map(item=>({id:item.id,name:getProduct(item.id)?.title[state.lang]}))};
-      if(tg&&tg.sendData){tg.sendData(JSON.stringify(orderData));btn.classList.remove('loading');}
-      else{console.log('Order:',orderData);alert('Заявка отправлена (режим браузера)');btn.classList.remove('loading');}
+      const initData = tg ? (tg.initData || '') : '';
+      // Try server API first (works both in browser and Telegram WebApp)
+      if(API_BASE && initData){
+        fetch(API_BASE+'/api/order',{method:'POST',headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({initData, order:orderData})})
+          .then(r=>r.json()).then(d=>{
+            btn.classList.remove('loading');
+            if(d.ok){
+              if(tg&&tg.showPopup) tg.showPopup({title:'✅ Заказ принят',message:'Номер: '+d.order_id+'\nМы свяжемся с вами в ближайшее время.',buttons:[{type:'ok'}]});
+              else alert('Заказ принят! Номер: '+d.order_id);
+              state.cart=[];render();
+            } else {
+              const errEl=document.getElementById('checkoutError');
+              if(errEl){errEl.style.display='block';errEl.textContent='Ошибка: '+(d.error||'server');}
+            }
+          }).catch(()=>{
+            // fallback to sendData
+            btn.classList.remove('loading');
+            if(tg&&tg.sendData) tg.sendData(JSON.stringify(orderData));
+            else alert('Заявка отправлена!');
+          });
+      } else if(tg&&tg.sendData){
+        tg.sendData(JSON.stringify(orderData));btn.classList.remove('loading');
+      } else {
+        console.log('Order:',orderData);alert('Заявка отправлена (режим браузера)');btn.classList.remove('loading');
+      }
     },600);return;
   }
   if(d.action==='toggleRevForm'){state.showRevForm=!state.showRevForm;render();return;}
