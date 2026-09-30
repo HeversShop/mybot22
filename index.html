@@ -55,6 +55,7 @@ body{font-family:var(--font-main);color:var(--text);display:flex;justify-content
 .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,0.04) 0%,transparent 70%);pointer-events:none;}
 .hero h1{margin:0;font-size:36px;font-weight:900;letter-spacing:-2px;position:relative;z-index:10;color:#fff;text-shadow:0 0 40px rgba(0,0,0,1);}
 .hero-sub{font-size:14px;color:rgba(255,255,255,0.55);margin-top:8px;position:relative;z-index:10;}
+.hero-hint{font-size:11px;color:rgba(255,255,255,0.35);margin-top:4px;letter-spacing:0.5px;}
 
 /* ===== CARDS — transparent, glassmorphism ===== */
 .card{
@@ -390,7 +391,7 @@ function render(){
     CATALOG.forEach(c => h += `<div class="chip ${state.cat===c.id?'on':''}" data-cat="${c.id}">${c.emoji} ${c.title[state.lang]}</div>`);
     h += `</div>`;
     // Hero — minimal, black hole is full-screen canvas
-    h += `<div class="hero"><h1>ONCEDSHOP</h1><div class="hero-sub">Лучшие цены · Мгновенная выдача</div></div>`;
+     h += `<div class="hero"><h1>ONCEDSHOP</h1><div class="hero-sub">Лучшие цены · Мгновенная выдача</div><div class="hero-hint">покупка от 8$</div></div>`;
 
     (state.cat==='all'?CATALOG:CATALOG.filter(c=>c.id===state.cat)).forEach((c,ci) => c.items.forEach((p,pi) => {
        let displayBase = p.base;
