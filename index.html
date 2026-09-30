@@ -333,6 +333,8 @@ function render(){
     (state.cat==='all'?CATALOG:CATALOG.filter(c=>c.id===state.cat)).forEach((c,ci) => c.items.forEach((p,pi) => {
        let displayBase = p.base;
        let displayUnit = p.unit;
+       let step = p.step || 1;
+       let minQty = p.min || 1;
        if(p.kind==='perUnit' && p.base < 0.1){
          displayBase = p.base * 1000;
          displayUnit = '1000 ' + p.unit;
@@ -346,7 +348,10 @@ function render(){
           <div class="n">${p.note?p.note[state.lang]:''}</div>
           <div class="pr">${prHTML} <small style="font-size:11px;opacity:0.45;font-weight:500">/ ${displayUnit}</small></div>
         </div>
-        <button type="button" class="add-btn" data-add="${p.id}">+</button>
+        <div style="display:flex;gap:6px;align-items:center;margin-left:auto">
+          <input type="number" class="qty-input" data-qty-for="${p.id}" value="${minQty}" min="${minQty}" step="${step}" style="width:50px">
+          <button type="button" class="add-btn" data-add="${p.id}">+</button>
+        </div>
       </div>`;
     }));
     v.innerHTML = h;
@@ -585,21 +590,20 @@ document.addEventListener('click',e=>{
   if(d.lang){state.lang=d.lang;render();}
   if(d.cur){state.currency=d.cur;render();}
   if(d.cat){state.cat=d.cat;render();}
-  if(d.add){
-    const p=getProduct(d.add);let qty=1;
-    if(p&&p.kind==='perUnit'){
-      const input=prompt(state.lang==='ru'?'Введите количество:':'Enter quantity:','1');
-      qty=parseInt(input);if(isNaN(qty)||qty<=0)return;
-    }
-    state.cart.push({id:d.add,q:qty});
-    if(tg)tg.HapticFeedback.impactOccurred('medium');
-    animateFly(el);
-    const btn=el,card=el.closest('.card');
-    if(btn&&card){
-      btn.classList.add('added-anim');card.classList.add('adding');
-      setTimeout(()=>{btn.classList.remove('added-anim');card.classList.remove('adding');render();},400);
-    }else render();
-  }
+   if(d.add){
+     const card=el.closest('.card');
+     const qtyInput=card?card.querySelector('input[data-qty-for="'+d.add+'"]'):null;
+     const qty=qtyInput?parseInt(qtyInput.value):1;
+     if(isNaN(qty)||qty<=0)return;
+     state.cart.push({id:d.add,q:qty});
+     if(tg)tg.HapticFeedback.impactOccurred('medium');
+     animateFly(el);
+     const btn=el;
+     if(btn&&card){
+       btn.classList.add('added-anim');card.classList.add('adding');
+       setTimeout(()=>{btn.classList.remove('added-anim');card.classList.remove('adding');render();},400);
+     }else render();
+   }
   if(d.rem!==undefined){state.cart.splice(parseInt(d.rem),1);if(tg)tg.HapticFeedback.impactOccurred('light');render();}
   if(tg&&!d.add&&d.rem===undefined)tg.HapticFeedback.impactOccurred('light');
 });
