@@ -364,18 +364,21 @@ function fmtGold(rub){
   return Math.round(rub / GOLD_PER_RUB).toLocaleString();
 }
 
-function buildPriceHTML(displayBase){
-  const rawUSD   = displayBase * 1.12;
-  const roundUSD = (Math.ceil(rawUSD * 20) / 20).toFixed(2);
-  if(state.currency === 'USD'){
-    const rubApprox = Math.round(rawUSD * state.rate);
-    const gold      = fmtGold(rubApprox);
-    return `$${roundUSD} <span class="gold-badge">${gold} Gold</span>`;
-  } else {
-    const rub  = Math.round(displayBase * 1.12 * state.rate);
-    const gold = fmtGold(rub);
-    return `${rub.toLocaleString()} ₽ <span class="gold-badge">${gold} Gold</span>`;
-  }
+function buildPriceHTML(displayBase, categoryId){
+   const rawUSD   = displayBase * 1.12;
+   const roundUSD = (Math.ceil(rawUSD * 20) / 20).toFixed(2);
+   const priceStr = state.currency === 'USD'
+     ? `$${roundUSD}`
+     : `${Math.round(displayBase * 1.12 * state.rate).toLocaleString()} ₽`;
+   
+   if(categoryId === 'standoff'){
+     const rubPrice = state.currency === 'USD' 
+       ? Math.round(displayBase * 1.12 * state.rate)
+       : Math.round(displayBase * 1.12 * state.rate);
+     const gold = fmtGold(rubPrice);
+     return `${priceStr} <span class="gold-badge">🪙 ${gold}</span>`;
+   }
+   return priceStr;
 }
 
 function render(){
@@ -391,13 +394,13 @@ function render(){
     h += `<div class="hero"><h1>ONCEDSHOP</h1><div class="hero-sub">Лучшие цены · Мгновенная выдача</div></div>`;
 
     (state.cat==='all'?CATALOG:CATALOG.filter(c=>c.id===state.cat)).forEach((c,ci) => c.items.forEach((p,pi) => {
-      let displayBase = p.base;
-      let displayUnit = p.unit;
-      if(p.kind==='perUnit' && p.base < 0.1){
-        displayBase = p.base * 1000;
-        displayUnit = '1000 ' + p.unit;
-      }
-      const prHTML = buildPriceHTML(displayBase);
+       let displayBase = p.base;
+       let displayUnit = p.unit;
+       if(p.kind==='perUnit' && p.base < 0.1){
+         displayBase = p.base * 1000;
+         displayUnit = '1000 ' + p.unit;
+       }
+       const prHTML = buildPriceHTML(displayBase, c.id);
       const delay  = (ci * 3 + pi) * 55;
       h += `<div class="card" style="animation-delay:${delay}ms">
         <div class="pic"><img src="${p.img}" loading="lazy"></div>
