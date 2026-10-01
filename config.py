@@ -16,7 +16,9 @@ DB_PATH          = os.getenv('DB_PATH', 'oncedshop.db')
 PRICE_MARKUP   = 0.12
 USD_TO_RUB     = 95.0
 STARS_PER_RUB  = 0.9
-MIN_ORDER_USD  = 7.0
+# Catalog is Standoff 2 Gold only (max item ~$6.38) — keep the minimum below
+# the cheapest item or checkout would be impossible for any single purchase.
+MIN_ORDER_USD  = 0.3
 
 # ---- Throttling ----
 THROTTLE_RATE_SECONDS = 0.7
