@@ -591,18 +591,22 @@ function init(){
 }
 
 function openSupportChat(){
-  // Telegram WebApp's openTelegramLink can throw/no-op on some clients
-  // (older Telegram versions, desktop webview) — guard every path with
-  // try/catch and always fall back to a plain navigation so the button
-  // never silently does nothing.
-  try{
-    if(tg && typeof tg.openTelegramLink === 'function'){ tg.openTelegramLink(SUPPORT_URL); return; }
-  }catch(e){ console.warn('openTelegramLink failed, falling back', e); }
-  try{
-    if(tg && typeof tg.openLink === 'function'){ tg.openLink(SUPPORT_URL, {try_instant_view:false}); return; }
-  }catch(e){ console.warn('openLink failed, falling back', e); }
-  try{ window.open(SUPPORT_URL,'_blank'); }
-  catch(e){ window.location.href = SUPPORT_URL; }
+  // There is no separate "support account" to redirect to — the mini-app
+  // runs inside the chat with the bot itself, and any text message typed
+  // there is forwarded to the support team by the bot (support.py).
+  // So "contact support" just needs to close the mini-app and tell the
+  // user to type their question in that same chat.
+  const msg = state.lang==='ru'
+    ? 'Напишите ваш вопрос прямо в этот чат с ботом — мы ответим в ближайшее время.'
+    : 'Type your question right here in the chat with the bot — we will reply shortly.';
+  if(tg && typeof tg.showPopup === 'function'){
+    tg.showPopup({title: state.lang==='ru' ? 'Поддержка' : 'Support', message: msg, buttons:[{type:'ok'}]},
+      ()=>{ if(tg.close) tg.close(); });
+  } else if(tg && typeof tg.close === 'function'){
+    alert(msg); tg.close();
+  } else {
+    alert(msg);
+  }
 }
 
 document.addEventListener('click',e=>{
@@ -616,11 +620,6 @@ document.addEventListener('click',e=>{
   if(d.action==='checkout'){
     const btn=el,errEl=document.getElementById('checkoutError');
     if(errEl)errEl.style.display='none';
-    // If "pay at support" method selected — just open support chat directly
-    if(state.payMethod==='support'){
-      openSupportChat();
-      return;
-    }
     btn.classList.add('loading');
     if(tg)tg.HapticFeedback.notificationOccurred('success');
     setTimeout(()=>{
