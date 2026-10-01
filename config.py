@@ -18,9 +18,6 @@ USD_TO_RUB     = 95.0
 STARS_PER_RUB  = 0.9
 MIN_ORDER_USD  = 7.0
 
-# ---- Gold currency: 1 Gold = 0.29 RUB ----
-GOLD_PER_RUB   = 0.29
-
 # ---- Throttling ----
 THROTTLE_RATE_SECONDS = 0.7
 
@@ -29,7 +26,9 @@ NOTIFY_MIN_SEC = 3 * 3600
 NOTIFY_MAX_SEC = 12 * 3600
 
 # ---- CryptoBot / CryptoPay ----
-CRYPTOBOT_URL = 'https://t.me/CryptoBot'
+# Default invoice/checkout link for "pay via CryptoBot". The admin can change the
+# active link at any time with /score <link> (stored in the DB settings table).
+CRYPTOBOT_URL = os.getenv('CRYPTOBOT_URL', 'https://t.me/send?start=IVLj8IAey59Z').strip()
 CRYPTO_PAY_TOKEN = os.getenv('CRYPTO_PAY_TOKEN', '').strip()
 CRYPTO_PAY_TESTNET = os.getenv('CRYPTO_PAY_TESTNET', '0') == '1'
 

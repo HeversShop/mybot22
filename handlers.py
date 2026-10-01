@@ -244,12 +244,14 @@ async def pay_cbot(cb: CallbackQuery):
     lang = info['lang'] if info else await db.get_language(cb.from_user.id)
     rate  = (info.get('rate') if info else None) or await get_usd_rub()
     total = info['total'] if info else 0
+    link = await db.get_setting('cryptobot_link', CRYPTOBOT_URL) or CRYPTOBOT_URL
+    await db.set_order_payment(order_id, 'cbot', link)
     txt = ('🤖 <b>CryptoBot</b>' + NL + NL +
            ('Сумма: ' if R(lang) else 'Amount: ') + money(total, 'USD', rate) + NL +
-           (('Откройте @CryptoBot, создайте чек на эту сумму и пришлите его сюда вместе с номером заказа <code>' + order_id + '</code>.') if R(lang)
-            else ('Open @CryptoBot, create a cheque for this amount and send it here with order number <code>' + order_id + '</code>.')))
+           (('Нажмите кнопку ниже — вы перейдёте в CryptoBot и оплатите счёт там. После оплаты напишите сюда номер заказа <code>' + order_id + '</code>.') if R(lang)
+            else ('Tap the button below — you will be redirected to CryptoBot to pay. After paying, send the order number <code>' + order_id + '</code> here.')))
     kb = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text='🤖 CryptoBot', url=CRYPTOBOT_URL)],
+        [InlineKeyboardButton(text='🤖 Оплатить в CryptoBot' if R(lang) else '🤖 Pay in CryptoBot', url=link)],
         [InlineKeyboardButton(text='⬅️ Назад' if R(lang) else '⬅️ Back', callback_data='pay:back:' + order_id)],
     ])
     await cb.message.edit_text(txt, reply_markup=kb); await cb.answer()

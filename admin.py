@@ -5,7 +5,7 @@ from aiogram import Router, F
 from aiogram.filters import Command, CommandObject
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
 
-from config import MONITOR_CHATS
+from config import MONITOR_CHATS, CRYPTOBOT_URL
 from common import NL, esc, user_label, IsAdmin
 import database as db
 from keyboards import main_reply_kb
@@ -76,6 +76,7 @@ async def render_menu():
         '/balance <code>id</code> <code>±сумма</code> — изменить баланс ($)',
         '/discount <code>id</code> <code>%</code> — персональная скидка',
         '/history <code>id</code> — история переписки · /close <code>id</code> — закрыть обращение',
+        '/score <code>ссылка</code> — задать счёт CryptoBot (без аргумента — показать текущий)',
     ]
     return NL.join(out), menu_kb()
 
@@ -94,6 +95,27 @@ async def cb_menu(cb: CallbackQuery):
     except Exception:
         await cb.message.answer(text, reply_markup=kb, disable_web_page_preview=True)
     await cb.answer()
+
+
+# ─────────────────────────── CryptoBot invoice link (/score) ──────────────────
+@admin_router.message(Command('score'))
+async def cmd_score(message: Message, command: CommandObject):
+    link = (command.args or '').strip()
+    if not link:
+        current = await db.get_setting('cryptobot_link', CRYPTOBOT_URL) or CRYPTOBOT_URL
+        await message.answer(
+            '🤖 <b>Текущий счёт CryptoBot:</b>' + NL + current + NL + NL +
+            'Чтобы изменить: <code>/score ссылка</code>',
+            disable_web_page_preview=True,
+        )
+        return
+    if not (link.startswith('http://') or link.startswith('https://') or link.startswith('t.me/')):
+        await message.answer('⚠️ Похоже, это не ссылка. Пример: <code>/score t.me/send?start=XXXX</code>')
+        return
+    if link.startswith('t.me/'):
+        link = 'https://' + link
+    await db.set_setting('cryptobot_link', link)
+    await message.answer('✅ Счёт CryptoBot обновлён:' + NL + esc(link), disable_web_page_preview=True)
 
 
 # ─────────────────────────── orders ───────────────────────────────────────────

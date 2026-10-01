@@ -158,7 +158,6 @@ body{font-family:var(--font-main);color:var(--text);display:flex;justify-content
 .bg-watermark{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) rotate(-10deg);font-size:18vw;font-weight:900;color:rgba(255,255,255,0.012);z-index:0;text-transform:uppercase;pointer-events:none;}
 
 /* ===== GOLD BADGE on card ===== */
-.gold-badge{display:inline-flex;align-items:center;gap:4px;background:var(--gold-dim);border:1px solid rgba(245,197,24,0.35);border-radius:8px;padding:3px 8px;font-size:11px;font-weight:800;color:var(--gold);margin-top:4px;}
 </style>
 </head>
 <body>
@@ -309,72 +308,90 @@ body{font-family:var(--font-main);color:var(--text);display:flex;justify-content
 const API_BASE='';
 const SUPPORT_URL='https://t.me/oncedshopsupport';
 const tg = window.Telegram ? window.Telegram.WebApp : null;
-const GOLD_PER_RUB = 0.29;
 
 const CATALOG = [
-  {id:'stars',emoji:'⭐',title:{ru:'Telegram Stars',en:'Stars'},items:[
-    {id:'p_stars_1k',title:{ru:'Stars 1000',en:'Stars 1000'},img:'https://img.icons8.com/color/96/telegram-app.png',base:12,unit:'Stars'}
-  ]},
-  {id:'tiktok',emoji:'📱',title:{ru:'TikTok',en:'TikTok'},items:[
-    {id:'p_tt_coins',title:{ru:'TikTok Монеты',en:'TikTok Coins'},img:'https://img.icons8.com/color/96/tiktok.png',base:0.013524,unit:'шт',kind:'perUnit',note:{ru:'Вход на аккаунт.',en:'Account login.'}}
-  ]},
-  {id:'rbx',emoji:'🟩',title:{ru:'Roblox',en:'Roblox'},items:[
-    {id:'p_rbx_acc',title:{ru:'Robux Account',en:'Robux Account'},img:'https://sc04.alicdn.com/kf/A78437d31bfba404e8c5e09f12f481e87w.jpg',base:0.004379,unit:'R$',kind:'perUnit',note:{ru:'1000 R$ (Аккаунт).',en:'1000 R$ (Account).'}},
-    {id:'p_rbxgp_new',title:{ru:'Robux GP',en:'Robux GP'},img:'https://sc04.alicdn.com/kf/A78437d31bfba404e8c5e09f12f481e87w.jpg',base:0.004637,unit:'R$',kind:'perUnit',note:{ru:'1000 рб (геймпасс).',en:'1000 rb (GP).'}},
-    {id:'p_rbxpv_new',title:{ru:'Robux Private',en:'Robux Private'},img:'https://sc04.alicdn.com/kf/A78437d31bfba404e8c5e09f12f481e87w.jpg',base:0.003864,unit:'R$',kind:'perUnit',note:{ru:'1000 рб (приватный сервер).',en:'1000 rb (PV).'}}
-  ]},
-  {id:'brawl',emoji:'🎮',title:{ru:'Brawl Stars',en:'Brawl Stars'},items:[
-    {id:'p_brawl_pass',title:{ru:'Brawl Pass',en:'Brawl Pass'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.15,unit:'акк',note:{ru:'300р. Код или вход на акк.',en:'300 RUB. Code or login.'}},
-    {id:'p_brawl_plus_new',title:{ru:'Brawl Pass Plus',en:'Brawl Pass Plus'},img:'https://sc04.alicdn.com/kf/A7f0cb151d8bf4cbfa877468e1d106cf9t.jpg',base:3.68,unit:'акк',note:{ru:'350р. Код или вход на акк.',en:'350 RUB. Code or login.'}}
-  ]},
-  {id:'ai',emoji:'🤖',title:{ru:'AI Подписки',en:'AI Subs'},items:[
-    {id:'p_gpt_p',title:{ru:'ChatGPT Plus (Личный)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:2.43455,unit:'мес',note:{ru:'Личный акк, гарантия.',en:'Personal, warranty.'}},
-    {id:'p_gpt_acc',title:{ru:'ChatGPT Plus (Аккаунт)',en:'ChatGPT Plus'},img:'https://img.icons8.com/color/96/chatgpt.png',base:4.06985,unit:'мес',note:{ru:'Гарантия на весь срок.',en:'Full warranty.'}},
-    {id:'p_gem_g',title:{ru:'Gemini 18м (Гарантия)',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:1.3524,unit:'акк',note:{ru:'Гарантия на весь срок.',en:'Full warranty.'}},
-    {id:'p_gem_ng',title:{ru:'Gemini 18м (Без гар.)',en:'Gemini 18m'},img:'https://img.icons8.com/color/96/google-logo.png',base:0.47656,unit:'акк',note:{ru:'Без гарантии.',en:'No warranty.'}},
-    {id:'p_grok_g',title:{ru:'Super Grok (Гарантия)',en:'Super Grok'},img:'https://sc04.alicdn.com/kf/Ab72368fd872646eba30b39f09ac99abdU.jpg',base:4.06985,unit:'мес',note:{ru:'Гарантия на весь срок.',en:'Full warranty.'}},
-    {id:'p_grok_ng',title:{ru:'Super Grok (Без гар.)',en:'Super Grok'},img:'https://sc04.alicdn.com/kf/Ab72368fd872646eba30b39f09ac99abdU.jpg',base:2.71745,unit:'мес',note:{ru:'Без гарантии.',en:'No warranty.'}},
-    {id:'p_cld_30_ng',title:{ru:'Claude PRO 30д (Без гар.)',en:'Claude PRO 30d'},img:'https://sc04.alicdn.com/kf/A79e1b8b316634ff785f4ab05f341d0e59.jpg',base:4.06985,unit:'мес',note:{ru:'Без гарантии.',en:'No warranty.'}},
-    {id:'p_cld_365_ng',title:{ru:'Claude PRO 365д (Без гар.)',en:'Claude PRO 365d'},img:'https://sc04.alicdn.com/kf/A79e1b8b316634ff785f4ab05f341d0e59.jpg',base:20.33775,unit:'год',note:{ru:'Без гарантии.',en:'No warranty.'}},
-    {id:'p_cld_30_g',title:{ru:'Claude PRO 30д (Гарантия)',en:'Claude PRO 30d'},img:'https://sc04.alicdn.com/kf/A79e1b8b316634ff785f4ab05f341d0e59.jpg',base:13.5631,unit:'мес',note:{ru:'Способ, с гарантией.',en:'Method, warranty.'}}
-  ]},
   {id:'standoff',emoji:'🔫',title:{ru:'Standoff 2',en:'Standoff 2'},items:[
     {id:'p_so2_gold_100',title:{ru:'Голда 100',en:'Gold 100'},img:'https://img.icons8.com/color/96/gold-bars.png',base:0.322,unit:'шт',note:{ru:'~31р. Пополнение на аккаунт.',en:'~31 RUB. Top-up to account.'}},
     {id:'p_so2_gold_500',title:{ru:'Голда 500',en:'Gold 500'},img:'https://img.icons8.com/color/96/gold-bars.png',base:1.518,unit:'шт',note:{ru:'~144р. Пополнение на аккаунт.',en:'~144 RUB. Top-up to account.'}},
     {id:'p_so2_gold_1000',title:{ru:'Голда 1000',en:'Gold 1000'},img:'https://img.icons8.com/color/96/gold-bars.png',base:2.83475,unit:'шт',note:{ru:'~269р. Пополнение на аккаунт.',en:'~269 RUB. Top-up to account.'}},
     {id:'p_so2_gold_2000',title:{ru:'Голда 2000',en:'Gold 2000'},img:'https://img.icons8.com/color/96/gold-bars.png',base:5.313,unit:'шт',note:{ru:'~505р. Пополнение на аккаунт.',en:'~505 RUB. Top-up to account.'}}
-  ]},
-  {id:'virta',emoji:'💰',title:{ru:'Вирты',en:'Virts'},items:[
-    {id:'p_rad',title:{ru:'Radmir RP',en:'Radmir'},img:'https://sc04.alicdn.com/kf/A9212c3b0f6d44b9c90de0a8d54f2ad4cx.jpg',base:0.7084,unit:'1kk',note:{ru:'~67р/1кк. Банк, трейд.',en:'~67r/1m.'}},
-    {id:'p_ama',title:{ru:'Amazing RP',en:'Amazing'},img:'https://sc04.alicdn.com/kf/A73993f3356a7447187b73f4b8b4fea8dP.jpg',base:0.60536,unit:'1kk',note:{ru:'~58р/1кк.',en:'~58r/1m.'}},
-    {id:'p_br',title:{ru:'Black Russia',en:'Black Russia'},img:'https://sc04.alicdn.com/kf/A0e637ec6d6f141e39e483a5fc88d325bH.jpg',base:0.47656,unit:'1kk',note:{ru:'~45р/1кк.',en:'~45r/1m.'}},
-    {id:'p_maj',title:{ru:'Majestic RP',en:'Majestic'},img:'https://sc04.alicdn.com/kf/A6fab1941243d4afaa1f1641cd9e3f6cfk.jpg',base:4.06985,unit:'1kk',note:{ru:'Покер, банк.',en:'Poker/Bank.'}},
-    {id:'p_arz',title:{ru:'Arizona RP',en:'Arizona'},img:'https://sc04.alicdn.com/kf/A356ac4bfea8f4fbe902d356556a27f210.jpg',base:3.38744,unit:'1kkk',note:{ru:'Банк, трейд.',en:'Bank/Trade.'}}
   ]}
 ];
 
-let state = {tab:'catalog',lang:'ru',currency:'USD',rate:95.0,rateLoading:false,cart:[],cat:'all',payMethod:'sbp',showRevForm:false,revStars:5};
+let state = {tab:'catalog',lang:'ru',currency:'USD',rate:95.0,rateLoading:false,cart:[],cat:'all',payMethod:'sbp',showRevForm:false,revStars:5,reviews:null};
+
+/* ===== Fake reviews generator =====
+   English-looking random nicknames + a random product from the catalog +
+   rating mostly 4 (range 3-5) + mostly no punctuation/lowercase, like real quick typed reviews. */
+const REV_NICK_PARTS1 = ['dark','shadow','night','ice','fire','ghost','storm','ninja','pixel','crypto','alex','max','neo','red','blue','iron','silent','lucky','royal','swift'];
+const REV_NICK_PARTS2 = ['wolf','fox','hawk','viper','blade','king','rider','gamer','player','knight','bear','tiger','phantom','hunter','pro','dev','x','master','zero','prime'];
+function randNick(){
+  const a = REV_NICK_PARTS1[Math.floor(Math.random()*REV_NICK_PARTS1.length)];
+  const b = REV_NICK_PARTS2[Math.floor(Math.random()*REV_NICK_PARTS2.length)];
+  const n = Math.random()<0.6 ? Math.floor(Math.random()*999) : '';
+  const cap = s => s.charAt(0).toUpperCase()+s.slice(1);
+  return Math.random()<0.5 ? cap(a)+cap(b)+n : a+'_'+b+n;
+}
+const REV_TEMPLATES_NOPUNCT = [
+  p => `купил ${p} все пришло быстро спасибо`,
+  p => `заказывал ${p} все четко без проблем`,
+  p => `${p} закинули почти сразу норм магазин`,
+  p => `брал ${p} все норм рекомендую`,
+  p => `${p} пришло на акк быстро все ок`,
+  p => `норм магаз взял ${p} все закинули`,
+  p => `нормально все ${p} пришло без обмана`,
+  p => `${p} купил тут дешевле чем везде пришло моментом`,
+  p => `все супер ${p} выдали за пару минут`,
+  p => `брал ${p} чутуь ждал но все пришло`,
+  p => `спс за ${p} все работает`,
+  p => `${p} заказал вечером утром уже было на акке`,
+];
+const REV_TEMPLATES_PUNCT = [
+  p => `Заказывал ${p}, пришло быстро, спасибо!`,
+  p => `Купил ${p} — все четко, без проблем.`,
+  p => `Отличный магазин, ${p} пришло почти моментально.`,
+  p => `${p} получил в течение пары минут, рекомендую.`,
+];
+function generateReviews(n){
+  const items = (CATALOG||[]).flatMap(c=>c.items||[]);
+  const names = ['Сегодня','Сегодня','Вчера','Вчера','18.09.2026','21.09.2026','25.09.2026','27.09.2026'];
+  const out = [];
+  for(let i=0;i<n;i++){
+    const p = items.length ? items[Math.floor(Math.random()*items.length)] : null;
+    const pname = p ? (p.title[state.lang]||p.title.ru) : 'товар';
+    const noPunct = Math.random() < 0.75; // most reviews skip punctuation/grammar
+    const tpl = noPunct
+      ? REV_TEMPLATES_NOPUNCT[Math.floor(Math.random()*REV_TEMPLATES_NOPUNCT.length)]
+      : REV_TEMPLATES_PUNCT[Math.floor(Math.random()*REV_TEMPLATES_PUNCT.length)];
+    let text = tpl(pname.toLowerCase());
+    if(noPunct) text = text.replace(/[.,!?]/g,'');
+    // Rating weighted mostly 4, sometimes 3 or 5
+    const roll = Math.random();
+    const stars = roll < 0.15 ? 3 : (roll < 0.75 ? 4 : 5);
+    const dpart = names[Math.floor(Math.random()*names.length)];
+    const d = (dpart==='Сегодня'||dpart==='Вчера')
+      ? dpart+', '+String(Math.floor(Math.random()*14)+8).padStart(2,'0')+':'+String(Math.floor(Math.random()*60)).padStart(2,'0')
+      : dpart;
+    out.push({u:randNick(), t:text, s:stars, d});
+  }
+  // newest-looking first: keep "Сегодня" entries near the top
+  out.sort((a,b)=> (a.d.startsWith('Сегодня')?0:a.d.startsWith('Вчера')?1:2) - (b.d.startsWith('Сегодня')?0:b.d.startsWith('Вчера')?1:2));
+  return out;
+}
 
 function getProduct(pid){
   for(let c of CATALOG) for(let p of c.items) if(p.id===pid) return p;
   return null;
 }
 
-function fmtGold(rub){
-  return Math.round(rub / GOLD_PER_RUB).toLocaleString();
-}
-
 function buildPriceHTML(displayBase){
   const rawUSD   = displayBase * 1.12;
   const roundUSD = (Math.ceil(rawUSD * 20) / 20).toFixed(2);
   if(state.currency === 'USD'){
-    const rubApprox = Math.round(rawUSD * state.rate);
-    const gold      = fmtGold(rubApprox);
-    return `$${roundUSD} <span class="gold-badge">${gold} Gold</span>`;
+    return `$${roundUSD}`;
   } else {
     const rub  = Math.round(displayBase * 1.12 * state.rate);
-    const gold = fmtGold(rub);
-    return `${rub.toLocaleString()} ₽ <span class="gold-badge">${gold} Gold</span>`;
+    return `${rub.toLocaleString()} ₽`;
   }
 }
 
@@ -444,13 +461,8 @@ function render(){
     }
 
   } else if(state.tab==='reviews'){
-    const revs = [
-      {u:'Angarleenari',t:'купил робуксы всё пришло за пару минут спасибо',s:5,d:'Сегодня, 14:20'},
-      {u:'Falal',t:'взял старс всё ок не обман рекомендую',s:5,d:'Сегодня, 12:05'},
-      {u:'Gange',t:'подписка работает теперь нейронка всё за меня делает ахах',s:5,d:'Вчера, 23:45'},
-      {u:'elaisergal',t:'была задержка небольшая но админ всё решил быстро пон',s:4,d:'Вчера, 21:10'},
-      {u:'Yalenalda',t:'лучшие цены которые нашел спс за вирты',s:5,d:'18.09.2026'}
-    ];
+    if(!state.reviews) state.reviews = generateReviews(24);
+    const revs = state.reviews;
     let h = '<div style="padding:20px;display:flex;justify-content:space-between;align-items:center"><h2>Отзывы</h2><button type="button" class="chip on" data-action="toggleRevForm">Написать</button></div>';
     if(state.showRevForm){
       h += `<div style="padding:0 20px"><div class="rev-form">
@@ -481,7 +493,6 @@ function render(){
     h += `<div class="user-card"><div class="user-avatar-lg">G</div><div class="user-name-big">Guest User</div><div class="user-status-tag">Verified Buyer</div></div>`;
     h += `<div class="tile active"><div class="icon">💎</div><div class="info"><div class="label">Способ оплаты</div><div class="value">Crypto Pay</div></div><div class="status-pill">Active</div></div>`;
     h += `<div class="tile"><div class="icon">🆔</div><div class="info"><div class="label">Telegram ID</div><div class="value">000000000</div></div></div>`;
-    h += `<div class="tile"><div class="icon">🪙</div><div class="info"><div class="label">Курс Gold</div><div class="value" style="color:var(--gold)">1 Gold = 0.29 ₽</div></div></div>`;
 
     h += '<div style="margin-top:28px;margin-bottom:12px"><div style="font-size:13px;font-weight:800;opacity:0.6;text-transform:uppercase;letter-spacing:1px">Пополнение баланса</div></div>';
     h += `<div style="background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:var(--radius-md);padding:20px;margin-bottom:16px">
@@ -502,7 +513,6 @@ function render(){
     let h = '<div class="about-box"><h2>О магазине</h2>';
     h += '<div class="about-card"><h3>🚀 Oncedshop</h3><p>Ваш надёжный проводник в мире цифровых товаров. Лучшие цены, мгновенная выдача, поддержка 24/7.</p></div>';
     h += '<div class="about-card"><h3>⚡ Мгновенная доставка</h3><p>Большинство товаров доставляются автоматически сразу после оплаты.</p></div>';
-    h += '<div class="about-card"><h3>🪙 Оплата Golden</h3><p>Принимаем внутреннюю валюту Gold — курс 1 Gold = 0.29 ₽. Цена в Gold отображается под каждым товаром.</p></div>';
     h += '<div class="about-card"><h3>💎 Гарантия качества</h3><p>На все товары с пометкой «Гарантия» — полная поддержка на весь срок подписки.</p></div>';
     h += '<div style="text-align:center;padding:20px;opacity:0.5;font-size:12px">© 2026 Oncedshop. Все права защищены.</div>';
     h += '</div>';
@@ -580,13 +590,27 @@ function init(){
   }
 }
 
+function openSupportChat(){
+  // Telegram WebApp's openTelegramLink can throw/no-op on some clients
+  // (older Telegram versions, desktop webview) — guard every path with
+  // try/catch and always fall back to a plain navigation so the button
+  // never silently does nothing.
+  try{
+    if(tg && typeof tg.openTelegramLink === 'function'){ tg.openTelegramLink(SUPPORT_URL); return; }
+  }catch(e){ console.warn('openTelegramLink failed, falling back', e); }
+  try{
+    if(tg && typeof tg.openLink === 'function'){ tg.openLink(SUPPORT_URL, {try_instant_view:false}); return; }
+  }catch(e){ console.warn('openLink failed, falling back', e); }
+  try{ window.open(SUPPORT_URL,'_blank'); }
+  catch(e){ window.location.href = SUPPORT_URL; }
+}
+
 document.addEventListener('click',e=>{
   const el=e.target.closest('[data-tab],[data-lang],[data-cur],[data-cat],[data-add],[data-rem],[data-action],[data-pay],[data-revstars]');
   const d=el?.dataset; if(!d) return;
   e.preventDefault();
   if(d.action==='opensupport'){
-    if(tg) tg.openTelegramLink(SUPPORT_URL);
-    else window.open(SUPPORT_URL,'_blank');
+    openSupportChat();
     return;
   }
   if(d.action==='checkout'){
@@ -594,8 +618,7 @@ document.addEventListener('click',e=>{
     if(errEl)errEl.style.display='none';
     // If "pay at support" method selected — just open support chat directly
     if(state.payMethod==='support'){
-      if(tg) tg.openTelegramLink(SUPPORT_URL);
-      else window.open(SUPPORT_URL,'_blank');
+      openSupportChat();
       return;
     }
     btn.classList.add('loading');

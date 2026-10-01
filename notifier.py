@@ -12,7 +12,7 @@ from aiogram.exceptions import TelegramForbiddenError, TelegramBadRequest
 
 import database as db
 from catalog import products_for_notifications, CATALOG
-from config import NOTIFY_MIN_SEC, NOTIFY_MAX_SEC, USD_TO_RUB, GOLD_PER_RUB, WEBAPP_URL
+from config import NOTIFY_MIN_SEC, NOTIFY_MAX_SEC, USD_TO_RUB, WEBAPP_URL
 
 log = logging.getLogger('oncedshop.notifier')
 
@@ -30,8 +30,7 @@ def _pick_items(n: int = 3):
 
 def _fmt_price(base_usd: float) -> str:
     rub = round(base_usd * _MARKUP * USD_TO_RUB)
-    gold = round(rub / GOLD_PER_RUB)
-    return f"{rub:,} ₽  |  🪙 {gold:,} Gold"
+    return f"{rub:,} ₽"
 
 
 def _build_message(items) -> str:

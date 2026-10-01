@@ -40,6 +40,7 @@ ADMIN_COMMANDS = [
     BotCommand(command='discount', description='🏷 Скидка: /discount id 10'),
     BotCommand(command='history',  description='🕘 История: /history id'),
     BotCommand(command='close',    description='🔒 Закрыть обращение'),
+    BotCommand(command='score',    description='🤖 Счёт CryptoBot: /score ссылка'),
     BotCommand(command='leads',    description='🎯 Лиды из чатов'),
     BotCommand(command='id',       description='🆔 Мой Telegram ID'),
 ]

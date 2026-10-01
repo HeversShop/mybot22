@@ -105,6 +105,13 @@ CREATE TABLE IF NOT EXISTS support_map (
 )
 '''
 
+CREATE_SETTINGS = '''
+CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT
+)
+'''
+
 
 def _now():
     return datetime.now(timezone.utc).isoformat()
@@ -118,6 +125,7 @@ async def init_db():
         await conn.execute(CREATE_TICKETS)
         await conn.execute(CREATE_SUPPORT_MESSAGES)
         await conn.execute(CREATE_SUPPORT_MAP)
+        await conn.execute(CREATE_SETTINGS)
         await conn.execute('CREATE INDEX IF NOT EXISTS idx_support_msgs_user ON support_messages(user_id, id)')
         await conn.execute('CREATE INDEX IF NOT EXISTS idx_orders_user ON orders(user_id, created_at)')
         for ddl in (
@@ -532,4 +540,22 @@ async def get_all_user_ids() -> list[int]:
         async with conn.execute('SELECT user_id FROM users') as cur:
             rows = await cur.fetchall()
     return [int(r[0]) for r in rows]
+
+
+# ---------------- Key/value settings (e.g. active CryptoBot invoice link) ----------------
+async def get_setting(key, default=None):
+    async with aiosqlite.connect(DB_PATH) as conn:
+        async with conn.execute('SELECT value FROM settings WHERE key=?', (key,)) as cur:
+            row = await cur.fetchone()
+            return row[0] if row and row[0] is not None else default
+
+
+async def set_setting(key, value):
+    async with aiosqlite.connect(DB_PATH) as conn:
+        await conn.execute(
+            'INSERT INTO settings (key, value) VALUES (?, ?) '
+            'ON CONFLICT(key) DO UPDATE SET value=excluded.value',
+            (key, value),
+        )
+        await conn.commit()
 
